@@ -1,0 +1,30 @@
+{
+  "lockfileVersion": 1,
+  "configVersion": 0,
+  "workspaces": {
+    "": {
+      "dependencies": {
+        "ags": "*",
+        "gnim": "*",
+        "ts-essentials": "^10.1.1",
+        "ts-pattern": "^5.9.0",
+        "type-fest": "^5.4.1",
+      },
+    },
+  },
+  "packages": {
+    "ags": ["ags@file:../../../../../../usr/share/ags/js", { "peerDependencies": { "gnim": "^1.9.0" }, "os": "linux" }],
+
+    "gnim": ["gnim@file:../../../../../../usr/share/ags/js/node_modules/gnim", {}],
+
+    "tagged-tag": ["tagged-tag@1.0.0", "", {}, "sha512-yEFYrVhod+hdNyx7g5Bnkkb0G6si8HJurOoOEgC8B/O0uXLHlaey/65KRv6cuWBNhBgHKAROVpc7QyYqE5gFng=="],
+
+    "ts-essentials": ["ts-essentials@10.1.1", "", { "peerDependencies": { "typescript": ">=4.5.0" }, "optionalPeers": ["typescript"] }, "sha512-4aTB7KLHKmUvkjNj8V+EdnmuVTiECzn3K+zIbRthumvHu+j44x3w63xpfs0JL3NGIzGXqoQ7AV591xHO+XrOTw=="],
+
+    "ts-pattern": ["ts-pattern@5.9.0", "", {}, "sha512-6s5V71mX8qBUmlgbrfL33xDUwO0fq48rxAu2LBE11WBeGdpCPOsXksQbZJHvHwhrd3QjUusd3mAOM5Gg0mFBLg=="],
+
+    "type-fest": ["type-fest@5.4.4", "", { "dependencies": { "tagged-tag": "^1.0.0" } }, "sha512-JnTrzGu+zPV3aXIUhnyWJj4z/wigMsdYajGLIYakqyOW1nPllzXEJee0QQbHj+CTIQtXGlAjuK0UY+2xTyjVAw=="],
+
+    "ags/gnim": ["gnim@file:../../../../../../usr/share/ags/js/node_modules/gnim", {}],
+  }
+}
