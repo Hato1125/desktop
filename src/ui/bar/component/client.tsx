@@ -10,11 +10,15 @@ const nestedCompositors = [
 ];
 
 const displayClientName = (client: AstalHyprland.Client) => {
-  if (nestedCompositors.includes(client.get_initial_class())) {
+  const initialClass = client.get_initial_class();
+
+  if (!initialClass
+    || initialClass.trim() === ''
+    || nestedCompositors.includes(initialClass)) {
     return client.get_title();
   }
 
-  return client.get_initial_class()
+  return initialClass
     .split('.')
     .pop()
     ?.replace(/^./, c => c.toUpperCase());
