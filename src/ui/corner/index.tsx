@@ -35,6 +35,8 @@ const makeCornerWindow = (
 ) => (
   <window
     visible
+    class='corner'
+    namespace='corner'
     gdkmonitor={props.monitor}
     layer={props.layer}
     anchor={props.anchor}
@@ -48,7 +50,7 @@ const makeCornerWindow = (
           props.drawCorner(ROUNDED, context);
 
           context.closePath();
-          context.setSourceRGB(255, 0, 0);
+          context.setSourceRGB(0, 0, 0);
           context.fill();
         });
       }}
