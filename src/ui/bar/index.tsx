@@ -2,6 +2,7 @@ import Gtk from 'gi://Gtk?version=4.0';
 import Astal from 'gi://Astal?version=4.0';
 
 import Distro from './component/distro';
+import Client from './component/client';
 import DateTime from './component/datetime';
 
 export default () => (
@@ -22,6 +23,7 @@ export default () => (
     >
       <box $type='start' spacing={18}>
         <Distro />
+        <Client />
       </box>
       <box $type='center' spacing={18}>
       </box>
