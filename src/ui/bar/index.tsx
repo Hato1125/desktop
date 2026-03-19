@@ -1,6 +1,8 @@
 import Gtk from 'gi://Gtk?version=4.0';
 import Astal from 'gi://Astal?version=4.0';
 
+import Distro from './component/distro';
+
 export default () => (
   <window
     visible
@@ -18,6 +20,7 @@ export default () => (
       orientation={Gtk.Orientation.HORIZONTAL}
     >
       <box $type='start' spacing={18}>
+        <Distro />
       </box>
       <box $type='center' spacing={18}>
       </box>
