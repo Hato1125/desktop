@@ -3,6 +3,10 @@ import AstalNetwork from 'gi://AstalNetwork?version=0.1';
 
 import { createBinding, With } from 'ags';
 
+import { VpnService } from '../../../service/vpn';
+
+const vpn = new VpnService();
+
 const WiredIcon = ({ wired }: { wired: AstalNetwork.Wired | null }) => (
   <label
     class='symbols'
@@ -42,7 +46,8 @@ const WifiIcon = ({ wifi }: { wifi: AstalNetwork.Wifi | null }) => {
   );
 };
 
-const NetworkIcon = ({ network }: { network: AstalNetwork.Network }) => {
+const NetworkIcon = () => {
+  const network = AstalNetwork.get_default();
   const primary = createBinding(network, 'primary');
 
   return (
@@ -56,16 +61,33 @@ const NetworkIcon = ({ network }: { network: AstalNetwork.Network }) => {
   );
 }
 
+const VPNState = () => (
+  <With value={createBinding(vpn, 'connected')}>
+    {(connected) => {
+      if (connected) {
+        return (
+          <box class='vpn' spacing={6}>
+            <label class='symbols' label='vpn_key' />
+            <label class='country' label={createBinding(vpn, 'country')} />
+          </box>
+        );
+      }
+    }}
+  </With>
+
+);
 export default () => {
-  const network = AstalNetwork.get_default();
 
   return (
     <box
+      class='network'
+      spacing={8}
       valign={Gtk.Align.CENTER}
       halign={Gtk.Align.CENTER}
       orientation={Gtk.Orientation.HORIZONTAL}
     >
-      <NetworkIcon network={network} />
+      <NetworkIcon />
+      <VPNState />
     </box>
   );
 }

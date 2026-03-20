@@ -19,16 +19,19 @@
   font-family: 'Oak Sans';
   font-size: 12px;
   font-weight: 600;
+  color: var(--900);
 }
 
 .nerd {
   font-family: "Symbols Nerd Font";
   font-size: 14px;
   font-weight: 600;
+  color: var(--900);
 }
 
 .symbols {
   font-family: "Material Symbols Outlined";
   font-size: 14px;
   font-weight: 600;
+  color: var(--900);
 }

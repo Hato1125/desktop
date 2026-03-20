@@ -9,3 +9,13 @@
 .bar .distro {
   font-size: 16px;
 }
+
+.bar .network .vpn {
+  background-color: var(--200);
+  padding: 4px 8px;
+  border-radius: 50rem;
+}
+
+.bar .network .vpn .country {
+  font-size: 9px;
+}
