@@ -20,3 +20,15 @@
   font-size: 12px;
   font-weight: 600;
 }
+
+.nerd {
+  font-family: "Symbols Nerd Font";
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.symbols {
+  font-family: "Material Symbols Outlined";
+  font-size: 14px;
+  font-weight: 600;
+}

@@ -3,6 +3,7 @@ import Astal from 'gi://Astal?version=4.0';
 
 import Distro from './component/distro';
 import Client from './component/client';
+import Network from './component/network';
 import DateTime from './component/datetime';
 
 export default () => (
@@ -28,6 +29,7 @@ export default () => (
       <box $type='center' spacing={18}>
       </box>
       <box $type='end' spacing={18}>
+        <Network />
         <DateTime />
       </box>
     </centerbox>
