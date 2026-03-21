@@ -16,8 +16,8 @@ const date = createPoll('', 60000, () =>
 
 export default () => (
   <box orientation={Gtk.Orientation.HORIZONTAL} spacing={8}>
-    <label halign={Gtk.Align.END} label={ampm} />
-    <label halign={Gtk.Align.END} label={time} />
-    <label halign={Gtk.Align.END} label={date} />
+    <label cssClasses={['label', 'label-body-l']} halign={Gtk.Align.END} label={ampm} />
+    <label cssClasses={['label', 'label-body-l']} halign={Gtk.Align.END} label={time} />
+    <label cssClasses={['label', 'label-body-l']} halign={Gtk.Align.END} label={date} />
   </box>
 );

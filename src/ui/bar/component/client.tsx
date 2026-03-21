@@ -31,8 +31,11 @@ export default () => {
     <With value={focused}>
       {(client) => client && (
         <label
+          cssClasses={[
+            'label',
+            'label-body-l'
+          ]}
           label={displayClientName(client)}
-          singleLineMode={true}
           maxWidthChars={65}
           ellipsize={Pango.EllipsizeMode.END}
         />

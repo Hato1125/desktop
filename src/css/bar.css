@@ -6,16 +6,11 @@
   padding: 0 28px;
 }
 
-.bar .distro {
-  font-size: 16px;
+.bar .vpn .symbols {
+  margin-top: -3px;
 }
 
-.bar .network .vpn {
-  background-color: var(--200);
-  padding: 4px 8px;
-  border-radius: 50rem;
-}
-
-.bar .network .vpn .country {
-  font-size: 9px;
+.bar .vpn .country {
+  margin-top: 6px;
+  font-weight: bold;
 }

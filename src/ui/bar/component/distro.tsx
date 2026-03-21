@@ -6,5 +6,7 @@ export default () => {
     .find((line) => line.startsWith('ID='))
     ?.split('=')[1] ?? 'linux';
 
-  return (<image iconName={`${distro}-symbolic`} />);
+  return (
+    <image class='symbol-s2' iconName={`${distro}-symbolic`} />
+  );
 }

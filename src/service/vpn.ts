@@ -33,9 +33,9 @@ export class VpnService extends GObject.Object {
         this.connected = false;
         this.country = '';
       } else if (!this.connected) {
-        this.connected = true;
         const res = await fetch('http://ip-api.com/line/?fields=countryCode')
         this.country = (await res.text()).trim();
+        this.connected = true;
       }
     } catch (e) {
       console.error(e);

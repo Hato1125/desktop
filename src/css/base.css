@@ -13,25 +13,44 @@
   --950: #fafafa;
 }
 
-* {
-  all: unset;
-  font-feature-settings: "zero" 1;
-  font-family: 'Oak Sans';
-  font-size: 12px;
-  font-weight: 600;
+* { all: unset; }
+
+.label {
+  font-family: 'Lexend';
   color: var(--900);
 }
 
 .nerd {
   font-family: "Symbols Nerd Font";
-  font-size: 14px;
-  font-weight: 600;
   color: var(--900);
 }
 
 .symbols {
   font-family: "Material Symbols Outlined";
-  font-size: 14px;
-  font-weight: 600;
   color: var(--900);
 }
+
+.symbol-s1 { font-size: 12px; -gtk-icon-size: 12px; font-weight: 600; }
+.symbol-s2 { font-size: 14px; -gtk-icon-size: 14px; font-weight: 600; }
+.symbol-s3 { font-size: 16px; -gtk-icon-size: 16px; font-weight: 600; }
+
+.symbol-m1 { font-size: 24px; -gtk-icon-size: 24px; font-weight: 600; }
+.symbol-m2 { font-size: 28px; -gtk-icon-size: 28px; font-weight: 600; }
+.symbol-m3 { font-size: 32px; -gtk-icon-size: 32px; font-weight: 600; }
+.symbol-m4 { font-size: 36px; -gtk-icon-size: 36px; font-weight: 600; }
+
+.symbol-x1 { font-size: 52px; -gtk-icon-size: 52px; font-weight: 600; }
+.symbol-x2 { font-size: 68px; -gtk-icon-size: 68px; font-weight: 600; }
+.symbol-x3 { font-size: 84px; -gtk-icon-size: 84px; font-weight: 600; }
+
+.label-display-s { font-size: 32px; font-weight: 800; }
+.label-display-m { font-size: 37px; font-weight: 800; }
+.label-display-l { font-size: 42px; font-weight: 800; }
+
+.label-heading-s { font-size: 17px; font-weight: 700; }
+.label-heading-m { font-size: 21px; font-weight: 700; }
+.label-heading-l { font-size: 25px; font-weight: 700; }
+
+.label-body-s { font-size: 7px; font-weight: 600; }
+.label-body-m { font-size: 9px; font-weight: 600; }
+.label-body-l { font-size: 11px; font-weight: 600; }
