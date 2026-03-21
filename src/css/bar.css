@@ -14,3 +14,13 @@
   margin-top: 6px;
   font-weight: bold;
 }
+
+.bar .battery .symbols {
+  color: var(--0);
+  font-weight: bold;
+}
+
+.bar .battery .percentage {
+  color: var(--0);
+  font-weight: bold;
+}

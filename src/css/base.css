@@ -17,6 +17,7 @@
 
 .label {
   font-family: 'Lexend';
+  margin-top: -1px;
   color: var(--900);
 }
 
@@ -27,8 +28,13 @@
 
 .symbols {
   font-family: "Material Symbols Outlined";
+  margin-top: -1px;
   color: var(--900);
 }
+
+.symbol-xs1 { font-size: 6px; -gtk-icon-size: 6px; font-weight: 600; }
+.symbol-xs2 { font-size: 8px; -gtk-icon-size: 8px; font-weight: 600; }
+.symbol-xs3 { font-size: 10px; -gtk-icon-size: 10px; font-weight: 600; }
 
 .symbol-s1 { font-size: 12px; -gtk-icon-size: 12px; font-weight: 600; }
 .symbol-s2 { font-size: 14px; -gtk-icon-size: 14px; font-weight: 600; }
