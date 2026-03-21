@@ -15,7 +15,7 @@ const update = () => {
   setState({
     percentage: Math.floor(battery.percentage * 100),
     charging: battery.charging,
-    present: battery.present,
+    present: battery.is_present,
   });
 }
 
