@@ -26,7 +26,7 @@ export default () => {
                 <label
                   cssClasses={['symbols', 'symbol-s3']}
                   label={
-                    network.wired.state !== AstalNetwork.DeviceState.ACTIVATED
+                    network.wifi.state !== AstalNetwork.DeviceState.ACTIVATED
                       ? 'wifi_off'
                       : network.wifi.strength >= 80 ? 'wifi' :
                         network.wifi.strength >= 60 ? 'network_wifi_3_bar' :
