@@ -28,10 +28,8 @@ export default () => {
                   label={
                     network.wifi.state !== AstalNetwork.DeviceState.ACTIVATED
                       ? 'wifi_off'
-                      : network.wifi.strength >= 80 ? 'wifi' :
-                        network.wifi.strength >= 60 ? 'network_wifi_3_bar' :
-                        network.wifi.strength >= 40 ? 'network_wifi_2_bar' :
-                        network.wifi.strength >= 20 ? 'network_wifi_1_bar' : 'signal_wifi_0_bar'
+                      : network.wifi.strength >= 67 ? 'wifi' :
+                        network.wifi.strength >= 34 ? 'wifi_2_bar' : 'wifi_1_bar'
                   }
                 />
               );
