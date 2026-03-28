@@ -17,7 +17,6 @@
 
 .label {
   font-family: 'Lexend';
-  margin-top: -1px;
   color: var(--900);
 }
 
@@ -28,7 +27,6 @@
 
 .symbols {
   font-family: "Material Symbols Outlined";
-  margin-top: -1px;
   color: var(--900);
 }
 
