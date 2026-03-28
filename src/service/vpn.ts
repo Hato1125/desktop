@@ -1,11 +1,25 @@
+import NM from 'gi://NM';
+import GObject from 'gi://GObject?version=2.0';
 import AstalNetwork from 'gi://AstalNetwork?version=0.1';
 
-import NM from 'gi://NM';
-import GObject, { register, property } from "ags/gobject"
+import {
+  register,
+  property,
+} from 'ags/gobject';
+
 import fetch from 'gnim/fetch';
 
 @register()
 export class VpnService extends GObject.Object {
+  static instance: VpnService;
+
+  static get_default(): VpnService {
+    if (!this.instance) {
+      this.instance = new VpnService();
+    }
+    return this.instance;
+  }
+
   @property(Boolean) connected: boolean = false;
   @property(String) country: string = '';
 
@@ -34,6 +48,7 @@ export class VpnService extends GObject.Object {
         this.country = '';
       } else if (!this.connected) {
         const res = await fetch('http://ip-api.com/line/?fields=countryCode')
+
         this.country = (await res.text()).trim();
         this.connected = true;
       }

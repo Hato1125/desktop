@@ -8,7 +8,7 @@ import {
 
 import { Gdk } from 'ags/gtk4';
 
-import Bar from './ui/bar/index';
+import Bar from '@ui/bar/index';
 import {
   MonitorBottomLeftCorner,
   MonitorBottomRightCorner,
@@ -16,7 +16,7 @@ import {
   MonitorTopRightCorner,
   BarBottomLeftCorner,
   BarBottomRightCorner,
-} from './ui/corner/index';
+} from '@ui/corner/index';
 
 app.start({
   css: 'css/main.css',

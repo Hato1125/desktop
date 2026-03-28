@@ -7,6 +7,11 @@
     "noEmit": true,
     "strict": true,
     "jsx": "react-jsx",
-    "jsxImportSource": "ags/gtk4"
+    "jsxImportSource": "ags/gtk4",
+    "baseUrl": ".",
+    "paths": {
+      "@ui/*": ["src/ui/*"],
+      "@service/*": ["src/service/*"],
+    }
   }
 }
