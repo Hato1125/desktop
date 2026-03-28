@@ -1,7 +1,7 @@
 import Gtk from 'gi://Gtk?version=4.0';
 import AstalBattery from 'gi://AstalBattery?version=0.1';
 
-import { createState, createBinding, With } from 'ags';
+import { createState } from 'ags';
 
 const battery = AstalBattery.get_default();
 
