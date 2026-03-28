@@ -24,6 +24,14 @@ const drawBottomRight = (round: number, context: giCairo.Context) => {
   context.lineTo(round, round);
 }
 
+const arcBottomLeft = (round: number, context: giCairo.Context) => {
+  context.arc(round, 0, round, Math.PI / 2, Math.PI);
+}
+
+const arcBottomRight = (round: number, context: giCairo.Context) => {
+  context.arc(0, 0, round, 0, Math.PI / 2);
+}
+
 const makeCornerWindow = (
   props: {
     monitor: Gdk.Monitor | undefined;
@@ -31,6 +39,9 @@ const makeCornerWindow = (
     anchor: Astal.WindowAnchor;
     exclusivity: Astal.Exclusivity;
     drawCorner: (round: number, context: giCairo.Context) => void;
+    drawArc?: (round: number, context: giCairo.Context) => void;
+    border?: boolean;
+    marginTop?: number;
   }
 ) => (
   <window
@@ -52,6 +63,13 @@ const makeCornerWindow = (
           context.closePath();
           context.setSourceRGB(0, 0, 0);
           context.fill();
+
+          if (props.border && props.drawArc) {
+            props.drawArc(ROUNDED, context);
+            context.setSourceRGBA(0.149, 0.149, 0.149, 1);
+            context.setLineWidth(1);
+            context.stroke();
+          }
         });
       }}
     />
@@ -73,6 +91,7 @@ const makeMonitorCorner = (
 const makeBarCorner = (
   anchor: Astal.WindowAnchor,
   drawCorner: (round: number, context: giCairo.Context) => void,
+  drawArc: (round: number, context: giCairo.Context) => void,
 ) => () =>
   makeCornerWindow({
     monitor: undefined,
@@ -80,6 +99,8 @@ const makeBarCorner = (
     anchor,
     exclusivity: Astal.Exclusivity.EXCLUSIVE,
     drawCorner,
+    drawArc,
+    border: true,
   });
 
 const TL = Astal.WindowAnchor.TOP | Astal.WindowAnchor.LEFT;
@@ -92,5 +113,5 @@ export const MonitorTopRightCorner = makeMonitorCorner(TR, drawTopRight);
 export const MonitorBottomLeftCorner = makeMonitorCorner(BL, drawBottomLeft);
 export const MonitorBottomRightCorner = makeMonitorCorner(BR, drawBottomRight);
 
-export const BarBottomLeftCorner = makeBarCorner(BL, drawBottomLeft);
-export const BarBottomRightCorner = makeBarCorner(BR, drawBottomRight);
+export const BarBottomLeftCorner = makeBarCorner(BL, drawBottomLeft, arcBottomLeft);
+export const BarBottomRightCorner = makeBarCorner(BR, drawBottomRight, arcBottomRight);
