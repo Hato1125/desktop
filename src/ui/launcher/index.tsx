@@ -102,9 +102,19 @@ const onKey = (_0: unknown, value: number, _1: unknown, _2: unknown) => {
   }
 }
 
-const onClickContent = (gesture: Gtk.GestureClick) => {
-  gesture.set_state(Gtk.EventSequenceState.CLAIMED);
+const onPressed = (_1: unknown, _2: unknown, x: number, y: number) => {
+  const alloc = content.get_allocation();
+
+  if (x < alloc.x
+    || x > alloc.x + alloc.width
+    || y < alloc.y
+    || y > alloc.y + alloc.height
+  ) {
+    closeWindow();
+  }
 }
+
+let content: Gtk.Box;
 
 export default () => (
   <window
@@ -127,15 +137,15 @@ export default () => (
     }}
   >
     <Gtk.EventControllerKey onKeyPressed={onKey} />
-    <Gtk.GestureClick onPressed={closeWindow} />
+    <Gtk.GestureClick onPressed={onPressed} />
 
     <box
+      $={(ref) => (content = ref)}
       class='content'
       halign={Gtk.Align.CENTER}
       valign={Gtk.Align.CENTER}
       orientation={Gtk.Orientation.VERTICAL}
     >
-      <Gtk.GestureClick onPressed={onClickContent} />
       <SearchBox />
       <List />
     </box>
