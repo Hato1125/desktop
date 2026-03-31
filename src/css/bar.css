@@ -4,14 +4,6 @@
   min-height: 37px;
   min-width: 37px;
   padding: 0 28px;
-  border-top: 1px solid transparent;
-    border-image: linear-gradient(
-      to right,
-      black 20px,
-      var(--200) 20px,
-      var(--200) calc(100% - 20px),
-      black calc(100% - 20px)
-    ) 1;
 }
 
 .bar .vpn .symbols {
