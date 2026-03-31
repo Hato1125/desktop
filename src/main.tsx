@@ -17,15 +17,23 @@ import {
   BarBottomLeftCorner,
   BarBottomRightCorner,
 } from '@ui/corner/index';
+import Launcher, { toggleWindow } from '@ui/launcher/index';
+
+import { match } from 'ts-pattern';
 
 app.start({
   css: 'css/main.css',
   icons: `${SRC}/icons`,
   instanceName: 'desktop',
+  requestHandler(args, res) {
+    match(args[0])
+      .with('toggle-launcher', () => toggleWindow());
+  },
   main() {
     Bar();
     BarBottomLeftCorner();
     BarBottomRightCorner();
+    Launcher();
 
     <For each={createBinding(app, 'monitors')}>
       {(monitor: Gdk.Monitor) => (

@@ -1,0 +1,32 @@
+.launcher .content {
+  background-color: var(--0);
+  border: 1px solid var(--200);
+  border-radius: 16px;
+  min-width: 750px;
+  min-height: 450px;
+}
+
+.launcher .search { padding: 0 28px; }
+.launcher .search entry { padding: 16px 0; }
+.launcher .search entry text { color: var(--900); }
+.launcher .search entry text placeholder { color: var(--300); }
+
+.launcher .item {
+  border-radius: 12px;
+  margin: 0 18px;
+  padding: 10px 30px;
+  color: var(--900);
+  background-color: var(--0);
+  filter: grayscale(100%)
+    brightness(1.0)
+    contrast(1.125)
+    brightness(1.125);
+}
+
+.launcher .item:focus {
+  color: var(--0);
+  background-color: var(--900);
+}
+
+.launcher .item image { -gtk-icon-shadow: 0 0 2px var(--700); }
+.launcher .item:focus image { -gtk-icon-shadow: 0 0 2px Var(--200); }
