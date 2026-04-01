@@ -22,7 +22,7 @@ import Launcher, { toggleWindow } from '@ui/launcher/index';
 import { match } from 'ts-pattern';
 
 app.start({
-  css: 'css/main.css',
+  css: `${SRC}/style.css`,
   icons: `${SRC}/icons`,
   instanceName: 'desktop',
   requestHandler(args, res) {

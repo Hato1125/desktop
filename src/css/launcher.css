@@ -17,8 +17,8 @@
   padding: 10px 30px;
   color: var(--900);
   background-color: var(--0);
-  filter: grayscale(100%)
-    brightness(1.0)
+  filter: grayscale(99.99%)
+    brightness(1.001)
     contrast(1.125)
     brightness(1.125);
 }
