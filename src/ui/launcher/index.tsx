@@ -54,7 +54,9 @@ const Item = ({ app }: { app: AstalApps.Application }) => (
     <box spacing={16}>
       <image
         cssClasses={['symbol-m1']}
-        iconName={app.iconName}
+        {...(app.iconName.startsWith('/')
+          ? { file: app.iconName }
+          : { iconName: app.iconName })}
       />
       <label
         cssClasses={['label-body-xl']}
