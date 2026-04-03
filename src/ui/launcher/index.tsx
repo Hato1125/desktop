@@ -133,6 +133,7 @@ export default () => (
     exclusivity={Astal.Exclusivity.IGNORE}
     onNotifyVisible={({ visible }) => {
       if (visible) {
+        apps.reload();
         entry.set_text('');
         entry.grab_focus();
       }
