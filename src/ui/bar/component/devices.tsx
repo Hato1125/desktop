@@ -11,13 +11,18 @@ const devices = createBinding(upower, 'devices').as(
   )
 );
 
-const Battery = ({ device }: { device: AstalBattery.Device }) => {
-  const icons: Map<AstalBattery.Type, string> = new Map([
-    [AstalBattery.Type.KEYBOARD, 'keyboard'],
-    [AstalBattery.Type.MOUSE, 'mouse'],
-    [AstalBattery.Type.HEADSET, 'headphones'],
-  ]);
+const icons: Map<AstalBattery.Type, string> = new Map([
+  [AstalBattery.Type.MOUSE, 'mouse'],
+  [AstalBattery.Type.KEYBOARD, 'keyboard'],
+  [AstalBattery.Type.PHONE, 'mobile'],
+  [AstalBattery.Type.SPEAKERS, 'speaker'],
+  [AstalBattery.Type.GAMING_INPUT, 'stadia_controller'],
+  [AstalBattery.Type.PEN, 'edit'],
+  [AstalBattery.Type.HEADSET, 'headphones'],
+  [AstalBattery.Type.BLUETOOTH_GENERIC, 'bluetooth'],
+]);
 
+const Battery = ({ device }: { device: AstalBattery.Device }) => {
   if (device.deviceType === AstalBattery.Type.HEADPHONES) {
     return (
       <box>
