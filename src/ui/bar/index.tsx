@@ -2,6 +2,7 @@ import Gtk from 'gi://Gtk?version=4.0';
 import Astal from 'gi://Astal?version=4.0';
 
 import Battery from './component/battery';
+import Devices from './component/devices';
 import Distro from './component/distro';
 import Client from './component/client';
 import Vpn from './component/vpn';
@@ -33,6 +34,7 @@ export default () => (
       <box $type='end' spacing={16}>
         <Vpn />
         <Network />
+        <Devices />
         <Battery />
         <DateTime />
       </box>

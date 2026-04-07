@@ -33,3 +33,17 @@
 
 .bar .battery .level trough block.filled { background-color: var(--900); }
 .bar .battery .level trough block.empty { background-color: var(--500); }
+
+
+.bar .devices .level {
+  border-radius: 50rem;
+  min-width: 34px;
+  min-height: 15px;
+}
+
+.bar .devices .level trough block.filled { background-color: var(--900); }
+.bar .devices .level trough block.empty { background-color: var(--500); }
+
+.bar .devices .battery {
+  color: var(--0);
+}
