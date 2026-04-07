@@ -24,3 +24,12 @@
   color: var(--0);
   font-weight: bold;
 }
+
+.bar .battery .level {
+  border-radius: 50rem;
+  min-width: 22px;
+  min-height: 13px;
+}
+
+.bar .battery .level trough block.filled { background-color: var(--900); }
+.bar .battery .level trough block.empty { background-color: var(--500); }

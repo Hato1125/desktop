@@ -22,26 +22,15 @@ const update = () => {
 battery.connect('notify::percentage', update);
 battery.connect('notify::charging', update);
 
-const Bar = () => {
-  return (
-    <box
-      css={bt.as((state) => {
-        return `
-          border-radius: 50rem;
-          min-width: 27px;
-          min-height: 15px;
-          background-image: linear-gradient(
-            to right,
-            white 0%,
-            white ${state.percentage}%,
-            rgba(255,255,255,0.6) ${state.percentage}%,
-            rgba(255,255,255,0.6) 100%
-          );
-        `;
-      })}
-    ></box>
-  );
-}
+const Bar = () => (
+  <levelbar
+    class='level'
+    minValue={0}
+    maxValue={100}
+    value={bt.as((state) => state.percentage)}
+    overflow={Gtk.Overflow.HIDDEN}
+  />
+);
 
 const Parcentage = () => (
   <label
@@ -65,7 +54,7 @@ const ChargingIcon = () => (
 );
 
 const State = () => (
-  <box class='battery' halign={Gtk.Align.CENTER}>
+  <box halign={Gtk.Align.CENTER}>
     <ChargingIcon />
     <Parcentage />
   </box>
@@ -74,8 +63,8 @@ const State = () => (
 const Battery = () => {
   const overlay = new Gtk.Overlay();
 
-  const bar = Bar() as Gtk.Box;
-  const state = State() as Gtk.Box;
+  const bar = <Bar/> as Gtk.Box;
+  const state = <State/> as Gtk.Box;
 
   bar.valign = Gtk.Align.CENTER;
 
@@ -85,7 +74,7 @@ const Battery = () => {
 }
 
 export default () => (
-  <box visible={bt.as((state) => state.present)}>
+  <box class='battery' visible={bt.as((state) => state.present)}>
     <Battery />
   </box>
 );
