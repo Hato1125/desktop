@@ -32,6 +32,7 @@
 }
 
 .bar .battery .level trough block.filled { background-color: var(--900); }
+.bar .battery .level.warn trough block.filled { background-color: var(--red); }
 .bar .battery .level trough block.empty { background-color: var(--500); }
 
 .bar .battery {
@@ -46,6 +47,7 @@
 }
 
 .bar .devices .level trough block.filled { background-color: var(--900); }
+.bar .devices .level.warn trough block.filled { background-color: var(--red); }
 .bar .devices .level trough block.empty { background-color: var(--500); }
 
 .bar .devices .battery {

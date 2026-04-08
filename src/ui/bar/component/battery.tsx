@@ -8,7 +8,13 @@ const battery = AstalBattery.get_default();
 export default () => (
   <overlay class='battery' visible={createBinding(battery, 'isPresent')}>
     <levelbar
-      class='level'
+      cssClasses={
+        createBinding(battery, 'percentage').as(p => {
+          return p <= 0.2
+            ? ['level', 'warn']
+            : ['level']
+        })
+      }
       minValue={0}
       maxValue={1}
       value={createBinding(battery, 'percentage')}

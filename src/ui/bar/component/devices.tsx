@@ -2,6 +2,7 @@ import Gtk from 'gi://Gtk?version=4.0';
 import AstalBattery from 'gi://AstalBattery?version=0.1';
 
 import { createBinding, For } from 'ags';
+import Libxml220 from 'gi://libxml2';
 
 const icons: Map<AstalBattery.Type, string> = new Map([
   [AstalBattery.Type.MOUSE, 'mouse'],
@@ -42,6 +43,13 @@ const Battery = ({ device }: { device: AstalBattery.Device }) => {
       <overlay class='battery'>
         <levelbar
           class='level'
+          cssClasses={
+            createBinding(device, 'percentage').as(p => {
+              return p <= 0.2
+                ? ['level', 'warn']
+                : ['level']
+            })
+          }
           minValue={0}
           maxValue={1}
           value={createBinding(device, 'percentage')}
