@@ -27,13 +27,17 @@
 
 .bar .battery .level {
   border-radius: 50rem;
-  min-width: 22px;
-  min-height: 13px;
+  min-width: 27px;
+  min-height: 15px;
 }
 
 .bar .battery .level trough block.filled { background-color: var(--900); }
 .bar .battery .level trough block.empty { background-color: var(--500); }
 
+.bar .battery {
+  color: var(--0);
+  margin-top: -1px;
+}
 
 .bar .devices .level {
   border-radius: 50rem;

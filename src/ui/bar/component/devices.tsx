@@ -3,14 +3,6 @@ import AstalBattery from 'gi://AstalBattery?version=0.1';
 
 import { createBinding, For } from 'ags';
 
-const upower = AstalBattery.UPower.new();
-
-const devices = createBinding(upower, 'devices').as(
-  (all: AstalBattery.Device[]) => all.filter(d =>
-    d.deviceType !== AstalBattery.Type.LINE_POWER && d.isPresent
-  )
-);
-
 const icons: Map<AstalBattery.Type, string> = new Map([
   [AstalBattery.Type.MOUSE, 'mouse'],
   [AstalBattery.Type.KEYBOARD, 'keyboard'],
@@ -21,6 +13,15 @@ const icons: Map<AstalBattery.Type, string> = new Map([
   [AstalBattery.Type.HEADSET, 'headphones'],
   [AstalBattery.Type.BLUETOOTH_GENERIC, 'bluetooth'],
 ]);
+
+const devices = createBinding(AstalBattery.UPower.new(), 'devices').as(
+  (all) => (all as AstalBattery.Device[]).filter(d =>
+    d.deviceType !== AstalBattery.Type.LINE_POWER
+    && d.isPresent
+    && d.isBattery
+    && icons.has(d.deviceType)
+  )
+);
 
 const Battery = ({ device }: { device: AstalBattery.Device }) => {
   if (device.deviceType === AstalBattery.Type.HEADPHONES) {
@@ -38,7 +39,6 @@ const Battery = ({ device }: { device: AstalBattery.Device }) => {
       valign={Gtk.Align.CENTER}
       tooltipText={device.model}
     >
-
       <overlay class='battery'>
         <levelbar
           class='level'
@@ -62,9 +62,8 @@ const Battery = ({ device }: { device: AstalBattery.Device }) => {
             label={icons.get(device.deviceType)}
           />
           <label
-            $type='overlay'
             class='label-body-m'
-            label={createBinding(device, 'percentage').as(p => (p * 100).toString())}
+            label={createBinding(device, 'percentage').as(p => (Math.floor(p * 100)).toString())}
           />
         </box>
       </overlay>
