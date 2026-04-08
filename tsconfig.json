@@ -13,5 +13,37 @@
       "@ui/*": ["src/ui/*"],
       "@service/*": ["src/service/*"],
     }
-  }
+  },
+  "include": [
+    "src/**/*",
+    "@girs/astal-4.0.d.ts",
+    "@girs/astalapps-0.1.d.ts",
+    "@girs/astalauth-0.1.d.ts",
+    "@girs/astalbattery-0.1.d.ts",
+    "@girs/astalbluetooth-0.1.d.ts",
+    "@girs/astalcava-0.1.d.ts",
+    "@girs/astalgreet-0.1.d.ts",
+    "@girs/astalhyprland-0.1.d.ts",
+    "@girs/astalio-0.1.d.ts",
+    "@girs/astalmpris-0.1.d.ts",
+    "@girs/astalnetwork-0.1.d.ts",
+    "@girs/astalnotifd-0.1.d.ts",
+    "@girs/astalpowerprofiles-0.1.d.ts",
+    "@girs/astalriver-0.1.d.ts",
+    "@girs/astaltray-0.1.d.ts",
+    "@girs/astalwp-0.1.d.ts",
+    "@girs/gtk-4.0.d.ts",
+    "@girs/gdk-4.0.d.ts",
+    "@girs/gdkwayland-4.0.d.ts",
+    "@girs/gdkx11-4.0.d.ts",
+    "@girs/gdkpixbuf-2.0.d.ts",
+    "@girs/gtk4layershell-1.0.d.ts",
+    "@girs/gtk4sessionlock-1.0.d.ts",
+    "@girs/glib-2.0.d.ts",
+    "@girs/gobject-2.0.d.ts",
+    "@girs/gio-2.0.d.ts",
+    "@girs/pango-1.0.d.ts",
+    "@girs/nm-1.0.d.ts",
+    "@girs/libxml2-2.0.d.ts"
+  ]
 }
