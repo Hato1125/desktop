@@ -4,52 +4,56 @@
   min-height: 37px;
   min-width: 37px;
   padding: 0 28px;
-}
 
-.bar .vpn .symbols {
-  margin-top: -3px;
-}
+  .vpn {
+    .symbols {
+      margin-top: -3px;
+    }
 
-.bar .vpn .country {
-  margin-top: 6px;
-  font-weight: bold;
-}
+    .country {
+      margin-top: 6px;
+      font-weight: bold;
+    }
+  }
 
-.bar .battery .symbols {
-  color: var(--0);
-  font-weight: bold;
-}
+  .battery {
+    color: var(--0);
+    margin-top: -1px;
 
-.bar .battery .percentage {
-  color: var(--0);
-  font-weight: bold;
-}
+    .symbols {
+      color: var(--0);
+      font-weight: bold;
+    }
 
-.bar .battery .level {
-  border-radius: 50rem;
-  min-width: 27px;
-  min-height: 15px;
-}
+    .percentage {
+      color: var(--0);
+      font-weight: bold;
+    }
 
-.bar .battery .level trough block.filled { background-color: var(--900); }
-.bar .battery .level.warn trough block.filled { background-color: var(--red); }
-.bar .battery .level trough block.empty { background-color: var(--500); }
+    .level {
+      border-radius: 50rem;
+      min-width: 27px;
+      min-height: 15px;
 
-.bar .battery {
-  color: var(--0);
-  margin-top: -1px;
-}
+      trough block.filled { background-color: var(--900); }
+      &.warn trough block.filled { background-color: var(--red); }
+      trough block.empty { background-color: var(--500); }
+    }
+  }
 
-.bar .devices .level {
-  border-radius: 50rem;
-  min-width: 34px;
-  min-height: 15px;
-}
+  .devices {
+    .level {
+      border-radius: 50rem;
+      min-width: 34px;
+      min-height: 15px;
 
-.bar .devices .level trough block.filled { background-color: var(--900); }
-.bar .devices .level.warn trough block.filled { background-color: var(--red); }
-.bar .devices .level trough block.empty { background-color: var(--500); }
+      trough block.filled { background-color: var(--900); }
+      &.warn trough block.filled { background-color: var(--red); }
+      trough block.empty { background-color: var(--500); }
+    }
 
-.bar .devices .battery {
-  color: var(--0);
+    .battery {
+      color: var(--0);
+    }
+  }
 }

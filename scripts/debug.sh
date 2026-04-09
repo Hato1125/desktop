@@ -2,7 +2,7 @@
 
 mkdir -p dist/debug
 cp -r src/icons dist/debug/
-bunx lightningcss --bundle src/css/main.css -o dist/debug/style.css
+bunx lightningcss --bundle --targets 'chrome 112' src/css/main.css -o dist/debug/style.css
 bunx esbuild src/main.tsx \
   --bundle \
   --outfile=dist/debug/main.js \

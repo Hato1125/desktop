@@ -2,7 +2,7 @@
 
 mkdir -p dist/release
 cp -r src/icons dist/release/
-bunx lightningcss --bundle --minify src/css/main.css -o dist/release/style.css
+bunx lightningcss --bundle --minify --targets 'chrome 112' src/css/main.css -o dist/release/style.css
 bunx esbuild src/main.tsx \
   --bundle \
   --outfile=dist/release/main.js \

@@ -23,11 +23,11 @@ tooltip {
   border: 1px solid var(--200);
   padding: 4px 12px;
   border-radius: 50rem;
-}
 
-tooltip label {
-  font-size: 11px;
-  font-weight: normal;
+  label {
+    font-size: 11px;
+    font-weight: normal;
+  }
 }
 
 popover {
