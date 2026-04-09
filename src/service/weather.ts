@@ -7,13 +7,6 @@ import {
 
 import fetch from 'gnim/fetch';
 
-interface WeatherData {
-  temperature: number;
-  weatherCode: number;
-  humidity: number;
-  windSpeed: number;
-}
-
 const weatherIcons: Map<number, string> = new Map([
   [0, 'clear_day'],
   [1, 'clear_day'],
