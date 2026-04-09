@@ -69,7 +69,7 @@ export default () => {
               />
             </box>
           </button>
-          <button onClicked={() => reboot()}>
+          <button onClicked={() => suspend()}>
             <box spacing={8}>
               <label
                 cssClasses={[
