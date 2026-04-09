@@ -8,6 +8,7 @@ import Client from './component/client';
 import Vpn from './component/vpn';
 import Network from './component/network';
 import DateTime from './component/datetime';
+import Weather from './component/weather';
 
 export default () => (
   <window
@@ -33,6 +34,7 @@ export default () => (
       </box>
       <box $type='end' spacing={16}>
         <Vpn />
+        <Weather />
         <Network />
         <Devices />
         <Battery />
