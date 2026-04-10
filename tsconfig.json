@@ -44,6 +44,7 @@
     "@girs/gio-2.0.d.ts",
     "@girs/pango-1.0.d.ts",
     "@girs/nm-1.0.d.ts",
-    "@girs/libxml2-2.0.d.ts"
+    "@girs/libxml2-2.0.d.ts",
+    "/usr/share/ags/js/node_modules/gnim/dist/**/*.ts"
   ]
 }
