@@ -32,12 +32,12 @@ export default () => (
         cssClasses={[
           'symbols',
           'filled',
-          'symbol-xs3',
+          'symbols-sm',
         ]}
         label='bolt'
       />
       <label
-        class='label-body-m'
+        class='text-sm'
         label={createBinding(battery, 'percentage').as(p => (Math.floor(p * 100)).toString())}
       />
     </box>

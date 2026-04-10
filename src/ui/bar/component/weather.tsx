@@ -8,7 +8,7 @@ export default () => (
     <label
       cssClasses={[
         'symbols',
-        'symbol-s2',
+        'symbols-lg',
       ]}
       label={createBinding(weather, 'icon')}
     />
@@ -16,7 +16,7 @@ export default () => (
     <label
       cssClasses={[
         'label',
-        'label-body-l',
+        'text-base',
       ]}
       label={createBinding(weather, 'temperature').as(t => `${t}°C`)}
     />

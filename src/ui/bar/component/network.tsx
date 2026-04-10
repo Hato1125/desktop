@@ -5,7 +5,7 @@ const network = AstalNetwork.get_default();
 
 const Wired = () => (
   <label
-    cssClasses={['symbols', 'symbol-s2']}
+    cssClasses={['symbols', 'symbols-lg']}
     label={
       network.wired.state === AstalNetwork.DeviceState.ACTIVATED
         ? 'automation'
@@ -16,7 +16,7 @@ const Wired = () => (
 
 const WiFi = () => (
   <label
-    cssClasses={['symbols', 'symbol-s3']}
+    cssClasses={['symbols', 'symbols-xl']}
     label={
       network.wifi.state !== AstalNetwork.DeviceState.ACTIVATED
         ? 'wifi_off'

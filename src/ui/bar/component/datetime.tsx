@@ -6,8 +6,8 @@ const now = createPoll(new GLib.DateTime(), 1000, () => GLib.DateTime.new_now_lo
 
 export default () => (
   <box orientation={Gtk.Orientation.HORIZONTAL} spacing={8}>
-    <label cssClasses={['label', 'label-body-l']} halign={Gtk.Align.END} label={now.as(d => d.format('%p')!)} />
-    <label cssClasses={['label', 'label-body-l']} halign={Gtk.Align.END} label={now.as(d => d.format('%-I:%M')!)} />
-    <label cssClasses={['label', 'label-body-l']} halign={Gtk.Align.END} label={now.as(d => d.format('%m/%d')!)} />
+    <label cssClasses={['label', 'text-base']} halign={Gtk.Align.END} label={now.as(d => d.format('%p')!)} />
+    <label cssClasses={['label', 'text-base']} halign={Gtk.Align.END} label={now.as(d => d.format('%-I:%M')!)} />
+    <label cssClasses={['label', 'text-base']} halign={Gtk.Align.END} label={now.as(d => d.format('%m/%d')!)} />
   </box>
 );

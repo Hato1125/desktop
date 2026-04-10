@@ -65,12 +65,12 @@ const Battery = ({ device }: { device: AstalBattery.Device }) => {
           <label
             cssClasses={[
               'symbols',
-              'symbol-s1',
+              'symbols-base',
             ]}
             label={icons.get(device.deviceType)}
           />
           <label
-            class='label-body-m'
+            class='text-sm'
             label={createBinding(device, 'percentage').as(p => (Math.floor(p * 100)).toString())}
           />
         </box>

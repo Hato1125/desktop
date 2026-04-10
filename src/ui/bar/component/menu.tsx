@@ -28,7 +28,7 @@ export default () => {
   return (
     <box>
       <button onClicked={() => popupvar.popup()}>
-        <image class='symbol-s2' iconName={`${distro}-symbolic`} />
+        <image class='symbols-lg' iconName={`${distro}-symbolic`} />
       </button>
 
       <Gtk.Popover $={(ref) => (popupvar = ref)} hasArrow={false}>
@@ -38,14 +38,14 @@ export default () => {
               <label
                 cssClasses={[
                   'symbols',
-                  'symbol-s3',
+                  'symbols-xl',
                 ]}
                 label='power_off'
               />
               <label
                 cssClasses={[
                   'label',
-                  'label-body-l',
+                  'text-base',
                 ]}
                 label='Shutdown'
               />
@@ -56,14 +56,14 @@ export default () => {
               <label
                 cssClasses={[
                   'symbols',
-                  'symbol-s3',
+                  'symbols-xl',
                 ]}
                 label='restart_alt'
               />
               <label
                 cssClasses={[
                   'label',
-                  'label-body-l',
+                  'text-base',
                 ]}
                 label='Restart'
               />
@@ -74,14 +74,14 @@ export default () => {
               <label
                 cssClasses={[
                   'symbols',
-                  'symbol-s3',
+                  'symbols-xl',
                 ]}
                 label='bedtime'
               />
               <label
                 cssClasses={[
                   'label',
-                  'label-body-l',
+                  'text-base',
                 ]}
                 label='Sleep'
               />

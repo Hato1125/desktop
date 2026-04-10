@@ -1,7 +1,7 @@
 .launcher {
   .content {
-    background-color: var(--0);
-    border: 1px solid var(--200);
+    background-color: var(--bg);
+    border: 1px solid var(--border);
     border-radius: 16px;
     min-width: 750px;
     min-height: 450px;
@@ -14,9 +14,9 @@
       padding: 16px 0;
 
       text {
-        color: var(--900);
+        color: var(--fg);
 
-        placeholder { color: var(--300); }
+        placeholder { color: var(--border-muted); }
       }
     }
   }
@@ -25,20 +25,20 @@
     border-radius: 12px;
     margin: 0 18px;
     padding: 10px 30px;
-    color: var(--900);
-    background-color: var(--0);
+    color: var(--fg);
+    background-color: var(--bg);
     filter: grayscale(99.99%)
       brightness(1.001)
       contrast(1.125)
       brightness(1.125);
 
-    image { -gtk-icon-shadow: 0 0 2px var(--700); }
+    image { -gtk-icon-shadow: 0 0 2px var(--fg-subtle); }
 
     &:focus {
-      color: var(--0);
-      background-color: var(--900);
+      color: var(--fg-inverse);
+      background-color: var(--bg-inverse);
 
-      image { -gtk-icon-shadow: 0 0 2px var(--200); }
+      image { -gtk-icon-shadow: 0 0 2px var(--border); }
     }
   }
 }

@@ -1,26 +1,72 @@
 :root {
-  --0: #000000;
-  --50: #0a0a0a;
-  --100: #171717;
-  --200: #262626;
-  --300: #373737;
-  --400: #525252;
-  --500: #8a8a8a;
-  --600: #a3a3a3;
-  --700: #d4d4d4;
-  --800: #e5e5e5;
-  --900: #f5f5f5;
-  --950: #fafafa;
+  --dark-0: #000000;
+  --dark-50: #0a0a0a;
+  --dark-100: #171717;
+  --dark-200: #262626;
+  --dark-300: #373737;
+  --dark-400: #525252;
+  --dark-500: #8a8a8a;
+  --dark-600: #a3a3a3;
+  --dark-700: #d4d4d4;
+  --dark-800: #e5e5e5;
+  --dark-900: #f5f5f5;
+  --dark-950: #fafafa;
+
+  --light-0: #ffffff;
+  --light-50: #fafafa;
+  --light-100: #f5f5f5;
+  --light-200: #e5e5e5;
+  --light-300: #d4d4d4;
+  --light-400: #a3a3a3;
+  --light-500: #8a8a8a;
+  --light-600: #525252;
+  --light-700: #373737;
+  --light-800: #262626;
+  --light-900: #171717;
+  --light-950: #0a0a0a;
 
   --red: #ff3434;
+
+  --bg: var(--dark-0);
+  --bg-subtle: var(--dark-50);
+  --bg-muted: var(--dark-100);
+  --border: var(--dark-200);
+  --border-muted: var(--dark-300);
+  --fg-muted: var(--dark-500);
+  --fg-subtle: var(--dark-600);
+  --fg: var(--dark-900);
+  --fg-emphasis: var(--dark-950);
+  --bg-inverse: var(--dark-900);
+  --fg-inverse: var(--dark-0);
+  --danger: var(--red);
+
+  --font-xs: 8px;
+  --font-sm: 9.8px;
+  --font-base: 12px;
+  --font-lg: 14.7px;
+  --font-xl: 18px;
+  --font-2xl: 22px;
+  --font-3xl: 27px;
+  --font-4xl: 33px;
+  --font-5xl: 40.5px;
+  --font-6xl: 49.7px;
+  --font-7xl: 60.8px;
+  --font-8xl: 74.5px;
 }
 
-* { all: unset; }
+* {
+  all: unset;
+}
+
+label {
+  font-family: 'Lexend';
+  font-weight: 600;
+}
 
 tooltip {
-  color: var(--900);
-  background-color: var(--0);
-  border: 1px solid var(--200);
+  color: var(--fg);
+  background-color: var(--bg);
+  border: 1px solid var(--border);
   padding: 4px 12px;
   border-radius: 50rem;
 
@@ -31,60 +77,53 @@ tooltip {
 }
 
 popover {
-  color: var(--900);
-  background-color: var(--0);
-  border: 1px solid var(--200);
+  color: var(--fg);
+  background-color: var(--bg);
+  border: 1px solid var(--border);
   border-radius: 16px;
   padding: 12px 12px;
 }
 
-.label {
-  font-family: 'Lexend';
-  color: var(--900);
-}
-
-.nerd {
-  font-family: "Symbols Nerd Font";
-  color: var(--900);
-}
-
 .symbols {
-  font-family: "Material Symbols Outlined";
-  color: var(--900);
+  font-family: "Material Symbols Rounded";
+  font-weight: 600;
+  color: var(--fg);
+
+  &.filled {
+    font-variation-settings: 'FILL' 1;
+  }
+
+  &.outlined {
+    font-family: "Material Symbols Outlined";
+  }
+
+  &.rounded {
+    font-family: "Material Symbols Rounded";
+  }
 }
 
-.filled {
-  font-variation-settings: 'FILL' 1;
-}
+.symbols-xs { font-size: var(--font-xs); -gtk-icon-size: var(--font-xs); }
+.symbols-sm { font-size: var(--font-sm); -gtk-icon-size: var(--font-sm); }
+.symbols-base { font-size: var(--font-base); -gtk-icon-size: var(--font-base); }
+.symbols-lg { font-size: var(--font-lg); -gtk-icon-size: var(--font-lg); }
+.symbols-xl { font-size: var(--font-xl); -gtk-icon-size: var(--font-xl); }
+.symbols-2xl { font-size: var(--font-2xl); -gtk-icon-size: var(--font-2xl); }
+.symbols-3xl { font-size: var(--font-3xl); -gtk-icon-size: var(--font-3xl); }
+.symbols-4xl { font-size: var(--font-4xl); -gtk-icon-size: var(--font-4xl); }
+.symbols-5xl { font-size: var(--font-5xl); -gtk-icon-size: var(--font-5xl); }
+.symbols-6xl { font-size: var(--font-6xl); -gtk-icon-size: var(--font-6xl); }
+.symbols-7xl { font-size: var(--font-7xl); -gtk-icon-size: var(--font-7xl); }
+.symbols-8xl { font-size: var(--font-8xl); -gtk-icon-size: var(--font-8xl); }
 
-.symbol-xs1 { font-size: 6px; -gtk-icon-size: 6px; font-weight: 600; }
-.symbol-xs2 { font-size: 8px; -gtk-icon-size: 8px; font-weight: 600; }
-.symbol-xs3 { font-size: 10px; -gtk-icon-size: 10px; font-weight: 600; }
-
-.symbol-s1 { font-size: 12px; -gtk-icon-size: 12px; font-weight: 600; }
-.symbol-s2 { font-size: 14px; -gtk-icon-size: 14px; font-weight: 600; }
-.symbol-s3 { font-size: 16px; -gtk-icon-size: 16px; font-weight: 600; }
-
-.symbol-m1 { font-size: 24px; -gtk-icon-size: 24px; font-weight: 600; }
-.symbol-m2 { font-size: 28px; -gtk-icon-size: 28px; font-weight: 600; }
-.symbol-m3 { font-size: 32px; -gtk-icon-size: 32px; font-weight: 600; }
-.symbol-m4 { font-size: 36px; -gtk-icon-size: 36px; font-weight: 600; }
-
-.symbol-x1 { font-size: 52px; -gtk-icon-size: 52px; font-weight: 600; }
-.symbol-x2 { font-size: 68px; -gtk-icon-size: 68px; font-weight: 600; }
-.symbol-x3 { font-size: 84px; -gtk-icon-size: 84px; font-weight: 600; }
-
-.label-display-s { font-size: 32px; font-weight: 800; }
-.label-display-m { font-size: 37px; font-weight: 800; }
-.label-display-l { font-size: 42px; font-weight: 800; }
-.label-display-xl { font-size: 48px; font-weight: 800; }
-
-.label-heading-s { font-size: 17px; font-weight: 700; }
-.label-heading-m { font-size: 21px; font-weight: 700; }
-.label-heading-l { font-size: 25px; font-weight: 700; }
-.label-heading-xl { font-size: 30px; font-weight: 700; }
-
-.label-body-s { font-size: 7px; font-weight: 600; }
-.label-body-m { font-size: 9px; font-weight: 600; }
-.label-body-l { font-size: 11px; font-weight: 600; }
-.label-body-xl { font-size: 14px; font-weight: 600; }
+.text-xs { font-size: var(--font-xs); }
+.text-sm { font-size: var(--font-sm); }
+.text-base { font-size: var(--font-base); }
+.text-lg { font-size: var(--font-lg); }
+.text-xl { font-size: var(--font-xl); }
+.text-2xl { font-size: var(--font-2xl); }
+.text-3xl { font-size: var(--font-3xl); }
+.text-4xl { font-size: var(--font-4xl); }
+.text-5xl { font-size: var(--font-5xl); }
+.text-6xl { font-size: var(--font-6xl); }
+.text-7xl { font-size: var(--font-7xl); }
+.text-8xl { font-size: var(--font-8xl); }

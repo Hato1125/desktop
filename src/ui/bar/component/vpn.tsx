@@ -13,14 +13,14 @@ export default () => (
       <label
         cssClasses={[
           'symbols',
-          'symbol-s1'
+          'symbols-base'
         ]}
         label='vpn_key'
       />
       <label
         cssClasses={[
           'country',
-          'label-body-s'
+          'text-xs'
         ]}
         label={createBinding(vpn, 'country')}
       />

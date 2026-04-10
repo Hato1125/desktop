@@ -33,7 +33,7 @@ export default () => {
         <label
           cssClasses={[
             'label',
-            'label-body-l'
+            'text-base'
           ]}
           label={displayClientName(client)}
           maxWidthChars={65}

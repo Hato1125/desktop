@@ -33,14 +33,14 @@ const SearchBox = () => (
     <label
       cssClasses={[
         'symbols',
-        'symbol-m1',
+        'symbols-3xl',
       ]}
       label='search'
     />
     <entry
       $={(ref) => (entry = ref)}
       cssClasses={[
-        'label-heading-s',
+        'text-xl',
       ]}
       hexpand={true}
       placeholderText='Search'
@@ -53,13 +53,13 @@ const Item = ({ app }: { app: AstalApps.Application }) => (
   <button class='item' onClicked={() => launch(app)}>
     <box spacing={16}>
       <image
-        cssClasses={['symbol-m1']}
+        cssClasses={['symbols-3xl']}
         {...(app.iconName.startsWith('/')
           ? { file: app.iconName }
           : { iconName: app.iconName })}
       />
       <label
-        cssClasses={['label-body-xl']}
+        cssClasses={['text-lg']}
         label={app.name}
       />
     </box>
