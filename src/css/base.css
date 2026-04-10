@@ -84,6 +84,10 @@ popover {
   padding: 12px 12px;
 }
 
+.tabular {
+  font-feature-settings: 'tnum' 1;
+}
+
 .symbols {
   font-family: "Material Symbols Rounded";
   font-weight: 600;

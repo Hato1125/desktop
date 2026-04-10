@@ -37,7 +37,10 @@ export default () => (
         label='bolt'
       />
       <label
-        class='text-sm'
+        cssClasses={[
+          'text-sm',
+          'tabular',
+        ]}
         label={createBinding(battery, 'percentage').as(p => (Math.floor(p * 100)).toString())}
       />
     </box>

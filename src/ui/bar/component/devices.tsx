@@ -70,7 +70,10 @@ const Battery = ({ device }: { device: AstalBattery.Device }) => {
             label={icons.get(device.deviceType)}
           />
           <label
-            class='text-sm'
+            cssClasses={[
+              'text-sm',
+              'tabular',
+            ]}
             label={createBinding(device, 'percentage').as(p => (Math.floor(p * 100)).toString())}
           />
         </box>
