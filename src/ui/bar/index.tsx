@@ -33,8 +33,8 @@ export default () => (
       <box $type='center' spacing={16}>
       </box>
       <box $type='end' spacing={16}>
-        <Vpn />
         <Weather />
+        <Vpn />
         <Network />
         <Devices />
         <Battery />
