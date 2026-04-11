@@ -50,10 +50,10 @@ const Battery = ({ device }: { device: AstalBattery.Device }) => {
         cssClasses={[
           'symbols',
           'symbols-xl',
-          'text-lg'
         ]}
         label={icons.get(device.deviceType)}
       />
+      <overlay>
         <levelbar
           class='level'
           cssClasses={
@@ -67,8 +67,22 @@ const Battery = ({ device }: { device: AstalBattery.Device }) => {
           maxValue={1}
           value={createBinding(device, 'percentage')}
           valign={Gtk.Align.CENTER}
-        overflow={Gtk.Overflow.HIDDEN}
-      />
+          overflow={Gtk.Overflow.HIDDEN}
+        />
+        <label
+          $type='overlay'
+          visible={createBinding(device, 'charging')}
+          halign={Gtk.Align.CENTER}
+          valign={Gtk.Align.CENTER}
+          cssClasses={[
+            'charging',
+            'filled',
+            'symbols',
+            'symbols-base',
+          ]}
+          label='bolt'
+        />
+      </overlay>
     </box>
   );
 }

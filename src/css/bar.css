@@ -62,5 +62,9 @@
     .battery {
       color: var(--bg-inverse);
     }
+
+    .charging {
+      text-shadow: 0 0 3px var(--bg-muted), 0 0 1px var(--bg-muted);
+    }
   }
 }
