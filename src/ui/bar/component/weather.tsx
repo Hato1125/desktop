@@ -4,21 +4,17 @@ import { createBinding } from 'ags';
 const weather = WeatherService.get_default();
 
 export default () => (
-  <box spacing={2}>
+  <box
+    spacing={6}
+    tooltipText={createBinding(weather, 'temperature').as(t => `${t}°C`)}
+  >
     <label
       cssClasses={[
+        'filled',
         'symbols',
         'symbols-lg',
       ]}
       label={createBinding(weather, 'icon')}
-    />
-    <label label='・'/>
-    <label
-      cssClasses={[
-        'label',
-        'text-base',
-      ]}
-      label={createBinding(weather, 'temperature').as(t => `${t}°C`)}
     />
   </box>
 );

@@ -13,7 +13,7 @@ export default () => (
         'tabular',
       ]}
       halign={Gtk.Align.END}
-      label={now.as(d => d.format('%p')!)}
+      label={now.as(d => d.format('%-m/%-d')!)}
     />
     <label
       cssClasses={[
@@ -31,7 +31,7 @@ export default () => (
         'tabular',
       ]}
       halign={Gtk.Align.END}
-      label={now.as(d => d.format('%m/%d')!)}
+      label={now.as(d => d.format('%p')!)}
     />
   </box>
 );

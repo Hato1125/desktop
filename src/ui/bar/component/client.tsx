@@ -28,18 +28,20 @@ export default () => {
   const focused = createBinding(AstalHyprland.get_default(), 'focusedClient');
 
   return (
-    <With value={focused}>
-      {(client) => client && (
-        <label
-          cssClasses={[
-            'label',
-            'text-base'
-          ]}
-          label={displayClientName(client)}
-          maxWidthChars={65}
-          ellipsize={Pango.EllipsizeMode.END}
-        />
-      )}
-    </With>
+    <box class='client'>
+      <With value={focused}>
+        {(client) => client && (
+          <label
+            cssClasses={[
+              'label',
+              'text-base'
+            ]}
+            label={displayClientName(client)}
+            maxWidthChars={65}
+            ellipsize={Pango.EllipsizeMode.END}
+          />
+        )}
+      </With>
+    </box>
   );
 }

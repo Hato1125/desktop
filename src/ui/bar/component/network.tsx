@@ -3,8 +3,9 @@ import { createBinding, With } from 'ags';
 
 const network = AstalNetwork.get_default();
 
-const Wired = () => (
+const Wired = ({ wired }: { wired: AstalNetwork.Wired }) => (
   <label
+    tooltipMarkup={createBinding(wired, 'device').as(d => d.perm_hw_address)}
     cssClasses={['symbols', 'symbols-lg']}
     label={
       network.wired.state === AstalNetwork.DeviceState.ACTIVATED
@@ -14,8 +15,9 @@ const Wired = () => (
   />
 );
 
-const WiFi = () => (
+const WiFi = ({ wifi }: { wifi: AstalNetwork.Wifi}) => (
   <label
+    tooltipMarkup={createBinding(wifi, 'ssid')}
     cssClasses={['symbols', 'symbols-xl']}
     label={
       network.wifi.state !== AstalNetwork.DeviceState.ACTIVATED
@@ -33,8 +35,8 @@ export default () => (
     <With value={createBinding(network, 'primary')}>
       {(primary) => {
         switch (primary) {
-          case AstalNetwork.Primary.WIRED: return <Wired />
-          case AstalNetwork.Primary.WIFI: return <WiFi />
+          case AstalNetwork.Primary.WIRED: return <Wired wired={network.wired} />
+          case AstalNetwork.Primary.WIFI: return <WiFi wifi={network.wifi} />
           case AstalNetwork.Primary.UNKNOWN: return <Unknown />
         }
       }}

@@ -1,9 +1,16 @@
 .bar {
   color: var(--fg);
   background-color: var(--bg);
-  min-height: 37px;
-  min-width: 37px;
+  min-height: 38px;
+  min-width: 38px;
   padding: 0 28px;
+
+  .client {
+    label {
+      font-family: 'Satoshi Variable';
+      font-weight: bold;
+    }
+  }
 
   .vpn {
     .symbols {
@@ -44,8 +51,8 @@
   .devices {
     .level {
       border-radius: 50rem;
-      min-width: 34px;
-      min-height: 15px;
+      min-width: 15px;
+      min-height: 4px;
 
       trough block.filled { background-color: var(--fg); }
       &.warn trough block.filled { background-color: var(--danger); }
@@ -53,7 +60,7 @@
     }
 
     .battery {
-      color: var(--fg-inverse);
+      color: var(--bg-inverse);
     }
   }
 }

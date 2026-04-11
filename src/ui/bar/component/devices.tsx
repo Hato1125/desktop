@@ -36,11 +36,24 @@ const Battery = ({ device }: { device: AstalBattery.Device }) => {
   return (
     <box
       class='devices'
+      orientation={Gtk.Orientation.VERTICAL}
       halign={Gtk.Align.CENTER}
       valign={Gtk.Align.CENTER}
-      tooltipText={device.model}
+      spacing={1}
+      tooltipText={
+        createBinding(device, 'percentage').as(p => {
+          return `${device.model} ${Math.floor(p * 100)}%`
+        })
+      }
     >
-      <overlay class='battery'>
+      <label
+        cssClasses={[
+          'symbols',
+          'symbols-xl',
+          'text-lg'
+        ]}
+        label={icons.get(device.deviceType)}
+      />
         <levelbar
           class='level'
           cssClasses={
@@ -54,30 +67,8 @@ const Battery = ({ device }: { device: AstalBattery.Device }) => {
           maxValue={1}
           value={createBinding(device, 'percentage')}
           valign={Gtk.Align.CENTER}
-          overflow={Gtk.Overflow.HIDDEN}
-        />
-        <box
-          $type='overlay'
-          spacing={2}
-          halign={Gtk.Align.CENTER}
-          valign={Gtk.Align.CENTER}
-        >
-          <label
-            cssClasses={[
-              'symbols',
-              'symbols-base',
-            ]}
-            label={icons.get(device.deviceType)}
-          />
-          <label
-            cssClasses={[
-              'text-sm',
-              'tabular',
-            ]}
-            label={createBinding(device, 'percentage').as(p => (Math.floor(p * 100)).toString())}
-          />
-        </box>
-      </overlay>
+        overflow={Gtk.Overflow.HIDDEN}
+      />
     </box>
   );
 }

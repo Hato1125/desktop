@@ -26,13 +26,15 @@ export default () => (
       valign={Gtk.Align.CENTER}
       orientation={Gtk.Orientation.HORIZONTAL}
     >
-      <box $type='start' spacing={16}>
-        <Menu />
-        <Client />
+      <box $type='start' spacing={18}>
+        <box spacing={14}>
+          <Menu />
+          <Client />
+        </box>
       </box>
-      <box $type='center' spacing={16}>
+      <box $type='center' spacing={18}>
       </box>
-      <box $type='end' spacing={16}>
+      <box $type='end' spacing={18}>
         <Weather />
         <Vpn />
         <Network />
