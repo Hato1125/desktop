@@ -1,5 +1,6 @@
-import app from 'ags/gtk4/app';
+declare const SRC: string;
 
+import app from 'ags/gtk4/app';
 import {
   createBinding,
   For,
