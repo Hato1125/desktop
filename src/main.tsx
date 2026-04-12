@@ -32,13 +32,14 @@ app.start({
       .with('toggle-launcher', () => toggleWindow())
     res(1);
   },
-  main: () => (
-    <>
-      <Launcher />
-      <Osd />
-      <Bar />
-      <BarBottomLeftCorner />
-      <BarBottomRightCorner />
+  main() {
+    Launcher();
+    Osd();
+    Bar();
+    BarBottomLeftCorner();
+    BarBottomRightCorner();
+
+    return (
       <For each={createBinding(app, 'monitors')}>
         {(monitor: Gdk.Monitor) => (
           <This this={app}>
@@ -49,6 +50,6 @@ app.start({
           </This>
         )}
       </For>
-    </>
-  ),
+    );
+  }
 });

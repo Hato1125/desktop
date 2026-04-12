@@ -7,7 +7,27 @@ import {
   property,
 } from 'ags/gobject';
 
-const KBD_DEVICE = '/dev/input/by-id/usb-hfd.cn_USB_DEVICE-event-kbd';
+function findKeyboardDevice(): string | null {
+  const file = Gio.File.new_for_path('/proc/bus/input/devices');
+  const [, contents] = file.load_contents(null);
+  const text = new TextDecoder().decode(contents);
+
+  for (const line of text.split('\n')) {
+    if (!line.startsWith('H:')) continue;
+    if (!line.includes('leds')) continue;
+    const match = line.match(/event(\d+)/);
+    if (match) {
+      const path = `/dev/input/event${match[1]}`;
+      try {
+        Gio.File.new_for_path(path).read(null);
+        return path;
+      } catch {
+        continue;
+      }
+    }
+  }
+  return null;
+}
 
 const EV_LED = 17;
 const LED_NUML = 0;
@@ -25,13 +45,23 @@ export class KeyLockService extends GObject.Object {
   constructor() {
     super();
 
-    const proc = Gio.Subprocess.new(
-      ['cat', KBD_DEVICE],
-      Gio.SubprocessFlags.STDOUT_PIPE,
-    );
+    try {
+      const device = findKeyboardDevice();
+      if (!device) {
+        console.warn('KeyLock: no keyboard device found');
+        return;
+      }
 
-    const stdout = proc.get_stdout_pipe()!;
-    this.read(stdout);
+      const proc = Gio.Subprocess.new(
+        ['cat', device],
+        Gio.SubprocessFlags.STDOUT_PIPE,
+      );
+
+      const stdout = proc.get_stdout_pipe()!;
+      this.read(stdout);
+    } catch (e) {
+      console.warn('KeyLock: failed to start:', e);
+    }
   }
 
   private read(stream: Gio.InputStream) {
