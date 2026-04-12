@@ -6,6 +6,8 @@
     "moduleResolution": "Bundler",
     "noEmit": true,
     "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
     "jsx": "react-jsx",
     "jsxImportSource": "ags/gtk4",
     "baseUrl": ".",
