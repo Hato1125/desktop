@@ -1,0 +1,37 @@
+.osd {
+  background-color: transparent;
+  margin-bottom: -1px;
+
+  .content {
+    background-color: var(--bg);
+    border: 1px solid var(--border);
+    min-width: 200px;
+    min-height: 40px;
+    border-radius: 50rem;
+    margin-bottom: 50px;
+  }
+
+  .volume {
+    padding: 0 21px 0 16px;
+
+    levelbar {
+      min-width: 115px;
+      min-height: 5px;
+
+      trough block {
+        border-radius: 50rem;
+
+        &.filled { background-color: var(--fg); }
+        &.empty { background-color: var(--fg-muted); }
+      }
+    }
+  }
+
+  .gamemode {
+    padding: 0 21px 0 16px;
+  }
+
+  .keylock {
+    padding: 0 21px 0 16px;
+  }
+}

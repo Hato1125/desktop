@@ -19,6 +19,7 @@ import {
   BarBottomRightCorner,
 } from '@ui/corner/index';
 import Launcher, { toggleWindow } from '@ui/launcher/index';
+import Osd from '@ui/osd/index';
 
 import { match } from 'ts-pattern';
 
@@ -28,11 +29,13 @@ app.start({
   instanceName: 'desktop',
   requestHandler(args, res) {
     match(args[0])
-      .with('toggle-launcher', () => toggleWindow());
+      .with('toggle-launcher', () => toggleWindow())
+    res(1);
   },
   main: () => (
     <>
       <Launcher />
+      <Osd />
       <Bar />
       <BarBottomLeftCorner />
       <BarBottomRightCorner />
