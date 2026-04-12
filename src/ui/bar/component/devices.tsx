@@ -21,7 +21,7 @@ const devices = createBinding(AstalBattery.UPower.new(), 'devices').as(
     && d.isPresent
     && d.isBattery
     && icons.has(d.deviceType)
-  )
+  ).sort((a, b) => a.deviceType - b.deviceType)
 );
 
 const Battery = ({ device }: { device: AstalBattery.Device }) => {
@@ -71,7 +71,7 @@ const Battery = ({ device }: { device: AstalBattery.Device }) => {
         />
         <label
           $type='overlay'
-          visible={createBinding(device, 'charging')}
+          visible={createBinding(device, 'state').as(s => s === AstalBattery.State.CHARGING)}
           halign={Gtk.Align.CENTER}
           valign={Gtk.Align.CENTER}
           cssClasses={[
