@@ -30,21 +30,22 @@ app.start({
     match(args[0])
       .with('toggle-launcher', () => toggleWindow());
   },
-  main() {
-    Bar();
-    BarBottomLeftCorner();
-    BarBottomRightCorner();
-    Launcher();
-
-    <For each={createBinding(app, 'monitors')}>
-      {(monitor: Gdk.Monitor) => (
-        <This this={app}>
-          <MonitorTopLeftCorner gdkmonitor={monitor} />
-          <MonitorTopRightCorner gdkmonitor={monitor} />
-          <MonitorBottomLeftCorner gdkmonitor={monitor} />
-          <MonitorBottomRightCorner gdkmonitor={monitor} />
-        </This>
-      )}
-    </For>
-  }
+  main: () => (
+    <>
+      <Launcher />
+      <Bar />
+      <BarBottomLeftCorner />
+      <BarBottomRightCorner />
+      <For each={createBinding(app, 'monitors')}>
+        {(monitor: Gdk.Monitor) => (
+          <This this={app}>
+            <MonitorTopLeftCorner gdkmonitor={monitor} />
+            <MonitorTopRightCorner gdkmonitor={monitor} />
+            <MonitorBottomLeftCorner gdkmonitor={monitor} />
+            <MonitorBottomRightCorner gdkmonitor={monitor} />
+          </This>
+        )}
+      </For>
+    </>
+  ),
 });
