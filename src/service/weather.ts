@@ -38,15 +38,6 @@ const INTERVAL = 600_000; // 10 minutes
 
 @register()
 export class WeatherService extends GObject.Object {
-  static instance: WeatherService;
-
-  static get_default(): WeatherService {
-    if (!this.instance) {
-      this.instance = new WeatherService();
-    }
-    return this.instance;
-  }
-
   @property(Number) temperature: number = 0;
   @property(Number) humidity: number = 0;
   @property(Number) windSpeed: number = 0;
@@ -94,3 +85,5 @@ export class WeatherService extends GObject.Object {
     }
   }
 }
+
+export default new WeatherService();

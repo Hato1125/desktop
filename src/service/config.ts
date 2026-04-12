@@ -9,15 +9,6 @@ import GLib from 'gi://GLib?version=2.0';
 
 @register()
 export class ConfigService extends GObject.Object {
-  static instance: ConfigService;
-
-  static get_default(): ConfigService{
-    if (!this.instance) {
-      this.instance = new ConfigService();
-    }
-    return this.instance;
-  }
-
   constructor()  {
     super();
     this.load();
@@ -44,3 +35,5 @@ export class ConfigService extends GObject.Object {
     }
   }
 }
+
+export default new ConfigService();

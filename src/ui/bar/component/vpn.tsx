@@ -1,7 +1,5 @@
 import { createBinding } from 'ags';
-import { VpnService } from '@service/vpn';
-
-const vpn = VpnService.get_default();
+import vpn from '@service/vpn';
 
 export default () => (
   <box class='vpn' visible={createBinding(vpn, 'connected')}>

@@ -1,7 +1,5 @@
-import { WeatherService } from '@service/weather';
 import { createBinding } from 'ags';
-
-const weather = WeatherService.get_default();
+import weather from '@service/weather';
 
 export default () => (
   <box

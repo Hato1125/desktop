@@ -11,15 +11,6 @@ import fetch from 'gnim/fetch';
 
 @register()
 export class VpnService extends GObject.Object {
-  static instance: VpnService;
-
-  static get_default(): VpnService {
-    if (!this.instance) {
-      this.instance = new VpnService();
-    }
-    return this.instance;
-  }
-
   @property(Boolean) connected: boolean = false;
   @property(String) country: string = '';
 
@@ -57,3 +48,5 @@ export class VpnService extends GObject.Object {
     }
   }
 }
+
+export default new VpnService();
