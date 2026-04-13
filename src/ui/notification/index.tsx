@@ -1,60 +1,58 @@
 import Gtk from 'gi://Gtk?version=4.0';
-import GLib from 'gi://GLib?version=2.0';
 import Astal from 'gi://Astal?version=4.0';
 import AstalNotifd from 'gi://AstalNotifd?version=0.1';
 
+import { timeout } from 'ags/time';
+import { createRoot } from 'ags';
+
 import Notification from './component/notification';
 
-const TIMEOUT = 5000;
+const TIMEOUT = 500000;
 
 const notifd = AstalNotifd.get_default();
 
 let win: Astal.Window;
 let container: Gtk.Box;
+
 let count = 0;
 
 const addNotification = (notification: AstalNotifd.Notification) => {
-  let revealer: Gtk.Revealer;
-
   count++;
   win.visible = true;
 
-  const dismiss = () => {
-    revealer.revealChild = false;
-  };
+  createRoot((dispose) => {
+    const revealer = (
+      <revealer
+        transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN}
+        transitionDuration={300}
+        onNotifyChildRevealed={(self: Gtk.Revealer) => {
+          if (!self.childRevealed) {
+            container.remove(self);
+            notification.dismiss();
+            count--;
+            dispose();
 
-  const widget = (
-    <revealer
-      $={(ref: Gtk.Revealer) => (revealer = ref)}
-      transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN}
-      transitionDuration={300}
-      revealChild={false}
-      onNotifyChildRevealed={(self: Gtk.Revealer) => {
-        if (!self.childRevealed) {
-          container.remove(widget as Gtk.Widget);
-          notification.dismiss();
-          count--;
-          if (count === 0) {
-            win.visible = false;
+            if (count === 0) {
+              win.visible = false;
+            }
           }
-        }
-      }}
-    >
-      <Notification notification={notification} onDismiss={dismiss} />
-    </revealer>
-  );
+        }}
+      >
+        <Notification
+          notification={notification}
+          onDismiss={() => {
+            revealer.revealChild = false;
+          }}
+        />
+      </revealer>
+    ) as Gtk.Revealer;
 
-  container.prepend(widget as Gtk.Widget);
-  revealer!.revealChild = true;
+    container.prepend(revealer);
+    revealer.revealChild = true;
 
-  const timeout = GLib.timeout_add(GLib.PRIORITY_DEFAULT, TIMEOUT, () => {
-    dismiss();
-    return GLib.SOURCE_REMOVE;
-  });
-
-  notification.connect('resolved', () => {
-    GLib.source_remove(timeout);
-    dismiss();
+    timeout(TIMEOUT, () => {
+      revealer.revealChild = false;
+    });
   });
 };
 
@@ -79,7 +77,6 @@ export default () => (
       orientation={Gtk.Orientation.VERTICAL}
       halign={Gtk.Align.END}
       valign={Gtk.Align.START}
-      spacing={8}
     />
   </window>
 );

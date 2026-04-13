@@ -7,12 +7,9 @@ const AppIcon = ({ notification }: { notification: AstalNotifd.Notification }) =
   const appIcon = notification.appIcon;
 
   if (image) {
-    return (
-      <image
-        cssClasses={['icon']}
-        file={image}
-      />
-    );
+    return image.startsWith('/')
+      ? <image cssClasses={['icon']} file={image} />
+      : <image cssClasses={['icon']} iconName={image} />;
   }
 
   if (appIcon) {
@@ -52,17 +49,20 @@ export default ({
     <box spacing={10}>
       <AppIcon notification={notification} />
       <box
+        valign={Gtk.Align.CENTER}
         orientation={Gtk.Orientation.VERTICAL}
         hexpand={true}
-        valign={Gtk.Align.CENTER}
         spacing={2}
       >
         <label
-          cssClasses={['summary', 'text-sm']}
-          label={notification.summary}
-          halign={Gtk.Align.START}
+          cssClasses={[
+            'summary',
+            'text-base'
+          ]}
           maxWidthChars={30}
+          halign={Gtk.Align.START}
           ellipsize={Pango.EllipsizeMode.END}
+          label={notification.summary}
         />
         {notification.body && (
           <label

@@ -1,8 +1,8 @@
 import Gtk from 'gi://Gtk?version=4.0';
-import GLib from 'gi://GLib?version=2.0';
 import Astal from 'gi://Astal?version=4.0';
 
 import { createState, With } from 'ags';
+import { timeout } from 'ags/time';
 
 import AstalWp from 'gi://AstalWp?version=0.1';
 import AstalBluetooth from 'gi://AstalBluetooth?version=0.1';
@@ -16,7 +16,7 @@ import KeyLock, { setKeyLock } from './component/keylock';
 
 const TIMEOUT = 3000;
 
-let timeout: number | null = null;
+let timer: import('ags/time').Timer | null = null;
 let win: Astal.Window;
 
 const [state, setState] = createState<
@@ -32,11 +32,10 @@ const show = (duration = TIMEOUT) => {
   win.visible = true;
   setRevealed(true);
 
-  if (timeout) GLib.source_remove(timeout);
-  timeout = GLib.timeout_add(GLib.PRIORITY_DEFAULT, duration, () => {
+  timer?.cancel();
+  timer = timeout(duration, () => {
     setRevealed(false);
-    timeout = null;
-    return GLib.SOURCE_REMOVE;
+    timer = null;
   });
 };
 

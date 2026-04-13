@@ -7,12 +7,16 @@
     border-radius: 16px;
     padding: 12px 14px;
     min-width: 280px;
-    margin: 8px;
+    margin: 6px;
 
     .icon {
-      -gtk-icon-size: 36px;
-      min-width: 36px;
-      min-height: 36px;
+      -gtk-icon-size: 28px;
+      min-width: 28px;
+      min-height: 28px;
+      filter: grayscale(99.99%)
+        brightness(1.001)
+        contrast(1.125)
+        brightness(1.125);
     }
 
     .summary {
