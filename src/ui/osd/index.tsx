@@ -5,10 +5,12 @@ import Astal from 'gi://Astal?version=4.0';
 import { createState, With } from 'ags';
 
 import AstalWp from 'gi://AstalWp?version=0.1';
+import AstalBluetooth from 'gi://AstalBluetooth?version=0.1';
 
 import gamemode from '@service/gamemode';
 import keylock from '@service/keylock';
 import Volume from './component/volume';
+import Bluetooth, { setBluetooth } from './component/bluetooth';
 import Gamemode, { setGamemodeName } from './component/gamemode';
 import KeyLock, { setKeyLock } from './component/keylock';
 
@@ -17,7 +19,13 @@ const TIMEOUT = 3000;
 let timeout: number | null = null;
 let win: Astal.Window;
 
-const [state, setState] = createState<'volume' | 'gamemode' | 'keylock'>('volume');
+const [state, setState] = createState<
+  'volume'
+  | 'gamemode'
+  | 'keylock'
+  | 'bluetooth'
+>('volume');
+
 const [revealed, setRevealed] = createState(false);
 
 const show = (duration = TIMEOUT) => {
@@ -37,6 +45,15 @@ export const showVolume = () => {
   show();
 };
 
+export const showBluetooth = (
+  name: string,
+  connected: boolean
+) => {
+  setState('bluetooth');
+  setBluetooth(name, connected);
+  show();
+};
+
 export const showGamemode = (name: string) => {
   setState('gamemode');
   setGamemodeName(name);
@@ -51,6 +68,23 @@ const showKeyLock = (icon: string, label: string) => {
 
 const speaker = AstalWp.get_default().defaultSpeaker;
 speaker.connect('notify::volume', () => showVolume());
+
+const bluetooth = AstalBluetooth.get_default();
+
+const connected = (device: AstalBluetooth.Device) => {
+  device.connect('notify::connected', () => {
+    showBluetooth(
+      device.name,
+      device.connected
+    );
+  });
+}
+
+bluetooth.devices.forEach(connected);
+
+bluetooth.connect('device-added', (_, device: AstalBluetooth.Device) => {
+  connected(device);
+});
 
 keylock.onCapsLockChanged = (active) => {
   showKeyLock('keyboard_capslock', active ? 'Caps Lock ON' : 'Caps Lock OFF');
@@ -99,6 +133,9 @@ export default () => {
                     return <KeyLock />;
                   case 'volume':
                     return <Volume />;
+                  case 'bluetooth':
+                    return <Bluetooth />;
+
                 }
               }}
             </With>
