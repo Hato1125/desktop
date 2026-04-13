@@ -7,7 +7,7 @@ import { createRoot } from 'ags';
 
 import Notification from './component/notification';
 
-const TIMEOUT = 500000;
+const TIMEOUT = 5000;
 
 const notifd = AstalNotifd.get_default();
 
