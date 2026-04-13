@@ -9,7 +9,7 @@ import {
 
 import { Gdk } from 'ags/gtk4';
 
-import Bar from '@ui/bar/index';
+import Launcher, { toggleWindow } from '@ui/launcher/index';
 import {
   MonitorBottomLeftCorner,
   MonitorBottomRightCorner,
@@ -18,7 +18,8 @@ import {
   BarBottomLeftCorner,
   BarBottomRightCorner,
 } from '@ui/corner/index';
-import Launcher, { toggleWindow } from '@ui/launcher/index';
+import Bar from '@ui/bar/index';
+import Notification from '@ui/notification/index';
 import Osd from '@ui/osd/index';
 
 import { match } from 'ts-pattern';
@@ -34,6 +35,7 @@ app.start({
   },
   main() {
     Launcher();
+    Notification();
     Osd();
     Bar();
     BarBottomLeftCorner();

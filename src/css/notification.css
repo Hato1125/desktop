@@ -1,0 +1,45 @@
+.notification {
+  background-color: transparent;
+
+  .item {
+    background-color: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 12px 14px;
+    min-width: 280px;
+    margin: 8px;
+
+    .icon {
+      -gtk-icon-size: 36px;
+      min-width: 36px;
+      min-height: 36px;
+    }
+
+    .summary {
+      font-weight: 800;
+    }
+
+    .body {
+      color: var(--fg-subtle);
+    }
+
+    .close {
+      padding: 2px;
+      border-radius: 50rem;
+
+      &:hover {
+        background-color: var(--bg-muted);
+      }
+    }
+
+    .action {
+      padding: 6px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+
+      &:hover {
+        background-color: var(--bg-muted);
+      }
+    }
+  }
+}
