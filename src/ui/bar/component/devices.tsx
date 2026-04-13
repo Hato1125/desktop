@@ -2,7 +2,6 @@ import Gtk from 'gi://Gtk?version=4.0';
 import AstalBattery from 'gi://AstalBattery?version=0.1';
 
 import { createBinding, For } from 'ags';
-import Libxml220 from 'gi://libxml2';
 
 const icons: Map<AstalBattery.Type, string> = new Map([
   [AstalBattery.Type.MOUSE, 'mouse'],

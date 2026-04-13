@@ -1,6 +1,6 @@
 import Gtk from 'gi://Gtk?version=4.0';
 import AstalWp from 'gi://AstalWp?version=0.1';
-import { createBinding, With } from 'ags';
+import { createBinding } from 'ags';
 
 const speaker = AstalWp.get_default().defaultSpeaker;
 
