@@ -37,6 +37,8 @@ export class GameModeService extends GObject.Object {
 
   private _proxy: Gio.DBusProxy;
 
+  private _pendingPids = new Set<number>();
+
   constructor() {
     super();
 
@@ -53,23 +55,15 @@ export class GameModeService extends GObject.Object {
     this._proxy.connect('g-signal', (_proxy, _sender, signal, params) => {
       if (signal === 'GameRegistered') {
         const [pid] = (params as GLib.Variant).deepUnpack() as [number, number];
-        let attempts = 0;
-        GLib.timeout_add(GLib.PRIORITY_DEFAULT, 500, () => {
-          attempts++;
-          const name = getGameName(pid);
-          if (name) {
-            const game = new Game(pid, name);
-            this.refresh();
-            this.onRegistered?.(game);
-            return GLib.SOURCE_REMOVE;
-          }
-
-          return attempts < 10
-            ? GLib.SOURCE_CONTINUE
-            : GLib.SOURCE_REMOVE;
-        });
+        const name = getGameName(pid);
+        if (name) {
+          this.registered(pid, name);
+        } else {
+          this._pendingPids.add(pid);
+        }
       } else if (signal === 'GameUnregistered') {
         const [pid] = (params as GLib.Variant).deepUnpack() as [number, number];
+        this._pendingPids.delete(pid);
         const game = this.games.find(g => g.pid === pid);
         if (!game) return;
         this.refresh();
@@ -77,7 +71,24 @@ export class GameModeService extends GObject.Object {
       }
     });
 
+    hyprland.connect('client-added', (_, client: AstalHyprland.Client) => {
+      const pid = client.get_pid();
+      if (!this._pendingPids.has(pid)) return;
+      this._pendingPids.delete(pid);
+
+      const name = getGameName(pid);
+      if (name) {
+        this.registered(pid, name);
+      }
+    });
+
     this.refresh();
+  }
+
+  private registered(pid: number, name: string) {
+    const game = new Game(pid, name);
+    this.refresh();
+    this.onRegistered?.(game);
   }
 
   private refresh() {

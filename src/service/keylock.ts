@@ -44,11 +44,18 @@ export class KeyLockService extends GObject.Object {
 
   constructor() {
     super();
+    this.watch();
+  }
 
+  private watch() {
     try {
       const device = findKeyboardDevice();
       if (!device) {
-        console.warn('KeyLock: no keyboard device found');
+        console.warn('KeyLock: no keyboard device found, retrying in 5s');
+        GLib.timeout_add(GLib.PRIORITY_DEFAULT, 5000, () => {
+          this.watch();
+          return GLib.SOURCE_REMOVE;
+        });
         return;
       }
 
@@ -71,8 +78,9 @@ export class KeyLockService extends GObject.Object {
         if (bytes && bytes.get_size() === EVENT_SIZE) {
           this.handleEvent(bytes.get_data()!);
         }
-      } catch (e) {
-        console.error('KeyLock:', e);
+      } catch {
+        console.warn('KeyLock: device disconnected, reconnecting...');
+        this.watch();
         return;
       }
 
