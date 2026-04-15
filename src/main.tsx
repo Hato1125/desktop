@@ -22,15 +22,14 @@ import Bar from '@ui/bar/index';
 import Notification from '@ui/notification/index';
 import Osd from '@ui/osd/index';
 
-import { match } from 'ts-pattern';
-
 app.start({
   css: `${SRC}/style.css`,
   icons: `${SRC}/icons`,
   instanceName: 'desktop',
   requestHandler(args, res) {
-    match(args[0])
-      .with('toggle-launcher', () => toggleWindow())
+    switch (args[0]) {
+      case 'toggle-launcher': toggleWindow(); break;
+    }
     res('');
   },
   main() {
