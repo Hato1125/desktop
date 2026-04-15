@@ -27,12 +27,7 @@
     color: var(--fg-inverse);
     margin-top: -1px;
 
-    .symbols {
-      color: var(--fg-inverse);
-      font-weight: bold;
-    }
-
-    .percentage {
+    .symbols, .percentage {
       color: var(--fg-inverse);
       font-weight: bold;
     }
@@ -41,10 +36,6 @@
       border-radius: 50rem;
       min-width: 27px;
       min-height: 15px;
-
-      trough block.filled { background-color: var(--fg); }
-      &.warn trough block.filled { background-color: var(--danger); }
-      trough block.empty { background-color: var(--fg-muted); }
     }
   }
 
@@ -53,10 +44,6 @@
       border-radius: 50rem;
       min-width: 15px;
       min-height: 4px;
-
-      trough block.filled { background-color: var(--fg); }
-      &.warn trough block.filled { background-color: var(--danger); }
-      trough block.empty { background-color: var(--fg-muted); }
     }
 
     .battery {
@@ -66,5 +53,11 @@
     .charging {
       text-shadow: 0 0 3px var(--bg-muted), 0 0 1px var(--bg-muted);
     }
+  }
+
+  .level {
+    trough block.filled { background-color: var(--fg); }
+    trough block.empty { background-color: var(--fg-muted); }
+    &.warn trough block.filled { background-color: var(--danger); }
   }
 }

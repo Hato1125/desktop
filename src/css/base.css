@@ -58,16 +58,19 @@
   all: unset;
 }
 
-label {
+label, entry {
   margin-top: 1px;
   font-family: 'Satoshi Variable';
   font-weight: 800;
 }
 
-tooltip {
+tooltip, popover {
   color: var(--fg);
   background-color: var(--bg);
   border: 1px solid var(--border);
+}
+
+tooltip {
   padding: 4px 12px;
   border-radius: 50rem;
 
@@ -78,11 +81,8 @@ tooltip {
 }
 
 popover {
-  color: var(--fg);
-  background-color: var(--bg);
-  border: 1px solid var(--border);
   border-radius: 16px;
-  padding: 12px 12px;
+  padding: 12px;
 }
 
 .tabular {
