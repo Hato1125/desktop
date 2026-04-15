@@ -31,7 +31,7 @@ app.start({
   requestHandler(args, res) {
     match(args[0])
       .with('toggle-launcher', () => toggleWindow())
-    res(1);
+    res('');
   },
   main() {
     Launcher();
