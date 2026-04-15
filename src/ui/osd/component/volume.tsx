@@ -22,7 +22,7 @@ export default () => (
       valign={Gtk.Align.CENTER}
       hexpand={true}
       minValue={0}
-      maxValue={1}
+      maxValue={1.25}
       value={createBinding(speaker, 'volume')}
     />
   </box>

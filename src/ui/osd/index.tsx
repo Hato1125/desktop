@@ -44,12 +44,9 @@ export const showVolume = () => {
   show();
 };
 
-export const showBluetooth = (
-  name: string,
-  connected: boolean
-) => {
+export const showBluetooth = (name: string) => {
   setState('bluetooth');
-  setBluetooth(name, connected);
+  setBluetooth(name);
   show();
 };
 
@@ -72,10 +69,7 @@ const bluetooth = AstalBluetooth.get_default();
 
 const connected = (device: AstalBluetooth.Device) => {
   device.connect('notify::connected', () => {
-    showBluetooth(
-      device.name,
-      device.connected
-    );
+    showBluetooth(device.name);
   });
 }
 
@@ -86,10 +80,19 @@ bluetooth.connect('device-added', (_, device: AstalBluetooth.Device) => {
 });
 
 keylock.onCapsLockChanged = (active) => {
-  showKeyLock('keyboard_capslock', active ? 'Caps Lock ON' : 'Caps Lock OFF');
+  if (active) {
+    showKeyLock('shift_lock', 'Caps Lock ON');
+  } else {
+    showKeyLock('shift_lock_off', 'Caps Lock OFF');
+  }
 };
+
 keylock.onNumLockChanged = (active) => {
-  showKeyLock('dialpad', active ? 'Num Lock ON' : 'Num Lock OFF');
+  if (active) {
+    showKeyLock('grid_view', 'Num Lock ON');
+  } else {
+    showKeyLock('grid_off', 'Num Lock OFF');
+  }
 };
 
 gamemode.onRegistered = (game) => showGamemode(game.name);

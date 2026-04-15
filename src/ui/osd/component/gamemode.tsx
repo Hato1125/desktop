@@ -18,7 +18,7 @@ export default () => (
         'symbols',
         'symbols-xl'
       ]}
-      label='stadia_controller'
+      label='rocket_launch'
     />
     <label
       valign={Gtk.Align.CENTER}

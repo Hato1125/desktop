@@ -4,15 +4,8 @@ import { createState } from 'ags';
 
 const [bluetoothLabel, setBluetoothLabel] = createState('');
 
-export const setBluetooth = (
-  name: string,
-  connected: boolean
-) => {
-  if (connected) {
-    setBluetoothLabel(`Connected ${name}`);
-  } else {
-    setBluetoothLabel(`Disconnected ${name}`);
-  }
+export const setBluetooth = (name: string) => {
+  setBluetoothLabel(name);
 };
 
 export default () => (
