@@ -69,9 +69,10 @@ export default ({
             cssClasses={['body', 'text-xs']}
             label={notification.body}
             halign={Gtk.Align.START}
-            maxWidthChars={30}
-            wrap={true}
             wrapMode={Pango.WrapMode.WORD_CHAR}
+            wrap={true}
+            useMarkup={true}
+            maxWidthChars={30}
           />
         )}
       </box>
