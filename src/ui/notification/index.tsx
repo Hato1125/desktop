@@ -1,58 +1,115 @@
-import Gtk from 'gi://Gtk?version=4.0';
+import Adw from 'gi://Adw?version=1';
 import Astal from 'gi://Astal?version=4.0';
 import AstalNotifd from 'gi://AstalNotifd?version=0.1';
 
-import { timeout } from 'ags/time';
+import app from 'ags/gtk4/app';
 import { createRoot } from 'ags';
+import { idle, timeout } from 'ags/time';
 
 import Notification from './component/notification';
 
 const TIMEOUT = 5000;
+const SLIDE = 320;
 
 const notifd = AstalNotifd.get_default();
 
-let win: Astal.Window;
-let container: Gtk.Box;
+type Entry = {
+  win: Astal.Window;
+  height: number;
+};
 
-let count = 0;
+const entries: Entry[] = [];
+
+const reposition = () => {
+  entries.reduce((offset, entry) => {
+    entry.win.marginTop = offset;
+    return offset + entry.height;
+  }, 0);
+};
 
 const addNotification = (notification: AstalNotifd.Notification) => {
-  count++;
-  win.visible = true;
-
   createRoot((dispose) => {
-    const revealer = (
-      <revealer
-        transitionType={Gtk.RevealerTransitionType.SLIDE_DOWN}
-        transitionDuration={300}
-        onNotifyChildRevealed={(self: Gtk.Revealer) => {
-          if (!self.childRevealed) {
-            container.remove(self);
-            notification.dismiss();
-            count--;
-            dispose();
+    let dismissing = false;
 
-            if (count === 0) {
-              win.visible = false;
-            }
-          }
-        }}
+    const dismiss = () => {
+      if (dismissing) {
+        return;
+      }
+
+      dismissing = true;
+
+      const target = Adw.CallbackAnimationTarget.new((v: number) => {
+        content.opacity = 1 - v;
+        win.marginRight = v * -SLIDE;
+      });
+
+      const anim = new Adw.TimedAnimation({
+        widget: content,
+        value_from: 0,
+        value_to: 1,
+        duration: 300,
+        target,
+      });
+
+      anim.connect('done', () => {
+        const idx = entries.indexOf(entry);
+        if (idx !== -1) {
+          entries.splice(idx, 1);
+        }
+
+        notification.dismiss();
+        win.destroy();
+        dispose();
+        reposition();
+      });
+
+      anim.play();
+    };
+
+    const win = (
+      <window
+        visible
+        class='notification'
+        namespace='notification'
+        application={app}
+        anchor={Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT}
+        exclusivity={Astal.Exclusivity.IGNORE}
+        layer={Astal.Layer.OVERLAY}
       >
         <Notification
           notification={notification}
-          onDismiss={() => {
-            revealer.revealChild = false;
-          }}
+          onDismiss={dismiss}
         />
-      </revealer>
-    ) as Gtk.Revealer;
+      </window>
+    ) as Astal.Window;
 
-    container.prepend(revealer);
-    revealer.revealChild = true;
+    const content = win.child;
+    content.opacity = 0;
+    win.marginRight = -SLIDE;
 
-    timeout(TIMEOUT, () => {
-      revealer.revealChild = false;
+    const entry: Entry = { win, height: 0 };
+    entries.unshift(entry);
+
+    idle(() => {
+      entry.height = content.get_preferred_size()[1]?.height ?? 0;
+      reposition();
+
+      const target = Adw.CallbackAnimationTarget.new((v: number) => {
+        content.opacity = v;
+        win.marginRight = (1 - v) * -SLIDE;
+      });
+
+      new Adw.TimedAnimation({
+        widget: content,
+        value_from: 0,
+        value_to: 1,
+        duration: 300,
+        target,
+      }).play();
     });
+
+    timeout(TIMEOUT, dismiss);
+    notification.connect('resolved', dismiss);
   });
 };
 
@@ -63,20 +120,4 @@ notifd.connect('notified', (_, id: number) => {
   }
 });
 
-export default () => (
-  <window
-    $={(ref: Astal.Window) => (win = ref)}
-    class='notification'
-    namespace='notification'
-    anchor={Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT}
-    exclusivity={Astal.Exclusivity.IGNORE}
-    layer={Astal.Layer.OVERLAY}
-  >
-    <box
-      $={(ref: Gtk.Box) => (container = ref)}
-      orientation={Gtk.Orientation.VERTICAL}
-      halign={Gtk.Align.END}
-      valign={Gtk.Align.START}
-    />
-  </window>
-);
+export default () => {};
