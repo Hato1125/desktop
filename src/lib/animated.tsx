@@ -26,10 +26,18 @@ type Props = {
     repeat?: boolean;
     alternate?: boolean;
   };
+  onEnter?: () => void;
+  onExit?: () => void;
   children: JSX.Element;
 };
 
-const widgetKeys = ['opacity', 'marginTop', 'marginBottom', 'marginStart', 'marginEnd'] as const;
+const widgetKeys = [
+  'opacity',
+  'marginTop',
+  'marginBottom',
+  'marginStart',
+  'marginEnd'
+] as const;
 
 const applyFrame = (
   widget: Gtk.Widget,
@@ -69,7 +77,16 @@ const applyFrame = (
   }
 };
 
-export const Animated = ({ when, initial, animate, style, transition, children }: Props) => {
+export const Animated = ({
+  when,
+  initial,
+  animate,
+  style,
+  transition,
+  onEnter,
+  onExit,
+  children,
+}: Props) => {
   const widget = children as unknown as Gtk.Widget;
 
   let provider: Gtk.CssProvider | null = null;
@@ -104,6 +121,11 @@ export const Animated = ({ when, initial, animate, style, transition, children }
         }),
       });
       active = anim;
+      anim.connect('done', () => {
+        if (active !== anim) return;
+        if (target === 1) onEnter?.();
+        else onExit?.();
+      });
       idle(() => anim.play());
     };
 

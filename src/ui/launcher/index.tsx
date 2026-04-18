@@ -13,7 +13,8 @@ const apps = new AstalApps.Apps();
 let entry: Gtk.Entry;
 
 const [list, setList] = createState(apps.get_list());
-const [visible, setVisible] = createState(false);
+const [rendered, setRendered] = createState(false);
+const [open, setOpen] = createState(false);
 
 const launch = (app: AstalApps.Application) => {
   if (app.launch()) {
@@ -80,16 +81,21 @@ const List = () => (
 );
 
 export const closeWindow = () => {
-  setVisible(false);
+  setOpen(false);
 }
 
 export const toggleWindow = () => {
-  setVisible(!visible());
+  if (open()) {
+    setOpen(false);
+  } else {
+    setRendered(true);
+    setOpen(true);
+  }
 }
 
 const onKey = (_0: unknown, value: number, _1: unknown, _2: unknown) => {
   if (value === Gdk.KEY_Escape) {
-    setVisible(false);
+    setOpen(false);
   } else  if (
     value !== Gdk.KEY_Return &&
     value !== Gdk.KEY_Up &&
@@ -123,7 +129,7 @@ let content: Gtk.Box;
 
 export default () => createRoot(() => (
   <window
-    visible={visible}
+    visible={rendered}
     class='launcher'
     namespace='launcher'
     anchor={
@@ -146,10 +152,11 @@ export default () => createRoot(() => (
     <Gtk.GestureClick onPressed={onPressed} />
 
     <Animated
-      when={visible}
+      when={open}
+      onExit={() => setRendered(false)}
       initial={{ opacity: 0, marginTop: 120, marginBottom: -120 }}
       animate={{ opacity: 1, marginTop: 0, marginBottom: 0 }}
-      transition={{ duration: 200, easing: Adw.Easing.EASE_OUT_CIRC }}
+      transition={{ duration: 150, easing: Adw.Easing.EASE_OUT_CIRC }}
     >
       <box
         $={(ref) => (content = ref)}
