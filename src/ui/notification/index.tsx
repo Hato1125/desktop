@@ -23,10 +23,12 @@ notifd.connect('notified', (_, id: number) => {
 
   if (notification) {
     const handle = popup.show(
-      <Notification
-        notification={notification}
-        onDismiss={() => handle.dismiss()}
-      />,
+      () => (
+        <Notification
+          notification={notification}
+          onDismiss={() => handle.dismiss()}
+        />
+      ),
       () => notification.dismiss(),
     );
 

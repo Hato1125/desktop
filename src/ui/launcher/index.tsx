@@ -1,16 +1,19 @@
 import Gtk from 'gi://Gtk?version=4.0'
 import Gdk from 'gi://Gdk?version=4.0'
+import Adw from 'gi://Adw?version=1'
 import Astal from 'gi://Astal?version=4.0'
 import AstalApps from 'gi://AstalApps'
 
-import { createState, For } from 'ags'
+import { createRoot, createState, For } from 'ags'
+
+import { Animated } from '@lib/animated';
 
 const apps = new AstalApps.Apps();
 
-let window: Astal.Window;
 let entry: Gtk.Entry;
 
 const [list, setList] = createState(apps.get_list());
+const [visible, setVisible] = createState(false);
 
 const launch = (app: AstalApps.Application) => {
   if (app.launch()) {
@@ -77,16 +80,16 @@ const List = () => (
 );
 
 export const closeWindow = () => {
-  window.visible = false;
+  setVisible(false);
 }
 
 export const toggleWindow = () => {
-  window.visible = !window.visible;
+  setVisible(!visible());
 }
 
 const onKey = (_0: unknown, value: number, _1: unknown, _2: unknown) => {
   if (value === Gdk.KEY_Escape) {
-    window.visible = false;
+    setVisible(false);
   } else  if (
     value !== Gdk.KEY_Return &&
     value !== Gdk.KEY_Up &&
@@ -118,9 +121,9 @@ const onPressed = (_1: unknown, _2: unknown, x: number, y: number) => {
 
 let content: Gtk.Box;
 
-export default () => (
+export default () => createRoot(() => (
   <window
-    $={(ref) => (window = ref)}
+    visible={visible}
     class='launcher'
     namespace='launcher'
     anchor={
@@ -142,15 +145,22 @@ export default () => (
     <Gtk.EventControllerKey onKeyPressed={onKey} />
     <Gtk.GestureClick onPressed={onPressed} />
 
-    <box
-      $={(ref) => (content = ref)}
-      class='content'
-      halign={Gtk.Align.CENTER}
-      valign={Gtk.Align.CENTER}
-      orientation={Gtk.Orientation.VERTICAL}
+    <Animated
+      when={visible}
+      initial={{ opacity: 0, marginTop: 120, marginBottom: -120 }}
+      animate={{ opacity: 1, marginTop: 0, marginBottom: 0 }}
+      transition={{ duration: 200, easing: Adw.Easing.EASE_OUT_CIRC }}
     >
-      <SearchBox />
-      <List />
-    </box>
+      <box
+        $={(ref) => (content = ref)}
+        class='content'
+        halign={Gtk.Align.CENTER}
+        valign={Gtk.Align.CENTER}
+        orientation={Gtk.Orientation.VERTICAL}
+      >
+        <SearchBox />
+        <List />
+      </box>
+    </Animated>
   </window>
-);
+));

@@ -59,15 +59,17 @@ speaker.connect('notify::volume', () => {
   }
 
   volumeHandle = osd.show(
-    <OsdItem icon='volume_up' cssClass='volume'>
-      <levelbar
-        valign={Gtk.Align.CENTER}
-        hexpand={true}
-        minValue={0}
-        maxValue={1.25}
-        value={createBinding(speaker, 'volume')}
-      />
-    </OsdItem>,
+    () => (
+      <OsdItem icon='volume_up' cssClass='volume'>
+        <levelbar
+          valign={Gtk.Align.CENTER}
+          hexpand={true}
+          minValue={0}
+          maxValue={1.25}
+          value={createBinding(speaker, 'volume')}
+        />
+      </OsdItem>
+    ),
     () => { volumeHandle = null; },
   );
 });
@@ -76,7 +78,7 @@ const bluetooth = AstalBluetooth.get_default();
 
 const watchDevice = (device: AstalBluetooth.Device) => {
   device.connect('notify::connected', () => {
-    osd.show(
+    osd.show(() => (
       <OsdItem icon='bluetooth' cssClass='bluetooth'>
         <label
           valign={Gtk.Align.CENTER}
@@ -84,7 +86,7 @@ const watchDevice = (device: AstalBluetooth.Device) => {
           label={device.name}
         />
       </OsdItem>
-    );
+    ));
   });
 };
 
@@ -94,7 +96,7 @@ bluetooth.connect('device-added', (_, device: AstalBluetooth.Device) => {
 });
 
 keylock.onCapsLockChanged = (active) => {
-  osd.show(
+  osd.show(() => (
     <OsdItem
       icon={active ? 'shift_lock' : 'shift_lock_off'}
       cssClass='keylock'
@@ -105,11 +107,11 @@ keylock.onCapsLockChanged = (active) => {
         label={active ? 'Caps Lock ON' : 'Caps Lock OFF'}
       />
     </OsdItem>
-  );
+  ));
 };
 
 keylock.onNumLockChanged = (active) => {
-  osd.show(
+  osd.show(() => (
     <OsdItem
       icon={active ? 'grid_view' : 'grid_off'}
       cssClass='keylock'
@@ -120,11 +122,11 @@ keylock.onNumLockChanged = (active) => {
         label={active ? 'Num Lock ON' : 'Num Lock OFF'}
       />
     </OsdItem>
-  );
+  ));
 };
 
 gamemode.onRegistered = (game) => {
-  osd.show(
+  osd.show(() => (
     <OsdItem icon='rocket_launch' cssClass='gamemode'>
       <label
         valign={Gtk.Align.CENTER}
@@ -132,7 +134,7 @@ gamemode.onRegistered = (game) => {
         label={game.name}
       />
     </OsdItem>
-  );
+  ));
 };
 
 export default () => {};

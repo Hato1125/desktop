@@ -1,6 +1,7 @@
 import Gtk from 'gi://Gtk?version=4.0';
 import Adw from 'gi://Adw?version=1';
 
+import type { Accessor } from 'ags';
 import { idle } from 'ags/time';
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -15,10 +16,16 @@ type Animatable = {
 };
 
 type Props = {
+  when?: Accessor<boolean>;
   initial: Animatable;
   animate: Animatable;
   style?: (t: number) => string;
-  transition?: { duration?: number; repeat?: boolean; alternate?: boolean };
+  transition?: {
+    duration?: number;
+    easing?: Adw.Easing;
+    repeat?: boolean;
+    alternate?: boolean;
+  };
   children: JSX.Element;
 };
 
@@ -62,7 +69,7 @@ const applyFrame = (
   }
 };
 
-export const Animated = ({ initial, animate, style, transition, children }: Props) => {
+export const Animated = ({ when, initial, animate, style, transition, children }: Props) => {
   const widget = children as unknown as Gtk.Widget;
 
   let provider: Gtk.CssProvider | null = null;
@@ -71,23 +78,56 @@ export const Animated = ({ initial, animate, style, transition, children }: Prop
     widget.get_style_context().add_provider(provider, Gtk.STYLE_PROVIDER_PRIORITY_USER);
   }
 
-  applyFrame(widget, provider, initial, animate, style, 0);
+  const duration = transition?.duration ?? 300;
+  const easing = transition?.easing ?? Adw.Easing.LINEAR;
 
-  idle(() => {
-    const anim = new Adw.TimedAnimation({
-      widget,
-      value_from: 0,
-      value_to: 1,
-      duration: transition?.duration ?? 300,
-      repeat_count: transition?.repeat ? 0 : 1,
-      alternate: transition?.alternate ?? false,
-      target: Adw.CallbackAnimationTarget.new((t: number) => {
-        applyFrame(widget, provider, initial, animate, style, t);
-      }),
+  if (when) {
+    let current = when() ? 1 : 0;
+    let active: Adw.TimedAnimation | null = null;
+
+    applyFrame(widget, provider, initial, animate, style, current);
+
+    const play = (target: number) => {
+      active?.pause();
+      const from = current;
+      if (from === target) return;
+
+      const anim = new Adw.TimedAnimation({
+        widget,
+        value_from: from,
+        value_to: target,
+        duration: Math.max(1, Math.round(duration * Math.abs(target - from))),
+        easing,
+        target: Adw.CallbackAnimationTarget.new((t: number) => {
+          current = t;
+          applyFrame(widget, provider, initial, animate, style, t);
+        }),
+      });
+      active = anim;
+      idle(() => anim.play());
+    };
+
+    when.subscribe(() => play(when() ? 1 : 0));
+  } else {
+    applyFrame(widget, provider, initial, animate, style, 0);
+
+    idle(() => {
+      const anim = new Adw.TimedAnimation({
+        widget,
+        value_from: 0,
+        value_to: 1,
+        duration,
+        easing,
+        repeat_count: transition?.repeat ? 0 : 1,
+        alternate: transition?.alternate ?? false,
+        target: Adw.CallbackAnimationTarget.new((t: number) => {
+          applyFrame(widget, provider, initial, animate, style, t);
+        }),
+      });
+
+      anim.play();
     });
-
-    anim.play();
-  });
+  }
 
   return widget;
 };

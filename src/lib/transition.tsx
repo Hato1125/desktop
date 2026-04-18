@@ -85,7 +85,7 @@ export const createPopup = (config: PopupConfig) => {
     resetTimeout: () => void;
   };
 
-  const show = (child: JSX.Element, onDestroy?: () => void): PopupHandle => {
+  const show = (render: () => JSX.Element, onDestroy?: () => void): PopupHandle => {
     if (config.replace) dismissAll();
 
     let dismiss: () => void;
@@ -128,7 +128,7 @@ export const createPopup = (config: PopupConfig) => {
           exclusivity={Astal.Exclusivity.IGNORE}
           layer={Astal.Layer.OVERLAY}
         >
-          {child}
+          {render()}
         </window>
       ) as Astal.Window;
 
