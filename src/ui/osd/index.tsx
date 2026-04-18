@@ -12,7 +12,7 @@ import keylock from '@service/keylock';
 const osd = createPopup({
   transition: {
     opacity: [0, 1],
-    marginBottom: [0, 40],
+    marginBottom: [0, 20],
     duration: 300,
   },
   timeout: 3000,
