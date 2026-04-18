@@ -9,6 +9,8 @@ import Vpn from './component/vpn';
 import Network from './component/network';
 import DateTime from './component/datetime';
 import Weather from './component/weather';
+import Search from './component/search';
+import Workspaces from './component/workspaces';
 
 export default () => (
   <window
@@ -33,6 +35,10 @@ export default () => (
         </box>
       </box>
       <box $type='center' spacing={20}>
+        <box spacing={8}>
+          <Search />
+          <Workspaces />
+        </box>
       </box>
       <box $type='end' spacing={20}>
         <Weather />

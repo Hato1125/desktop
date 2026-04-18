@@ -5,6 +5,42 @@
   min-width: 38px;
   padding: 0 28px;
 
+  .search {
+    transition: all 150ms ease-out;
+    border-radius: 50rem;
+    min-width: 30px;
+    min-height: 30px;
+    color: var(--fg);
+    background-color: var(--bg);
+  }
+
+  .search:active {
+    color: var(--bg);
+    background-color: var(--fg);
+  }
+
+  .workspaces {
+    padding: 4px 4px;
+    border-radius: 50rem;
+    background-color: var(--dark-100);
+
+    .workspace {
+      border-radius: 50rem;
+      min-width: 22.5px;
+      min-height: 22.5px;
+
+      &.focused {
+        color: var(--bg);
+        background-color: var(--fg);
+      }
+
+      &.unfocused {
+        color: var(--fg);
+        background-color: var(--dark-200);
+      }
+    }
+  }
+
   .client {
     label {
       font-family: 'Satoshi Variable';
