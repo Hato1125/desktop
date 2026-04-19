@@ -15,6 +15,7 @@
       "@ui/*": ["src/ui/*"],
       "@service/*": ["src/service/*"],
       "@lib/*": ["src/lib/*"],
+      "@config": ["src/service/config.ts"],
     }
   },
   "include": [

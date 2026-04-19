@@ -27,6 +27,9 @@
 
   --red: #ff3434;
 
+  --overlay-subtle: rgba(255, 255, 255, 0.06);
+  --overlay-muted: rgba(255, 255, 255, 0.12);
+
   --bg: var(--dark-0);
   --bg-subtle: var(--dark-50);
   --bg-muted: var(--dark-100);

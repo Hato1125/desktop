@@ -9,6 +9,7 @@ import {
 
 import { Gdk } from 'ags/gtk4';
 
+import config from '@config';
 import Launcher, { toggleWindow } from '@ui/launcher/index';
 import {
   MonitorBottomLeftCorner,
@@ -17,8 +18,11 @@ import {
   MonitorTopRightCorner,
   BarBottomLeftCorner,
   BarBottomRightCorner,
+  BarTopLeftCorner,
+  BarTopRightCorner,
 } from '@ui/corner/index';
 import Bar from '@ui/bar/index';
+import Dock from '@ui/dock/index';
 import Notification from '@ui/notification/index';
 import Osd from '@ui/osd/index';
 
@@ -37,8 +41,14 @@ app.start({
     Notification();
     Osd();
     Bar();
-    BarBottomLeftCorner();
-    BarBottomRightCorner();
+    if (config.barAnchor === 'top') {
+      BarTopLeftCorner();
+      BarTopRightCorner();
+    } else {
+      BarBottomLeftCorner();
+      BarBottomRightCorner();
+    }
+    if (config.dockEnable) Dock();
 
     return (
       <For each={createBinding(app, 'monitors')}>

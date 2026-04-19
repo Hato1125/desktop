@@ -70,6 +70,7 @@ export const createPopup = (config: PopupConfig) => {
   const entries: Entry[] = [];
 
   const reposition = () => {
+    if (config.replace) return;
     entries.reduce((offset, entry) => {
       entry.win.marginTop = offset;
       return offset + entry.height;

@@ -96,3 +96,5 @@ export const MonitorBottomRightCorner = makeMonitorCorner(BR, drawBottomRight);
 
 export const BarBottomLeftCorner = makeBarCorner(BL, drawBottomLeft);
 export const BarBottomRightCorner = makeBarCorner(BR, drawBottomRight);
+export const BarTopLeftCorner = makeBarCorner(TL, drawTopLeft);
+export const BarTopRightCorner = makeBarCorner(TR, drawTopRight);

@@ -1,0 +1,17 @@
+.dock {
+  background-color: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 50rem;
+  padding: 8px 14px;
+
+  .icon {
+    -gtk-icon-size: 28px;
+    border-radius: 50rem;
+    min-width: 28px;
+    min-height: 28px;
+    filter: grayscale(99.99%)
+      brightness(1.001)
+      contrast(1.125)
+      brightness(1.125);
+  }
+}

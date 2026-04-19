@@ -1,6 +1,9 @@
 import Gtk from 'gi://Gtk?version=4.0';
 import Astal from 'gi://Astal?version=4.0';
 
+import { createBinding } from 'ags';
+
+import config from '@config';
 import Battery from './component/battery';
 import Devices from './component/devices';
 import Menu from './component/menu';
@@ -9,7 +12,6 @@ import Vpn from './component/vpn';
 import Network from './component/network';
 import DateTime from './component/datetime';
 import Weather from './component/weather';
-import Search from './component/search';
 import Workspaces from './component/workspaces';
 import KeyLock from './component/keylock';
 
@@ -18,11 +20,11 @@ export default () => (
     visible
     class='bar'
     namespace='bar'
-    anchor={
-      Astal.WindowAnchor.BOTTOM
+    anchor={createBinding(config, 'barAnchor').as((a) =>
+      (a === 'top' ? Astal.WindowAnchor.TOP : Astal.WindowAnchor.BOTTOM)
       | Astal.WindowAnchor.LEFT
       | Astal.WindowAnchor.RIGHT
-    }
+    )}
     exclusivity={Astal.Exclusivity.EXCLUSIVE}
   >
     <centerbox
@@ -36,10 +38,7 @@ export default () => (
         </box>
       </box>
       <box $type='center' spacing={20}>
-        <box spacing={8}>
-          <Search />
-          <Workspaces />
-        </box>
+        <Workspaces />
       </box>
       <box $type='end' spacing={20}>
         <Weather />

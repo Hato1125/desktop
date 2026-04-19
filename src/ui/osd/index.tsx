@@ -5,6 +5,7 @@ import AstalBluetooth from 'gi://AstalBluetooth?version=0.1';
 
 import { createBinding } from 'ags';
 import { createPopup } from '@lib/transition';
+import config from '@config';
 
 import gamemode from '@service/gamemode';
 import keylock from '@service/keylock';
@@ -12,11 +13,13 @@ import keylock from '@service/keylock';
 const osd = createPopup({
   transition: {
     opacity: [0, 1],
-    marginBottom: [0, 20],
+    ...(config.barAnchor === 'top'
+      ? { marginTop: [0, 50] }
+      : { marginBottom: [0, 20] }),
     duration: 300,
   },
   timeout: 3000,
-  anchor: Astal.WindowAnchor.BOTTOM,
+  anchor: config.barAnchor === 'top' ? Astal.WindowAnchor.TOP : Astal.WindowAnchor.BOTTOM,
   className: 'osd',
   namespace: 'osd',
   replace: true,
