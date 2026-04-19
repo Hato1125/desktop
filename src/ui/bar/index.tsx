@@ -11,6 +11,7 @@ import DateTime from './component/datetime';
 import Weather from './component/weather';
 import Search from './component/search';
 import Workspaces from './component/workspaces';
+import KeyLock from './component/keylock';
 
 export default () => (
   <window
@@ -44,6 +45,7 @@ export default () => (
         <Weather />
         <Vpn />
         <Network />
+        <KeyLock />
         <Devices />
         <Battery />
         <DateTime />
