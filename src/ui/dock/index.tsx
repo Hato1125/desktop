@@ -1,11 +1,18 @@
 import Gtk from 'gi://Gtk?version=4.0';
 import Astal from 'gi://Astal?version=4.0';
+import AstalApps from 'gi://AstalApps';
 
 import { createBinding, For } from 'ags';
-import { onCleanup } from 'ags';
 
 import config from '@config';
 import { toggleWindow } from '@ui/launcher';
+
+const apps = new AstalApps.Apps();
+
+const launchByIcon = (iconName: string) => {
+  const app = apps.get_list().find((a) => a.iconName === iconName);
+  if (app) app.launch();
+};
 
 const Launcher = () => (
   <button
@@ -31,6 +38,7 @@ const App = ({ name }: { name: string }) => (
     class='item'
     halign={Gtk.Align.CENTER}
     valign={Gtk.Align.CENTER}
+    onClicked={() => launchByIcon(name)}
   >
     <image
       class='icon'
@@ -40,37 +48,31 @@ const App = ({ name }: { name: string }) => (
   </button>
 );
 
-export default () => {
-  let win: Astal.Window | null = null;
-
-  const unsub = createBinding(config, 'dockApps').subscribe(() => {
-    win?.set_default_size(1, 1);
-  });
-  onCleanup(unsub);
-
-  return (
-    <window
-      $={(w) => { win = w; }}
-      visible
+export default () => (
+  <window
+    visible={createBinding(config, 'dockEnable')}
+    class='dock-layer'
+    namespace='dock'
+    anchor={
+      Astal.WindowAnchor.BOTTOM
+      | Astal.WindowAnchor.LEFT
+      | Astal.WindowAnchor.RIGHT
+    }
+    layer={Astal.Layer.TOP}
+    exclusivity={Astal.Exclusivity.EXCLUSIVE}
+  >
+    <box
       class='dock'
-      namespace='dock'
-      anchor={Astal.WindowAnchor.BOTTOM}
-      exclusivity={Astal.Exclusivity.EXCLUSIVE}
-      defaultWidth={1}
-      defaultHeight={1}
-      marginTop={2}
+      halign={Gtk.Align.CENTER}
+      valign={Gtk.Align.CENTER}
+      marginTop={4}
       marginBottom={8}
+      spacing={14}
     >
-      <box
-        halign={Gtk.Align.CENTER}
-        valign={Gtk.Align.CENTER}
-        spacing={14}
-      >
-        <Launcher />
-        <For each={createBinding(config, 'dockApps')}>
-          {(name: string) => <App name={name} />}
-        </For>
-      </box>
-    </window>
-  );
-};
+      <Launcher />
+      <For each={createBinding(config, 'dockApps')}>
+        {(name: string) => <App name={name} />}
+      </For>
+    </box>
+  </window>
+);

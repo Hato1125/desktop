@@ -48,7 +48,7 @@ app.start({
       BarBottomLeftCorner();
       BarBottomRightCorner();
     }
-    if (config.dockEnable) Dock();
+    Dock();
 
     return (
       <For each={createBinding(app, 'monitors')}>

@@ -1,3 +1,7 @@
+.dock-layer {
+  background: transparent;
+}
+
 .dock {
   background-color: var(--bg);
   border: 1px solid var(--border);
