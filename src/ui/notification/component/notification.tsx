@@ -1,28 +1,20 @@
 import Gtk from 'gi://Gtk?version=4.0';
-import AstalNotifd from 'gi://AstalNotifd?version=0.1';
 import Pango from 'gi://Pango?version=1.0';
+import Notifd from 'gi://AstalNotifd?version=0.1';
 
-const AppIcon = ({ notification }: { notification: AstalNotifd.Notification }) => {
+const AppIcon = ({ notification }: { notification: Notifd.Notification }) => {
   const image = notification.image;
   const appIcon = notification.appIcon;
 
   if (image) {
     return image.startsWith('/')
-      ? <image cssClasses={['icon']} file={image} />
-      : <image cssClasses={['icon']} iconName={image} />;
+      ? <image class='icon' file={image} />
+      : <image class='icon' iconName={image} />;
   }
 
-  if (appIcon) {
-    return (
-      <image
-        cssClasses={['icon']}
-        iconName={appIcon}
-      />
-    );
-  }
-
-  return (
-    <label
+  return appIcon
+    ? <image class='icon' iconName={appIcon} />
+    : <label
       cssClasses={[
         'icon',
         'symbols',
@@ -30,15 +22,82 @@ const AppIcon = ({ notification }: { notification: AstalNotifd.Notification }) =
         'filled'
       ]}
       label='notifications'
-    />
-  );
+    />;
 };
+
+const Content = ({ notification }: { notification: Notifd.Notification }) => (
+  <box
+    hexpand
+    valign={Gtk.Align.CENTER}
+    orientation={Gtk.Orientation.VERTICAL}
+    spacing={2}
+  >
+    <label
+      cssClasses={[
+        'summary',
+        'text-base',
+      ]}
+      maxWidthChars={30}
+      halign={Gtk.Align.START}
+      ellipsize={Pango.EllipsizeMode.END}
+      label={notification.summary}
+    />
+    {notification.body && (
+      <label
+        cssClasses={[
+          'body',
+          'text-xs',
+        ]}
+        maxWidthChars={30}
+        halign={Gtk.Align.START}
+        wrapMode={Pango.WrapMode.WORD_CHAR}
+        wrap
+        useMarkup
+        label={notification.body}
+      />
+    )}
+  </box>
+);
+
+const Actions = ({ notification }: { notification: Notifd.Notification }) => (
+  <box spacing={6}>
+    {notification.actions.map(action => (
+      <button
+        class='action'
+        hexpand
+        onClicked={() => notification.invoke(action.id)}
+      >
+        <label
+          class='text-xs'
+          label={action.label}
+        />
+      </button>
+    ))}
+  </box>
+);
+
+const CloseButton = ({ onDismiss }: { onDismiss: () => void }) => (
+  <button
+    class='close'
+    valign={Gtk.Align.START}
+    onClicked={onDismiss}
+  >
+    <label
+      cssClasses={[
+        'filled',
+        'symbols',
+        'symbols-sm',
+      ]}
+      label='close'
+    />
+  </button>
+);
 
 export default ({
   notification,
   onDismiss,
 }: {
-  notification: AstalNotifd.Notification;
+  notification: Notifd.Notification;
   onDismiss: () => void;
 }) => (
   <box
@@ -48,60 +107,9 @@ export default ({
   >
     <box spacing={10}>
       <AppIcon notification={notification} />
-      <box
-        valign={Gtk.Align.CENTER}
-        orientation={Gtk.Orientation.VERTICAL}
-        hexpand={true}
-        spacing={2}
-      >
-        <label
-          cssClasses={[
-            'summary',
-            'text-base'
-          ]}
-          maxWidthChars={30}
-          halign={Gtk.Align.START}
-          ellipsize={Pango.EllipsizeMode.END}
-          label={notification.summary}
-        />
-        {notification.body && (
-          <label
-            cssClasses={['body', 'text-xs']}
-            label={notification.body}
-            halign={Gtk.Align.START}
-            wrapMode={Pango.WrapMode.WORD_CHAR}
-            wrap={true}
-            useMarkup={true}
-            maxWidthChars={30}
-          />
-        )}
-      </box>
-      <button
-        class='close'
-        valign={Gtk.Align.START}
-        onClicked={onDismiss}
-      >
-        <label
-          cssClasses={['symbols', 'symbols-sm']}
-          label='close'
-        />
-      </button>
+      <Content notification={notification} />
+      <CloseButton onDismiss={onDismiss} />
     </box>
-    {notification.actions.length > 0 && (
-      <box spacing={6}>
-        {notification.actions.map(action => (
-          <button
-            class='action'
-            hexpand={true}
-            onClicked={() => notification.invoke(action.id)}
-          >
-            <label
-              cssClasses={['text-xs']}
-              label={action.label}
-            />
-          </button>
-        ))}
-      </box>
-    )}
+    {notification.actions.length > 0 && <Actions notification={notification} />}
   </box>
 );
