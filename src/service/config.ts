@@ -10,11 +10,38 @@ import {
 
 type BarAnchor = 'top' | 'bottom';
 
+const assign = <T extends GObject.Object, K extends keyof T>(
+  obj: T,
+  key: K,
+  value: T[K],
+) => {
+  if (obj[key] !== value) obj[key] = value;
+};
+
+@register()
+export class BarConfig extends GObject.Object {
+  @property(String) anchor: BarAnchor = 'top';
+
+  load(data: any) {
+    assign(this, 'anchor', data?.anchor ?? 'top');
+  }
+}
+
+@register()
+export class DockConfig extends GObject.Object {
+  @property(Boolean) enable: boolean = true;
+  @property(Object) apps: string[] = [];
+
+  load(data: any) {
+    assign(this, 'enable', data?.enable ?? true);
+    this.apps = data?.apps ?? [];
+  }
+}
+
 @register()
 export class ConfigService extends GObject.Object {
-  @property(String) barAnchor: BarAnchor = 'top';
-  @property(Boolean) dockEnable: boolean = true;
-  @property(Object) dockApps: string[] = [];
+  @property(Object) bar = new BarConfig();
+  @property(Object) dock = new DockConfig();
 
   private path = `${GLib.get_user_config_dir()}/desktop/config.json`;
   private monitor: Gio.FileMonitor | null = null;
@@ -30,13 +57,8 @@ export class ConfigService extends GObject.Object {
       const str = readFile(this.path);
       const json = JSON.parse(str);
 
-      const barAnchor: BarAnchor = json?.bar?.anchor ?? 'top';
-      const dockEnable: boolean = json?.dock?.enable ?? true;
-      const dockApps: string[] = json?.dock?.apps ?? [];
-
-      if (this.barAnchor !== barAnchor) this.barAnchor = barAnchor;
-      if (this.dockEnable !== dockEnable) this.dockEnable = dockEnable;
-      this.dockApps = dockApps;
+      this.bar.load(json?.bar);
+      this.dock.load(json?.dock);
     } catch (e) {
       console.error('config: failed to load', e);
     }

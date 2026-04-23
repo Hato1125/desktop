@@ -13,13 +13,13 @@ import keylock from '@service/keylock';
 const osd = createPopup({
   transition: {
     opacity: [0, 1],
-    ...(config.barAnchor === 'top'
+    ...(config.bar.anchor === 'top'
       ? { marginTop: [0, 50] }
       : { marginBottom: [0, 20] }),
     duration: 300,
   },
   timeout: 3000,
-  anchor: config.barAnchor === 'top' ? Astal.WindowAnchor.TOP : Astal.WindowAnchor.BOTTOM,
+  anchor: config.bar.anchor === 'top' ? Astal.WindowAnchor.TOP : Astal.WindowAnchor.BOTTOM,
   className: 'osd',
   namespace: 'osd',
   replace: true,

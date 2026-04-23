@@ -20,7 +20,7 @@ export default () => (
     visible
     class='bar'
     namespace='bar'
-    anchor={createBinding(config, 'barAnchor').as((a) =>
+    anchor={createBinding(config.bar, 'anchor').as((a) =>
       (a === 'top' ? Astal.WindowAnchor.TOP : Astal.WindowAnchor.BOTTOM)
       | Astal.WindowAnchor.LEFT
       | Astal.WindowAnchor.RIGHT

@@ -50,7 +50,7 @@ const App = ({ name }: { name: string }) => (
 
 export default () => (
   <window
-    visible={createBinding(config, 'dockEnable')}
+    visible={createBinding(config.dock, 'enable')}
     class='dock-layer'
     namespace='dock'
     anchor={
@@ -70,7 +70,7 @@ export default () => (
       spacing={14}
     >
       <Launcher />
-      <For each={createBinding(config, 'dockApps')}>
+      <For each={createBinding(config.dock, 'apps')}>
         {(name: string) => <App name={name} />}
       </For>
     </box>

@@ -41,7 +41,7 @@ app.start({
     Notification();
     Osd();
     Bar();
-    if (config.barAnchor === 'top') {
+    if (config.bar.anchor === 'top') {
       BarTopLeftCorner();
       BarTopRightCorner();
     } else {
