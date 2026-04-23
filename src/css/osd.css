@@ -5,18 +5,18 @@
   .content {
     background-color: var(--bg);
     border: 1px solid var(--border);
-    min-width: 205px;
-    min-height: 42.5px;
+    min-width: 200px;
+    min-height: 40px;
     border-radius: 50rem;
     margin-bottom: 50px;
   }
 
   .volume {
-    padding: 0 21px 0 16px;
+    padding: 0 20px 0 15px;
 
     levelbar {
-      min-width: 115px;
-      min-height: 5px;
+      min-width: 114px;
+      min-height: 4px;
 
       trough block {
         border-radius: 50rem;
@@ -27,4 +27,4 @@
     }
   }
 
-  .gamemode, .keylock, .bluetooth { padding: 0 21px 0 16px; }}
+  .gamemode, .keylock, .bluetooth { padding: 0 20px 0 15px; }}

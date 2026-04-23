@@ -6,13 +6,13 @@
   background-color: var(--bg);
   border: 1px solid var(--border);
   border-radius: 50rem;
-  padding: 8px 14px;
+  padding: 7px 13px;
 
   .icon {
-    -gtk-icon-size: 28px;
+    -gtk-icon-size: 27px;
     border-radius: 50rem;
-    min-width: 28px;
-    min-height: 28px;
+    min-width: 27px;
+    min-height: 27px;
     filter: grayscale(99.99%)
       brightness(1.001)
       contrast(1.125)

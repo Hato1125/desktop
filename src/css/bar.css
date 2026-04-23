@@ -1,15 +1,15 @@
 .bar {
   color: var(--fg);
   background-color: var(--bg);
-  min-height: 38px;
-  min-width: 38px;
-  padding: 0 28px;
+  min-height: 34px;
+  min-width: 37px;
+  padding: 0 27px;
 
   .search {
     transition: all 150ms ease-out;
     border-radius: 50rem;
-    min-width: 30px;
-    min-height: 30px;
+    min-width: 29px;
+    min-height: 29px;
     color: var(--fg);
     background-color: var(--bg);
   }
@@ -20,14 +20,14 @@
   }
 
   .workspaces {
-    padding: 4px 4px;
+    padding: 3px 3px;
     border-radius: 50rem;
     background-color: var(--dark-100);
 
     .workspace {
       border-radius: 50rem;
-      min-width: 22.5px;
-      min-height: 22.5px;
+      min-width: 21.5px;
+      min-height: 21.5px;
 
       &.focused {
         color: var(--bg);
@@ -70,16 +70,16 @@
 
     .level {
       border-radius: 50rem;
-      min-width: 27px;
-      min-height: 15px;
+      min-width: 26px;
+      min-height: 14px;
     }
   }
 
   .devices {
     .level {
       border-radius: 50rem;
-      min-width: 15px;
-      min-height: 4px;
+      min-width: 14px;
+      min-height: 3px;
     }
 
     .battery {

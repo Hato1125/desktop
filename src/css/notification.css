@@ -5,14 +5,14 @@
     background-color: var(--bg);
     border: 1px solid var(--border);
     border-radius: 16px;
-    padding: 12px 14px;
-    min-width: 280px;
+    padding: 11px 13px;
+    min-width: 279px;
     margin: 6px;
 
     .icon {
-      -gtk-icon-size: 28px;
-      min-width: 28px;
-      min-height: 28px;
+      -gtk-icon-size: 27px;
+      min-width: 27px;
+      min-height: 27px;
       filter: grayscale(99.99%)
         brightness(1.001)
         contrast(1.125)
@@ -28,7 +28,7 @@
     }
 
     .close {
-      padding: 2px;
+      padding: 1px;
       border-radius: 50rem;
 
       &:hover {
@@ -37,7 +37,7 @@
     }
 
     .action {
-      padding: 6px 12px;
+      padding: 5px 11px;
       border-radius: 8px;
       border: 1px solid var(--border);
 

@@ -38,7 +38,6 @@ const Battery = ({ device }: { device: AstalBattery.Device }) => {
       orientation={Gtk.Orientation.VERTICAL}
       halign={Gtk.Align.CENTER}
       valign={Gtk.Align.CENTER}
-      spacing={1}
       tooltipText={
         createBinding(device, 'percentage').as(p => {
           return `${device.model} ${Math.floor(p * 100)}%`

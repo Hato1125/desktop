@@ -43,18 +43,18 @@
   --fg-inverse: var(--dark-0);
   --danger: var(--red);
 
-  --font-xs: 8px;
-  --font-sm: 9.8px;
-  --font-base: 12px;
-  --font-lg: 14.7px;
-  --font-xl: 18px;
-  --font-2xl: 22px;
-  --font-3xl: 27px;
-  --font-4xl: 33px;
-  --font-5xl: 40.5px;
-  --font-6xl: 49.7px;
-  --font-7xl: 60.8px;
-  --font-8xl: 74.5px;
+  --font-xs: 6.75px;
+  --font-sm: 8.55px;
+  --font-base: 10.75px;
+  --font-lg: 13.45px;
+  --font-xl: 16.75px;
+  --font-2xl: 20.75px;
+  --font-3xl: 25.75px;
+  --font-4xl: 31.75px;
+  --font-5xl: 39.25px;
+  --font-6xl: 48.45px;
+  --font-7xl: 59.55px;
+  --font-8xl: 73.25px;
 }
 
 * {

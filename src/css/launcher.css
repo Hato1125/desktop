@@ -3,15 +3,15 @@
     background-color: var(--bg);
     border: 1px solid var(--border);
     border-radius: 16px;
-    min-width: 750px;
-    min-height: 450px;
+    min-width: 749px;
+    min-height: 449px;
   }
 
   .search {
-    padding: 0 28px;
+    padding: 0 27px;
 
     entry {
-      padding: 16px 0;
+      padding: 15px 0;
 
       text {
         color: var(--fg);
@@ -24,7 +24,7 @@
   .item {
     border-radius: 12px;
     margin: 0 18px;
-    padding: 10px 30px;
+    padding: 9px 29px;
     color: var(--fg);
     background-color: var(--bg);
     filter: grayscale(99.99%)
