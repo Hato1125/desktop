@@ -2,6 +2,7 @@ import Gtk from 'gi://Gtk?version=4.0';
 import Gio from 'gi://Gio?version=2.0';
 import GLib from 'gi://GLib?version=2.0';
 import { readFile } from 'ags/file';
+import { defineComponent } from './component';
 
 export default () => {
   const distro = readFile('/etc/os-release')
@@ -25,7 +26,7 @@ export default () => {
   const reboot = () => login1.call_sync('Reboot', new GLib.Variant('(b)', [true]), Gio.DBusCallFlags.NONE, -1, null);
   const suspend = () => login1.call_sync('Suspend', new GLib.Variant('(b)', [true]), Gio.DBusCallFlags.NONE, -1, null);
 
-  return (
+  return defineComponent('menu', () => (
     <box>
       <button onClicked={() => popupvar.popup()}>
         <image class='symbols-lg' iconName={`${distro}-symbolic`} />
@@ -90,5 +91,5 @@ export default () => {
         </box>
       </Gtk.Popover>
     </box>
-  );
+  ));
 }

@@ -1,11 +1,11 @@
 import Gtk from 'gi://Gtk?version=4.0';
 import AstalBattery from 'gi://AstalBattery?version=0.1';
-
 import { createBinding } from 'ags';
+import { defineComponent } from './component';
 
 const battery = AstalBattery.get_default();
 
-export default () => (
+export default () => defineComponent('battery', () => (
   <overlay class='battery' visible={createBinding(battery, 'isPresent')}>
     <levelbar
       cssClasses={
@@ -45,4 +45,4 @@ export default () => (
       />
     </box>
   </overlay>
-);
+));

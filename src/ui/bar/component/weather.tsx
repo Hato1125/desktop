@@ -1,7 +1,8 @@
 import { createBinding } from 'ags';
+import { defineComponent } from './component';
 import weather from '@service/weather';
 
-export default () => (
+export default () => defineComponent('weather', () => (
   <box
     spacing={6}
     tooltipText={createBinding(weather, 'temperature').as(t => `${t}°C`)}
@@ -15,4 +16,4 @@ export default () => (
       label={createBinding(weather, 'icon')}
     />
   </box>
-);
+));

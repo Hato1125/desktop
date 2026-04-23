@@ -1,7 +1,8 @@
 import { createBinding } from 'ags';
+import { defineComponent } from './component';
 import vpn from '@service/vpn';
 
-export default () => (
+export default () => defineComponent('vpn', () => (
   <box class='vpn' visible={createBinding(vpn, 'connected')}>
     <label
       cssClasses={[
@@ -19,4 +20,4 @@ export default () => (
       label={createBinding(vpn, 'country')}
     />
   </box>
-);
+));

@@ -1,7 +1,7 @@
 import AstalHyprland from 'gi://AstalHyprland?version=0.1';
 import Pango from 'gi://Pango?version=1.0';
-
 import { createBinding, With } from 'ags';
+import { defineComponent } from './component';
 
 const nestedCompositors = [
   'gamescope',
@@ -27,7 +27,7 @@ const displayClientName = (client: AstalHyprland.Client) => {
 export default () => {
   const focused = createBinding(AstalHyprland.get_default(), 'focusedClient');
 
-  return (
+  return defineComponent('client', () => (
     <box class='client'>
       <With value={focused}>
         {(client) => client && (
@@ -43,5 +43,5 @@ export default () => {
         )}
       </With>
     </box>
-  );
+  ));
 }

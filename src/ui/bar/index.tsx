@@ -1,7 +1,7 @@
 import Gtk from 'gi://Gtk?version=4.0';
 import Astal from 'gi://Astal?version=4.0';
 
-import { createBinding } from 'ags';
+import { createBinding, For } from 'ags';
 
 import config from '@config';
 import Battery from './component/battery';
@@ -14,6 +14,29 @@ import DateTime from './component/datetime';
 import Weather from './component/weather';
 import Workspaces from './component/workspaces';
 import KeyLock from './component/keylock';
+
+import { Component } from './component/component';
+
+const components: Component[] = [
+  Battery(),
+  Devices(),
+  Menu(),
+  Client(),
+  Vpn(),
+  Network(),
+  DateTime(),
+  Weather(),
+  Workspaces(),
+  KeyLock(),
+];
+
+const byName = new Map(components.map((c) => [c.name, c]));
+
+const Slot = ({ names }: { names: 'start' | 'center' | 'end' }) => (
+  <For each={createBinding(config.bar, names)}>
+    {(name: string) => byName.get(name)?.render() ?? (<box visible={false} />) as JSX.Element}
+  </For>
+);
 
 export default () => (
   <window
@@ -32,22 +55,13 @@ export default () => (
       orientation={Gtk.Orientation.HORIZONTAL}
     >
       <box $type='start' spacing={20}>
-        <box spacing={14}>
-          <Menu />
-          <Client />
-        </box>
+        <Slot names='start' />
       </box>
       <box $type='center' spacing={20}>
-        <Workspaces />
+        <Slot names='center' />
       </box>
       <box $type='end' spacing={20}>
-        <Weather />
-        <Vpn />
-        <Network />
-        <KeyLock />
-        <Devices />
-        <Battery />
-        <DateTime />
+        <Slot names='end' />
       </box>
     </centerbox>
   </window>

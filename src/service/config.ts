@@ -18,12 +18,30 @@ const assign = <T extends GObject.Object, K extends keyof T>(
   if (obj[key] !== value) obj[key] = value;
 };
 
+const DEFAULT_BAR_START = ['menu', 'client'];
+const DEFAULT_BAR_CENTER = ['workspaces'];
+const DEFAULT_BAR_END = [
+  'weather',
+  'vpn',
+  'network',
+  'keylock',
+  'devices',
+  'battery',
+  'datetime',
+];
+
 @register()
 export class BarConfig extends GObject.Object {
   @property(String) anchor: BarAnchor = 'top';
+  @property(Object) start: string[] = DEFAULT_BAR_START;
+  @property(Object) center: string[] = DEFAULT_BAR_CENTER;
+  @property(Object) end: string[] = DEFAULT_BAR_END;
 
   load(data: any) {
     assign(this, 'anchor', data?.anchor ?? 'top');
+    this.start = data?.start ?? DEFAULT_BAR_START;
+    this.center = data?.center ?? DEFAULT_BAR_CENTER;
+    this.end = data?.end ?? DEFAULT_BAR_END;
   }
 }
 

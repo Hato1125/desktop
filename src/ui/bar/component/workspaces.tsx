@@ -1,13 +1,14 @@
 import Gtk from 'gi://Gtk?version=4.0';
 import AstalHyprland from 'gi://AstalHyprland?version=0.1';
 import { createBinding, For } from 'ags';
+import { defineComponent } from './component';
 
 export default () => {
   const hyprland = AstalHyprland.get_default();
   const workspaces = createBinding(hyprland, 'workspaces');
   const focused = createBinding(hyprland, 'focusedWorkspace');
 
-  return (
+  return defineComponent('workspaces', () => (
     <box class='workspaces' spacing={8}>
       <For each={workspaces}>
         {(workspace: AstalHyprland.Workspace) => (
@@ -33,5 +34,5 @@ export default () => {
         )}
       </For>
     </box>
-  );
+  ));
 }

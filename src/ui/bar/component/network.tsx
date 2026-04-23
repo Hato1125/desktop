@@ -1,5 +1,6 @@
 import AstalNetwork from 'gi://AstalNetwork?version=0.1';
 import { createBinding, createMemo, With } from 'ags';
+import { defineComponent } from './component';
 
 const network = AstalNetwork.get_default();
 
@@ -41,7 +42,7 @@ const WiFi = ({ wifi }: { wifi: AstalNetwork.Wifi }) => {
 
 const Unknown = () => (<label class='symbols' label='android_wifi_3_bar_off' />);
 
-export default () => (
+export default () => defineComponent('network', () => (
   <box>
     <With value={createBinding(network, 'primary')}>
       {(primary) => {
@@ -53,4 +54,4 @@ export default () => (
       }}
     </With>
   </box>
-);
+));

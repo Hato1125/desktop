@@ -2,6 +2,7 @@ import Gtk from 'gi://Gtk?version=4.0'
 import GLib from 'gi://GLib?version=2.0'
 import { createMemo, createState } from 'ags';
 import { timeout } from 'ags/time'
+import { defineComponent } from './component';
 
 const [now, setNow] = createState(GLib.DateTime.new_now_local());
 
@@ -14,7 +15,7 @@ const tick = () => {
 
 tick();
 
-export default () => (
+export default () => defineComponent('datetime', () => (
   <box orientation={Gtk.Orientation.HORIZONTAL} spacing={8}>
     <label
       cssClasses={[
@@ -44,4 +45,4 @@ export default () => (
       label={createMemo(() => now().format('%p')!)}
     />
   </box>
-);
+));

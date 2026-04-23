@@ -1,7 +1,7 @@
 import Gtk from 'gi://Gtk?version=4.0';
 import AstalBattery from 'gi://AstalBattery?version=0.1';
-
 import { createBinding, For } from 'ags';
+import { defineComponent } from './component';
 
 const icons: Map<AstalBattery.Type, string> = new Map([
   [AstalBattery.Type.MOUSE, 'mouse'],
@@ -86,7 +86,7 @@ const Battery = ({ device }: { device: AstalBattery.Device }) => {
   );
 }
 
-export default () => (
+export default () => defineComponent('devices', () => (
   <box spacing={14} visible={devices.as(d => d.length > 0)}>
     <For each={devices}>
       {(device) => device && (
@@ -96,4 +96,4 @@ export default () => (
       )}
     </For>
   </box>
-);
+));

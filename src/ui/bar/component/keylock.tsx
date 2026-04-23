@@ -1,12 +1,13 @@
 import keylock from '@service/keylock';
 import { createBinding, createMemo } from 'ags';
+import { defineComponent } from './component';
 
 export default () => {
   const capsLock = createBinding(keylock, 'capsLock');
   const numLock = createBinding(keylock, 'numLock');
   const hasLock = createMemo(() => capsLock() || numLock());
 
-  return (
+  return defineComponent('keylock', () => (
     <box visible={hasLock}>
       <label
         visible={capsLock}
@@ -27,5 +28,5 @@ export default () => {
         label='grid_view'
       />
     </box>
-  );
+  ));
 }
