@@ -5,8 +5,8 @@
   .content {
     background-color: var(--bg);
     border: 1px solid var(--border);
-    min-width: 200px;
-    min-height: 40px;
+    min-width: 190px;
+    min-height: 38.5px;
     border-radius: 50rem;
     margin-bottom: 50px;
   }
@@ -27,4 +27,5 @@
     }
   }
 
-  .gamemode, .keylock, .bluetooth { padding: 0 20px 0 15px; }}
+  .gamemode, .keylock, .bluetooth { padding: 0 20px 0 15px; }
+}

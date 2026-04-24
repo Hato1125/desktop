@@ -96,4 +96,27 @@
     trough block.empty { background-color: var(--fg-muted); }
     &.warn trough block.filled { background-color: var(--danger); }
   }
+
+  .nowplaying {
+    .thumbnail {
+      min-width: 22px;
+      min-height: 22px;
+      background-size: cover;
+      background-position: center;
+      border-radius: 50rem;
+      animation: nowplaying-spin 8s linear infinite;
+    }
+
+    .difficulty {
+      .value {
+        font-family: 'Satoshi Variable';
+        font-feature-settings: 'tnum' 1;
+      }
+    }
+  }
+}
+
+@keyframes nowplaying-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }

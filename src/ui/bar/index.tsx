@@ -14,6 +14,7 @@ import DateTime from './component/datetime';
 import Weather from './component/weather';
 import Workspaces from './component/workspaces';
 import KeyLock from './component/keylock';
+import Nowplaying from './component/nowplaying';
 
 import { Component } from './component/component';
 
@@ -28,6 +29,7 @@ const components: Component[] = [
   Weather(),
   Workspaces(),
   KeyLock(),
+  Nowplaying(),
 ];
 
 const byName = new Map(components.map((c) => [c.name, c]));
