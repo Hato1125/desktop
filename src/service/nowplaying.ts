@@ -1,4 +1,5 @@
 import GObject from 'gi://GObject?version=2.0';
+import GLib from 'gi://GLib?version=2.0';
 import AstalMpris from 'gi://AstalMpris?version=0.1';
 
 import {
@@ -21,24 +22,25 @@ export class NowPlayingService extends GObject.Object {
 
   private mpris: AstalMpris.Mpris;
   private bound = new WeakSet<AstalMpris.Player>();
+  private scheduled = false;
 
   constructor() {
     super();
     this.mpris = AstalMpris.get_default();
 
     for (const p of ['available', 'title', 'artist', 'background', 'stars']) {
-      tosu.connect(`notify::${p}`, () => this.recompute());
+      tosu.connect(`notify::${p}`, () => this.schedule());
     }
 
     this.mpris.connect('notify::players', () => {
       this.mpris.players.forEach((p) => this.bindPlayer(p));
-      this.recompute();
+      this.schedule();
     });
     this.mpris.connect('player-added', (_, player: AstalMpris.Player) => {
       this.bindPlayer(player);
-      this.recompute();
+      this.schedule();
     });
-    this.mpris.connect('player-closed', () => this.recompute());
+    this.mpris.connect('player-closed', () => this.schedule());
 
     this.mpris.players.forEach((p) => this.bindPlayer(p));
     this.recompute();
@@ -48,8 +50,18 @@ export class NowPlayingService extends GObject.Object {
     if (this.bound.has(player)) return;
     this.bound.add(player);
     for (const p of ['playback-status', 'title', 'artist', 'cover-art', 'art-url']) {
-      player.connect(`notify::${p}`, () => this.recompute());
+      player.connect(`notify::${p}`, () => this.schedule());
     }
+  }
+
+  private schedule() {
+    if (this.scheduled) return;
+    this.scheduled = true;
+    GLib.idle_add(GLib.PRIORITY_DEFAULT, () => {
+      this.scheduled = false;
+      this.recompute();
+      return GLib.SOURCE_REMOVE;
+    });
   }
 
   private pickMprisPlayer(): AstalMpris.Player | null {
