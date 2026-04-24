@@ -98,6 +98,11 @@
   }
 
   .nowplaying {
+    .thumb-container {
+      min-width: 22px;
+      min-height: 22px;
+    }
+
     .thumbnail {
       min-width: 22px;
       min-height: 22px;
@@ -106,6 +111,16 @@
       border-radius: 50rem;
       animation: nowplaying-spin 8s linear infinite;
     }
+
+    .note {
+      color: transparent;
+      text-shadow: 0 0 0 var(--fg);
+      font-size: 8px;
+      animation: note-float 3s ease-out infinite;
+    }
+    .note-1 { animation-delay: 0s;   }
+    .note-2 { animation-delay: 1s;   }
+    .note-3 { animation-delay: 2s;   }
 
     .difficulty {
       .value {
@@ -119,4 +134,11 @@
 @keyframes nowplaying-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+@keyframes note-float {
+  0%   { transform: translate(2px,    0px);     text-shadow: 0 0 0 var(--fg); opacity: 0; }
+  20%  { transform: translate(9px,  -4px);  text-shadow: 0 0 0 var(--fg); opacity: 1; }
+  60%  { transform: translate(19px, -10px); text-shadow: 0 0 1px var(--fg); opacity: 0.7; }
+  100% { transform: translate(29px, -18px); text-shadow: 0 0 10px var(--fg); opacity: 0; }
 }

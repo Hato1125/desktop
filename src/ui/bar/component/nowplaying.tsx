@@ -25,8 +25,10 @@ const text = createMemo(() => artist() ? `${artist()} - ${title()}` : title());
 const signature = createMemo(() => `${source()}|${text()}|${stars()}`);
 
 const createThumb = () => {
-  const provider = new Gtk.CssProvider();
-  const widget = (
+  const bgProvider = new Gtk.CssProvider();
+  const noteBlurProvider = new Gtk.CssProvider();
+
+  const base = (
     <box
       class='thumbnail'
       halign={Gtk.Align.CENTER}
@@ -34,13 +36,37 @@ const createThumb = () => {
       overflow={Gtk.Overflow.HIDDEN}
     />
   ) as Gtk.Widget;
-  widget.get_style_context().add_provider(provider, USER_PRIORITY);
+  base.get_style_context().add_provider(bgProvider, USER_PRIORITY);
+
+  const note = (cls: string) => {
+    const label = (
+      <label
+        $type='overlay'
+        cssClasses={['symbols', 'filled', 'note', cls]}
+        label='music_note'
+        halign={Gtk.Align.CENTER}
+        valign={Gtk.Align.CENTER}
+      />
+    ) as Gtk.Label;
+    label.get_style_context().add_provider(noteBlurProvider, USER_PRIORITY);
+    return label;
+  };
+
+  const widget = (
+    <overlay class='thumb-container'>
+      {base}
+      {note('note-1')}
+      {note('note-2')}
+      {note('note-3')}
+    </overlay>
+  ) as Gtk.Widget;
 
   let blur = 0;
   let bg = 'background-image: none;';
-  const render = () => provider.load_from_string(
-    `* { ${bg} filter: blur(${blur}px) ${THUMB_FILTER}; }`
-  );
+  const render = () => {
+    bgProvider.load_from_string(`* { ${bg} filter: blur(${blur}px) ${THUMB_FILTER}; }`);
+    noteBlurProvider.load_from_string(`* { filter: blur(${blur}px); }`);
+  };
   render();
 
   return {
