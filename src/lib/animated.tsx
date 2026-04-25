@@ -2,7 +2,7 @@ import Gtk from 'gi://Gtk?version=4.0';
 import Adw from 'gi://Adw?version=1';
 
 import type { Accessor } from 'ags';
-import { idle } from 'ags/time';
+import { idle, Timer } from 'ags/time';
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
@@ -101,13 +101,19 @@ export const Animated = ({
   if (when) {
     let current = when() ? 1 : 0;
     let active: Adw.TimedAnimation | null = null;
+    let pendingIdle: Timer | null = null;
 
     applyFrame(widget, provider, initial, animate, style, current);
 
     const play = (target: number) => {
       active?.pause();
+      pendingIdle?.cancel();
+      pendingIdle = null;
       const from = current;
-      if (from === target) return;
+      if (from === target) {
+        active = null;
+        return;
+      }
 
       const anim = new Adw.TimedAnimation({
         widget,
@@ -126,7 +132,10 @@ export const Animated = ({
         if (target === 1) onEnter?.();
         else onExit?.();
       });
-      idle(() => anim.play());
+      pendingIdle = idle(() => {
+        pendingIdle = null;
+        anim.play();
+      });
     };
 
     when.subscribe(() => play(when() ? 1 : 0));
