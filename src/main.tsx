@@ -1,25 +1,11 @@
 declare const SRC: string;
 
 import app from 'ags/gtk4/app';
-import {
-  createBinding,
-  For,
-  This
-} from 'ags';
 
-import { Gdk } from 'ags/gtk4';
-
-import config from '@config';
 import Launcher, { toggleWindow } from '@ui/launcher/index';
 import {
-  MonitorBottomLeftCorner,
-  MonitorBottomRightCorner,
-  MonitorTopLeftCorner,
-  MonitorTopRightCorner,
-  BarBottomLeftCorner,
-  BarBottomRightCorner,
-  BarTopLeftCorner,
-  BarTopRightCorner,
+  MonitorCorners,
+  BarCorner,
 } from '@ui/corner/index';
 import Bar from '@ui/bar/index';
 import Dock from '@ui/dock/index';
@@ -41,26 +27,8 @@ app.start({
     Notification();
     Osd();
     Bar();
-    if (config.bar.anchor === 'top') {
-      BarTopLeftCorner();
-      BarTopRightCorner();
-    } else {
-      BarBottomLeftCorner();
-      BarBottomRightCorner();
-    }
+    BarCorner();
+    MonitorCorners();
     Dock();
-
-    return (
-      <For each={createBinding(app, 'monitors')}>
-        {(monitor: Gdk.Monitor) => (
-          <This this={app}>
-            <MonitorTopLeftCorner gdkmonitor={monitor} />
-            <MonitorTopRightCorner gdkmonitor={monitor} />
-            <MonitorBottomLeftCorner gdkmonitor={monitor} />
-            <MonitorBottomRightCorner gdkmonitor={monitor} />
-          </This>
-        )}
-      </For>
-    );
   }
 });

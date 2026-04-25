@@ -1,6 +1,14 @@
 import Gdk from 'gi://Gdk?version=4.0';
 import Astal from 'gi://Astal?version=4.0';
+import {
+  createBinding,
+  For,
+  This
+} from 'ags';
+import app from 'ags/gtk4/app';
+
 import giCairo from 'cairo';
+import config from '@config';
 
 const ROUNDED: number = 20;
 
@@ -33,10 +41,11 @@ const makeCornerWindow = (
     anchor: Astal.WindowAnchor;
     exclusivity: Astal.Exclusivity;
     drawCorner: DrawArc;
+    visible?: boolean | object;
   }
 ) => (
   <window
-    visible
+    visible={props.visible ?? true}
     class='corner'
     namespace='corner'
     gdkmonitor={props.monitor}
@@ -75,13 +84,14 @@ const makeMonitorCorner = (
 const makeBarCorner = (
   anchor: Astal.WindowAnchor,
   drawCorner: DrawArc,
-) => () =>
+) => (visible?: boolean | object) =>
   makeCornerWindow({
     monitor: undefined,
     layer: Astal.Layer.TOP,
     anchor,
     exclusivity: Astal.Exclusivity.EXCLUSIVE,
     drawCorner,
+    visible,
   });
 
 const TL = Astal.WindowAnchor.TOP | Astal.WindowAnchor.LEFT;
@@ -98,3 +108,27 @@ export const BarBottomLeftCorner = makeBarCorner(BL, drawBottomLeft);
 export const BarBottomRightCorner = makeBarCorner(BR, drawBottomRight);
 export const BarTopLeftCorner = makeBarCorner(TL, drawTopLeft);
 export const BarTopRightCorner = makeBarCorner(TR, drawTopRight);
+
+export const BarCorner = () => {
+  const anchorBinding = createBinding(config.bar, 'anchor');
+
+  BarTopLeftCorner(anchorBinding.as((a) => a === 'top'));
+  BarTopRightCorner(anchorBinding.as((a) => a === 'top'));
+  BarBottomLeftCorner(anchorBinding.as((a) => a !== 'top'));
+  BarBottomRightCorner(anchorBinding.as((a) => a !== 'top'));
+
+  return <box visible={false} />;
+}
+
+export const MonitorCorners = () => (
+  <For each={createBinding(app, 'monitors')}>
+    {(monitor: Gdk.Monitor) => (
+      <This this={app}>
+        <MonitorTopLeftCorner gdkmonitor={monitor} />
+        <MonitorTopRightCorner gdkmonitor={monitor} />
+        <MonitorBottomLeftCorner gdkmonitor={monitor} />
+        <MonitorBottomRightCorner gdkmonitor={monitor} />
+      </This>
+    )}
+  </For>
+);
