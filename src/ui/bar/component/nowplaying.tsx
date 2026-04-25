@@ -2,7 +2,7 @@ import Gtk from 'gi://Gtk?version=4.0';
 import Pango from 'gi://Pango?version=1.0';
 import { createBinding, createMemo, createState } from 'ags';
 import { defineComponent } from './component';
-import { createTween, easings } from '@lib/tween';
+import { createTween, easings, CANCELLED } from '@lib/tween';
 import nowplaying from '@service/nowplaying';
 
 const BLUR_MAX = 8;
@@ -28,15 +28,29 @@ const createThumb = () => {
   const bgProvider = new Gtk.CssProvider();
   const noteBlurProvider = new Gtk.CssProvider();
 
+  const placeholder = (
+    <label
+      cssClasses={['symbols', 'filled', 'thumb-placeholder']}
+      label='music_note'
+      halign={Gtk.Align.FILL}
+      valign={Gtk.Align.FILL}
+      xalign={0.5}
+      yalign={0.5}
+    />
+  ) as Gtk.Label;
+
   const base = (
     <box
       class='thumbnail'
       halign={Gtk.Align.CENTER}
       valign={Gtk.Align.CENTER}
       overflow={Gtk.Overflow.HIDDEN}
-    />
+    >
+      {placeholder}
+    </box>
   ) as Gtk.Widget;
   base.get_style_context().add_provider(bgProvider, USER_PRIORITY);
+  base.add_css_class('no-art');
 
   const note = (cls: string) => {
     const label = (
@@ -74,6 +88,9 @@ const createThumb = () => {
     setArtwork: (p: string) => {
       const url = !p ? '' : /^(https?|file):\/\//.test(p) ? p : `file://${p}`;
       bg = url ? `background-image: url("${url}");` : 'background-image: none;';
+      placeholder.visible = !url;
+      if (url) base.remove_css_class('no-art');
+      else     base.add_css_class('no-art');
       render();
     },
     setBlur: (b: number) => { blur = b; render(); },
@@ -101,10 +118,18 @@ type AnimatorDeps = {
 };
 
 const createAnimator = ({ root, thumb, textGroup, setVisible }: AnimatorDeps) => {
+  let lastBlur = -1;
+  let lastOpacity = -1;
   const apply = ({ blur, opacity }: { blur: number; opacity: number }) => {
-    thumb.setBlur(blur);
-    textGroup.setBlur(blur);
-    root.opacity = opacity;
+    if (Math.abs(blur - lastBlur) >= 0.05) {
+      lastBlur = blur;
+      thumb.setBlur(blur);
+      textGroup.setBlur(blur);
+    }
+    if (Math.abs(opacity - lastOpacity) >= 0.005) {
+      lastOpacity = opacity;
+      root.opacity = opacity;
+    }
   };
   const sync = () => {
     textGroup.title.set_label(text());
@@ -118,28 +143,32 @@ const createAnimator = ({ root, thumb, textGroup, setVisible }: AnimatorDeps) =>
   const swapOut = () => tween(VISIBLE, HIDDEN,  SWITCH_DURATION / 2, easings.easeInOut);
   const swapIn  = () => tween(HIDDEN,  VISIBLE, SWITCH_DURATION / 2, easings.easeInOut);
 
+  const safe = (fn: () => Promise<void>) => async () => {
+    try { await fn(); } catch (e) { if (e !== CANCELLED) throw e; }
+  };
+
   let showing = false;
 
-  const show = async () => {
+  const show = safe(async () => {
     sync();
     apply(HIDDEN);
     setVisible(true);
     showing = true;
     await fadeIn();
     showing = false;
-  };
+  });
 
-  const hide = async () => {
+  const hide = safe(async () => {
     showing = false;
     await fadeOut();
     setVisible(false);
-  };
+  });
 
-  const swap = async () => {
+  const swap = safe(async () => {
     await swapOut();
     sync();
     await swapIn();
-  };
+  });
 
   sync();
   if (available()) show();
@@ -148,6 +177,9 @@ const createAnimator = ({ root, thumb, textGroup, setVisible }: AnimatorDeps) =>
     if (!available()) return;
     if (showing) sync();
     else swap();
+  });
+  artwork.subscribe(() => {
+    if (available()) thumb.setArtwork(artwork());
   });
 };
 

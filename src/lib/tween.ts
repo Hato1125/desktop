@@ -15,13 +15,24 @@ export const easings = {
     t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2,
 } as const;
 
+export const CANCELLED = Symbol('tween-cancelled');
+
 export const createTween = <T extends Values>(widget: Gtk.Widget, apply: (v: T) => void) => {
   let anim: Adw.TimedAnimation | null = null;
-  let gen = 0;
+  let cancel: (() => void) | null = null;
 
-  return (from: T, to: T, duration: number, easing: Easing) => new Promise<void>((resolve) => {
-    anim?.pause();
-    const my = ++gen;
+  return (from: T, to: T, duration: number, easing: Easing) => new Promise<void>((resolve, reject) => {
+    cancel?.();
+
+    let dead = false;
+    cancel = () => {
+      if (dead) return;
+      dead = true;
+      anim?.pause();
+      anim = null;
+      reject(CANCELLED);
+    };
+
     const keys = Object.keys(from) as (keyof T)[];
 
     const current = new Adw.TimedAnimation({
@@ -31,7 +42,7 @@ export const createTween = <T extends Values>(widget: Gtk.Widget, apply: (v: T) 
       duration,
       easing: Adw.Easing.LINEAR,
       target: Adw.CallbackAnimationTarget.new((t: number) => {
-        if (my !== gen) return;
+        if (dead) return;
         const e = easing(t);
         const out = {} as Record<string, number>;
         for (const k of keys) {
@@ -45,11 +56,14 @@ export const createTween = <T extends Values>(widget: Gtk.Widget, apply: (v: T) 
     anim = current;
 
     current.connect('done', () => {
-      if (my !== gen) return;
+      if (dead) return;
+      dead = true;
+      anim = null;
+      cancel = null;
       apply(to);
       resolve();
     });
 
-    idle(() => { if (my === gen) current.play(); });
+    idle(() => { if (!dead) current.play(); });
   });
 };

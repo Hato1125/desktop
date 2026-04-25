@@ -110,6 +110,19 @@
       background-position: center;
       border-radius: 50rem;
       animation: nowplaying-spin 8s linear infinite;
+
+      &.no-art {
+        background-color: var(--fg);
+      }
+    }
+
+    .thumb-placeholder {
+      margin: 0;
+      min-width: 22px;
+      min-height: 22px;
+      color: var(--bg);
+      font-size: 11px;
+      -gtk-icon-size: 11px;
     }
 
     .note {
@@ -137,8 +150,9 @@
 }
 
 @keyframes note-float {
-  0%   { transform: translate(2px,    0px);     text-shadow: 0 0 0 var(--fg); opacity: 0; }
-  20%  { transform: translate(9px,  -4px);  text-shadow: 0 0 0 var(--fg); opacity: 1; }
-  60%  { transform: translate(19px, -10px); text-shadow: 0 0 1px var(--fg); opacity: 0.7; }
-  100% { transform: translate(29px, -18px); text-shadow: 0 0 10px var(--fg); opacity: 0; }
+  0% { transform: translate(2px, 0px); text-shadow: 0 0 0 var(--fg); opacity: 0; }
+  10% { transform: translate(5px, -3px); text-shadow: 0 0 0 var(--fg); opacity: 0; }
+  20% { transform: translate(9px, -7px); text-shadow: 0 0 0 var(--fg); opacity: 1; }
+  60% { transform: translate(23px, -12px); text-shadow: 0 0 3px var(--fg); opacity: 0.7; }
+  100% { transform: translate(33px, -14px); text-shadow: 0 0 12px var(--fg); opacity: 0; }
 }
