@@ -7,7 +7,7 @@ const network = AstalNetwork.get_default();
 const Wired = ({ wired }: { wired: AstalNetwork.Wired }) => (
   <label
     tooltipMarkup={createBinding(wired, 'device').as(d => d.perm_hw_address)}
-    cssClasses={['symbols', 'symbols-lg']}
+    cssClasses={['filled', 'symbols', 'symbols-lg']}
     label={
       createBinding(wired, 'state')
         .as(state =>
@@ -20,27 +20,32 @@ const Wired = ({ wired }: { wired: AstalNetwork.Wired }) => (
 );
 
 const WiFi = ({ wifi }: { wifi: AstalNetwork.Wifi }) => {
-   const state = createBinding(wifi, 'state');
-   const strength = createBinding(wifi, 'strength');
+  const state = createBinding(wifi, 'state');
+  const strength = createBinding(wifi, 'strength');
 
-   const icon = createMemo(() =>
-     state() !== AstalNetwork.DeviceState.ACTIVATED
-       ? 'wifi_off'
-       : strength() >= 67 ? 'wifi'
-       : strength() >= 34 ? 'wifi_2_bar'
-       : 'wifi_1_bar'
-   );
+  const icon = createMemo(() =>
+    state() !== AstalNetwork.DeviceState.ACTIVATED
+      ? 'wifi_off'
+      : strength() >= 67 ? 'wifi'
+      : strength() >= 34 ? 'wifi_2_bar'
+      : 'wifi_1_bar'
+  );
 
-   return (
-     <label
-       tooltipMarkup={createBinding(wifi, 'ssid')}
-       cssClasses={['symbols', 'symbols-xl']}
-       label={icon}
-     />
-   );
- };
+  return (
+    <label
+      tooltipMarkup={createBinding(wifi, 'ssid')}
+      cssClasses={['filled', 'symbols', 'symbols-xl']}
+      label={icon}
+    />
+  );
+};
 
-const Unknown = () => (<label class='symbols' label='android_wifi_3_bar_off' />);
+const Unknown = () => (
+  <label
+    cssClasses={['filled', 'symbols', 'symbols-xl']}
+    label='android_wifi_3_bar_off'
+  />
+);
 
 export default () => defineComponent('network', () => (
   <box>
