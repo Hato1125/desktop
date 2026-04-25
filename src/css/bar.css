@@ -12,11 +12,11 @@
     min-height: 29px;
     color: var(--fg);
     background-color: var(--bg);
-  }
 
-  .search:active {
-    color: var(--bg);
-    background-color: var(--fg);
+    &:active {
+      color: var(--bg);
+      background-color: var(--fg);
+    }
   }
 
   .workspaces {
@@ -131,9 +131,9 @@
       font-size: 8px;
       animation: note-float 3s ease-out infinite;
     }
-    .note-1 { animation-delay: 0s;   }
-    .note-2 { animation-delay: 1s;   }
-    .note-3 { animation-delay: 2s;   }
+    .note-1 { animation-delay: 0s; }
+    .note-2 { animation-delay: 1s; }
+    .note-3 { animation-delay: 2s; }
 
     .difficulty {
       .value {
@@ -151,8 +151,8 @@
 
 @keyframes note-float {
   0% { transform: translate(2px, 0px); text-shadow: 0 0 0 var(--fg); opacity: 0; }
-  10% { transform: translate(5px, -3px); text-shadow: 0 0 0 var(--fg); opacity: 0; }
+  10% { transform: translate(5px, -3px); text-shadow: 0 0 0 var(--fg); opacity: 0.25; }
   20% { transform: translate(9px, -7px); text-shadow: 0 0 0 var(--fg); opacity: 1; }
   60% { transform: translate(23px, -12px); text-shadow: 0 0 3px var(--fg); opacity: 0.7; }
-  100% { transform: translate(33px, -14px); text-shadow: 0 0 12px var(--fg); opacity: 0; }
+  100% { transform: translate(33px, -11.5px); text-shadow: 0 0 12px var(--fg); opacity: 0; }
 }

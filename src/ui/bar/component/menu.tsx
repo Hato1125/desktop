@@ -4,6 +4,33 @@ import GLib from 'gi://GLib?version=2.0';
 import { readFile } from 'ags/file';
 import { defineComponent } from './component';
 
+const Button = (
+  { name, icon, action }: {
+    name: string,
+    icon: string,
+    action: () => void,
+  }
+) => (
+  <button onClicked={action}>
+    <box spacing={8}>
+      <label
+        cssClasses={[
+          'symbols',
+          'symbols-xl',
+        ]}
+        label={icon}
+      />
+      <label
+        cssClasses={[
+          'label',
+          'text-base',
+        ]}
+        label={name}
+      />
+    </box>
+  </button>
+);
+
 export default () => {
   const distro = readFile('/etc/os-release')
     .split('\n')
@@ -34,60 +61,9 @@ export default () => {
 
       <Gtk.Popover $={(ref) => (popupvar = ref)} hasArrow={false}>
         <box orientation={Gtk.Orientation.VERTICAL} spacing={6}>
-          <button onClicked={() => powerOff()}>
-            <box spacing={8}>
-              <label
-                cssClasses={[
-                  'symbols',
-                  'symbols-xl',
-                ]}
-                label='power_off'
-              />
-              <label
-                cssClasses={[
-                  'label',
-                  'text-base',
-                ]}
-                label='Shutdown'
-              />
-            </box>
-          </button>
-          <button onClicked={() => reboot()}>
-            <box spacing={8}>
-              <label
-                cssClasses={[
-                  'symbols',
-                  'symbols-xl',
-                ]}
-                label='restart_alt'
-              />
-              <label
-                cssClasses={[
-                  'label',
-                  'text-base',
-                ]}
-                label='Restart'
-              />
-            </box>
-          </button>
-          <button onClicked={() => suspend()}>
-            <box spacing={8}>
-              <label
-                cssClasses={[
-                  'symbols',
-                  'symbols-xl',
-                ]}
-                label='bedtime'
-              />
-              <label
-                cssClasses={[
-                  'label',
-                  'text-base',
-                ]}
-                label='Sleep'
-              />
-            </box>
-          </button>
+          <Button name='Shutdown' icon='power_off' action={powerOff} />
+          <Button name='Restart' icon='restart_alt' action={reboot} />
+          <Button name='Sleep' icon='bedtime' action={suspend} />
         </box>
       </Gtk.Popover>
     </box>

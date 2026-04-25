@@ -16,9 +16,7 @@ import Workspaces from './component/workspaces';
 import KeyLock from './component/keylock';
 import Nowplaying from './component/nowplaying';
 
-import { Component } from './component/component';
-
-const components: Component[] = [
+const components = new Map([
   Battery(),
   Devices(),
   Menu(),
@@ -30,13 +28,11 @@ const components: Component[] = [
   Workspaces(),
   KeyLock(),
   Nowplaying(),
-];
+].map((c) => [c.name, c]));
 
-const byName = new Map(components.map((c) => [c.name, c]));
-
-const Slot = ({ names }: { names: 'start' | 'center' | 'end' }) => (
-  <For each={createBinding(config.bar, names)}>
-    {(name: string) => byName.get(name)?.render() ?? (<box visible={false} />) as JSX.Element}
+const Slot = ({ align }: { align: 'start' | 'center' | 'end' }) => (
+  <For each={createBinding(config.bar, align)}>
+    {(name: string) => components.get(name)?.render() ?? (<box visible={false} />)}
   </For>
 );
 
@@ -45,11 +41,13 @@ export default () => (
     visible
     class='bar'
     namespace='bar'
-    anchor={createBinding(config.bar, 'anchor').as((a) =>
-      (a === 'top' ? Astal.WindowAnchor.TOP : Astal.WindowAnchor.BOTTOM)
-      | Astal.WindowAnchor.LEFT
-      | Astal.WindowAnchor.RIGHT
-    )}
+    anchor={
+      createBinding(config.bar, 'anchor').as((a) =>
+        (a === 'top' ? Astal.WindowAnchor.TOP : Astal.WindowAnchor.BOTTOM)
+        | Astal.WindowAnchor.LEFT
+        | Astal.WindowAnchor.RIGHT
+      )
+    }
     exclusivity={Astal.Exclusivity.EXCLUSIVE}
   >
     <centerbox
@@ -57,13 +55,13 @@ export default () => (
       orientation={Gtk.Orientation.HORIZONTAL}
     >
       <box $type='start' spacing={20}>
-        <Slot names='start' />
+        <Slot align='start' />
       </box>
       <box $type='center' spacing={20}>
-        <Slot names='center' />
+        <Slot align='center' />
       </box>
       <box $type='end' spacing={20}>
-        <Slot names='end' />
+        <Slot align='end' />
       </box>
     </centerbox>
   </window>
