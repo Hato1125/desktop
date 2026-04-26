@@ -7,35 +7,23 @@ import {
 
 import fetch from 'gnim/fetch';
 
-const weatherIcons: Map<number, string> = new Map([
-  [0, 'clear_day'],
-  [1, 'clear_day'],
-  [2, 'partly_cloudy_day'],
-  [3, 'cloud'],
-  [45, 'foggy'],
-  [48, 'foggy'],
-  [51, 'rainy'],
-  [53, 'rainy'],
-  [55, 'rainy'],
-  [61, 'rainy'],
-  [63, 'rainy'],
-  [65, 'rainy'],
-  [71, 'weather_snowy'],
-  [73, 'weather_snowy'],
-  [75, 'weather_snowy'],
-  [77, 'weather_snowy'],
-  [80, 'rainy'],
-  [81, 'rainy'],
-  [82, 'rainy'],
-  [85, 'weather_snowy'],
-  [86, 'weather_snowy'],
-  [95, 'thunderstorm'],
-  [96, 'thunderstorm'],
-  [99, 'thunderstorm'],
-]);
+const weatherIcon = (code: number): string => {
+  switch (code) {
+    case 0: case 1: return 'clear_day';
+    case 2: return 'partly_cloudy_day';
+    case 45: case 48: return 'foggy';
+    case 51: case 53: case 55:
+    case 61: case 63: case 65:
+    case 80: case 81: case 82: return 'rainy';
+    case 71: case 73: case 75: case 77:
+    case 85: case 86: return 'weather_snowy';
+    case 95: case 96: case 99: return 'thunderstorm';
+    default: return 'cloud';
+  }
+};
 
-const INTERVAL = 600_000; // 10 minutes
-const LOCATE_RETRY = 60_000; // 1 minute
+const INTERVAL = 600_000;
+const LOCATE_RETRY = 60_000;
 
 @register()
 export class WeatherService extends GObject.Object {
@@ -80,7 +68,7 @@ export class WeatherService extends GObject.Object {
       this.humidity = current.relative_humidity_2m;
       this.windSpeed = current.wind_speed_10m;
       this.weatherCode = current.weather_code;
-      this.icon = weatherIcons.get(current.weather_code) ?? 'cloud';
+      this.icon = weatherIcon(current.weather_code);
     } catch (e) {
       console.error('Weather: failed to fetch', e);
     }
