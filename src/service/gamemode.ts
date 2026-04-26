@@ -102,7 +102,7 @@ export class GameModeService extends GObject.Object {
         'ListGames',
         null,
         Gio.DBusCallFlags.NONE,
-        -1,
+        2000,
         null,
       );
 

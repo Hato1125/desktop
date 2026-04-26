@@ -49,9 +49,9 @@ export default () => {
     null,
   );
 
-  const powerOff = () => login1.call_sync('PowerOff', new GLib.Variant('(b)', [true]), Gio.DBusCallFlags.NONE, -1, null);
-  const reboot = () => login1.call_sync('Reboot', new GLib.Variant('(b)', [true]), Gio.DBusCallFlags.NONE, -1, null);
-  const suspend = () => login1.call_sync('Suspend', new GLib.Variant('(b)', [true]), Gio.DBusCallFlags.NONE, -1, null);
+  const powerOff = () => login1.call_sync('PowerOff', new GLib.Variant('(b)', [true]), Gio.DBusCallFlags.NONE, 5000, null);
+  const reboot = () => login1.call_sync('Reboot', new GLib.Variant('(b)', [true]), Gio.DBusCallFlags.NONE, 5000, null);
+  const suspend = () => login1.call_sync('Suspend', new GLib.Variant('(b)', [true]), Gio.DBusCallFlags.NONE, 5000, null);
 
   return defineComponent('menu', () => (
     <box>
