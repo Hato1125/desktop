@@ -18,6 +18,7 @@ export class Game {
 const BUS_NAME = 'com.feralinteractive.GameMode';
 const BUS_PATH = '/com/feralinteractive/GameMode';
 const BUS_IFACE = 'com.feralinteractive.GameMode';
+const PENDING_TIMEOUT = 30; // seconds
 
 const hyprland = AstalHyprland.get_default();
 
@@ -60,6 +61,10 @@ export class GameModeService extends GObject.Object {
           this.registered(pid, name);
         } else {
           this._pendingPids.add(pid);
+          GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, PENDING_TIMEOUT, () => {
+            this._pendingPids.delete(pid);
+            return GLib.SOURCE_REMOVE;
+          });
         }
       } else if (signal === 'GameUnregistered') {
         const [pid] = (params as GLib.Variant).deepUnpack() as [number, number];
