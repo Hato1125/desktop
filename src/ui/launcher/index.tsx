@@ -7,8 +7,14 @@ import AstalApps from 'gi://AstalApps'
 import { createRoot, createState, For } from 'ags'
 
 import { Animated } from '@lib/animated';
+import { watchDirs } from '@lib/watch';
 
 const apps = new AstalApps.Apps();
+
+const appsWatch = watchDirs([
+  '/usr/share/applications',
+  '~/.local/share/applications',
+]);
 
 let entry: Gtk.Entry;
 
@@ -142,7 +148,10 @@ export default () => createRoot(() => (
     exclusivity={Astal.Exclusivity.IGNORE}
     onNotifyVisible={({ visible }) => {
       if (visible) {
-        apps.reload();
+        if (appsWatch.stale) {
+          apps.reload();
+          appsWatch.clear();
+        }
         entry.set_text('');
         entry.grab_focus();
       }
