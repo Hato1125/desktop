@@ -35,6 +35,7 @@ const weatherIcons: Map<number, string> = new Map([
 ]);
 
 const INTERVAL = 600_000; // 10 minutes
+const LOCATE_RETRY = 60_000; // 1 minute
 
 @register()
 export class WeatherService extends GObject.Object {
@@ -43,10 +44,9 @@ export class WeatherService extends GObject.Object {
   @property(Number) windSpeed: number = 0;
   @property(Number) weatherCode: number = 0;
   @property(String) icon: string = 'cloud';
-  @property(String) description: string = '';
 
-  private lat: number = 0;
-  private lon: number = 0;
+  private lat: number | null = null;
+  private lon: number | null = null;
 
   constructor() {
     super();
@@ -62,12 +62,13 @@ export class WeatherService extends GObject.Object {
       this.lon = data.lon;
       await this.fetchWeather();
     } catch (e) {
-      console.error('weather: failed to get location', e);
+      console.error('Weather: failed to get location, retrying in 60s', e);
+      setTimeout(() => this.locateAndFetch(), LOCATE_RETRY);
     }
   }
 
   private async fetchWeather() {
-    if (this.lat === 0 && this.lon === 0) return;
+    if (this.lat === null || this.lon === null) return;
 
     try {
       const url = `https://api.open-meteo.com/v1/forecast?latitude=${this.lat}&longitude=${this.lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m`;
@@ -81,7 +82,7 @@ export class WeatherService extends GObject.Object {
       this.weatherCode = current.weather_code;
       this.icon = weatherIcons.get(current.weather_code) ?? 'cloud';
     } catch (e) {
-      console.error('weather: failed to fetch', e);
+      console.error('Weather: failed to fetch', e);
     }
   }
 }
