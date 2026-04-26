@@ -10,14 +10,6 @@ import {
 
 type BarAnchor = 'top' | 'bottom';
 
-const assign = <T extends GObject.Object, K extends keyof T>(
-  obj: T,
-  key: K,
-  value: T[K],
-) => {
-  if (obj[key] !== value) obj[key] = value;
-};
-
 const DEFAULT_BAR_START = ['menu', 'client'];
 const DEFAULT_BAR_CENTER = ['workspaces'];
 const DEFAULT_BAR_END = [
@@ -38,7 +30,7 @@ export class BarConfig extends GObject.Object {
   @property(Object) end: string[] = DEFAULT_BAR_END;
 
   load(data: any) {
-    assign(this, 'anchor', data?.anchor ?? 'top');
+    this.anchor = data?.anchor ?? 'top';
     this.start = data?.start ?? DEFAULT_BAR_START;
     this.center = data?.center ?? DEFAULT_BAR_CENTER;
     this.end = data?.end ?? DEFAULT_BAR_END;
@@ -51,7 +43,7 @@ export class DockConfig extends GObject.Object {
   @property(Object) apps: string[] = [];
 
   load(data: any) {
-    assign(this, 'enable', data?.enable ?? true);
+    this.enable = data?.enable ?? true;
     this.apps = data?.apps ?? [];
   }
 }
@@ -78,7 +70,7 @@ export class ConfigService extends GObject.Object {
       this.bar.load(json?.bar);
       this.dock.load(json?.dock);
     } catch (e) {
-      console.error('config: failed to load', e);
+      console.error('Config: failed to load', e);
     }
   }
 
@@ -95,7 +87,7 @@ export class ConfigService extends GObject.Object {
         }
       });
     } catch (e) {
-      console.warn('config: failed to watch file:', e);
+      console.warn('Config: failed to watch file:', e);
     }
   }
 }

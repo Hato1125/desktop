@@ -99,15 +99,15 @@ const TR = Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT;
 const BL = Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.LEFT;
 const BR = Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT;
 
-export const MonitorTopLeftCorner = makeMonitorCorner(TL, drawTopLeft);
-export const MonitorTopRightCorner = makeMonitorCorner(TR, drawTopRight);
-export const MonitorBottomLeftCorner = makeMonitorCorner(BL, drawBottomLeft);
-export const MonitorBottomRightCorner = makeMonitorCorner(BR, drawBottomRight);
+const MonitorTopLeftCorner = makeMonitorCorner(TL, drawTopLeft);
+const MonitorTopRightCorner = makeMonitorCorner(TR, drawTopRight);
+const MonitorBottomLeftCorner = makeMonitorCorner(BL, drawBottomLeft);
+const MonitorBottomRightCorner = makeMonitorCorner(BR, drawBottomRight);
 
-export const BarBottomLeftCorner = makeBarCorner(BL, drawBottomLeft);
-export const BarBottomRightCorner = makeBarCorner(BR, drawBottomRight);
-export const BarTopLeftCorner = makeBarCorner(TL, drawTopLeft);
-export const BarTopRightCorner = makeBarCorner(TR, drawTopRight);
+const BarBottomLeftCorner = makeBarCorner(BL, drawBottomLeft);
+const BarBottomRightCorner = makeBarCorner(BR, drawBottomRight);
+const BarTopLeftCorner = makeBarCorner(TL, drawTopLeft);
+const BarTopRightCorner = makeBarCorner(TR, drawTopRight);
 
 export const BarCorner = () => {
   const anchorBinding = createBinding(config.bar, 'anchor');
