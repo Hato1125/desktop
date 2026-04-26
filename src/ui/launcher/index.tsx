@@ -52,7 +52,7 @@ const SearchBox = () => (
       cssClasses={[
         'text-xl',
       ]}
-      hexpand={true}
+      hexpand
       placeholderText='Search'
       onNotifyText={({ text }) => search(text)}
     />
@@ -77,7 +77,7 @@ const Item = ({ app }: { app: AstalApps.Application }) => (
 );
 
 const List = () => (
-  <scrolledwindow heightRequest={350} vexpand={true} hexpand={true}>
+  <scrolledwindow heightRequest={350} vexpand hexpand>
     <box orientation={Gtk.Orientation.VERTICAL}>
       <For each={list}>
         {(app) => (<Item app={app} />)}
