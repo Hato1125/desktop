@@ -26,6 +26,8 @@ export class TosuService extends GObject.Object {
   @property(String) background: string = '';
   @property(Number) stars: number = 0;
 
+  private inFlight = false;
+
   constructor() {
     super();
     this.fetch();
@@ -33,6 +35,8 @@ export class TosuService extends GObject.Object {
   }
 
   private async fetch() {
+    if (this.inFlight) return;
+    this.inFlight = true;
     try {
       const res = await fetch(URL);
       const data = await res.json();
@@ -50,6 +54,8 @@ export class TosuService extends GObject.Object {
       if (this.available !== available) this.available = available;
     } catch {
       if (this.available) this.available = false;
+    } finally {
+      this.inFlight = false;
     }
   }
 }
