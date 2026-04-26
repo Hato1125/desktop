@@ -14,6 +14,8 @@ export class VpnService extends GObject.Object {
   @property(Boolean) connected: boolean = false;
   @property(String) country: string = '';
 
+  private currentVpn: NM.ActiveConnection | null = null;
+
   constructor() {
     super();
 
@@ -31,20 +33,22 @@ export class VpnService extends GObject.Object {
       const connections = client.get_active_connections();
       const vpnConn = connections.find(
         c => c.type === 'wireguard' && c.state === NM.ActiveConnectionState.ACTIVATED
-      );
-      const isConnected = !!vpnConn;
+      ) ?? null;
 
-      if (!isConnected) {
-        this.connected = false;
-        this.country = '';
-      } else if (!this.connected) {
-        const res = await fetch('http://ip-api.com/line/?fields=countryCode')
+      if (vpnConn === this.currentVpn) return;
+      this.currentVpn = vpnConn;
 
-        this.country = (await res.text()).trim();
-        this.connected = true;
+      if (!vpnConn) {
+        if (this.connected) this.connected = false;
+        if (this.country) this.country = '';
+        return;
       }
+
+      const res = await fetch('http://ip-api.com/line/?fields=countryCode');
+      this.country = (await res.text()).trim();
+      this.connected = true;
     } catch (e) {
-      console.error(e);
+      console.error('Vpn:', e);
     }
   }
 }
