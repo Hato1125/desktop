@@ -5,7 +5,8 @@ import { defineComponent } from './component';
 
 export default () => {
   const hyprland = AstalHyprland.get_default();
-  const workspaces = createBinding(hyprland, 'workspaces');
+  const workspaces = createBinding(hyprland, 'workspaces')
+    .as(ws => [...ws].sort((a, b) => a.id - b.id));
   const focused = createBinding(hyprland, 'focusedWorkspace');
 
   return defineComponent('workspaces', () => (
