@@ -86,7 +86,11 @@ export const createPopup = (config: PopupConfig) => {
     resetTimeout: () => void;
   };
 
-  const show = (render: () => JSX.Element, onDestroy?: () => void): PopupHandle => {
+  const show = (
+    render: () => JSX.Element,
+    onDestroy?: () => void,
+    timeoutOverride?: number,
+  ): PopupHandle => {
     if (config.replace) dismissAll();
 
     let dismiss: () => void;
@@ -95,10 +99,11 @@ export const createPopup = (config: PopupConfig) => {
     createRoot((dispose) => {
       let dismissing = false;
       let timer: import('ags/time').Timer | null = null;
+      const timeoutMs = timeoutOverride ?? config.timeout;
 
       const startTimer = () => {
         timer?.cancel();
-        timer = timeout(config.timeout, () => dismiss());
+        timer = timeout(timeoutMs, () => dismiss());
       };
 
       dismiss = async () => {

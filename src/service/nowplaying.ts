@@ -8,9 +8,11 @@ import {
 } from 'ags/gobject';
 
 import tosu from './tosu';
+import { support } from 'src/feature/feature';
 
 export type NowPlayingSource = 'none' | 'tosu' | 'mpris';
 
+@support()
 @register()
 export class NowPlayingService extends GObject.Object {
   @property(Boolean) available: boolean = false;

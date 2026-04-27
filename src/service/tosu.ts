@@ -8,6 +8,8 @@ import {
 
 import fetch from 'gnim/fetch';
 
+import { support } from 'src/feature/feature';
+
 const INTERVAL = 2000;
 const URL = 'http://127.0.0.1:24050/json/v2';
 const LAZER_FILES = `${GLib.get_home_dir()}/.local/share/osu/files`;
@@ -18,6 +20,7 @@ const resolvePath = (p: string) => {
   return `${LAZER_FILES}/${p}`;
 };
 
+@support()
 @register()
 export class TosuService extends GObject.Object {
   @property(Boolean) available: boolean = false;

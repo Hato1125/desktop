@@ -8,6 +8,8 @@ import {
 } from 'ags/gobject';
 import { readFile } from 'ags/file';
 
+import { support } from 'src/feature/feature';
+
 function findKeyboardDevice(): string | null {
   const text = readFile('/proc/bus/input/devices');
 
@@ -36,6 +38,9 @@ const LED_CAPSL = 1;
 const EVENT_SIZE = 24;
 const RETRY_INTERVAL = 5000;
 
+@support({
+  os: [{ os: 'linux' }]
+})
 @register()
 export class KeyLockService extends GObject.Object {
   @property(Boolean) capsLock: boolean = false;

@@ -6,9 +6,13 @@ import {
   register,
   property,
 } from 'ags/gobject';
-
 import fetch from 'gnim/fetch';
 
+import { support } from 'src/feature/feature';
+
+@support({
+  os: [{ os: 'freebsd' }]
+})
 @register()
 export class VpnService extends GObject.Object {
   @property(Boolean) connected: boolean = false;

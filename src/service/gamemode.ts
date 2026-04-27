@@ -8,6 +8,8 @@ import {
   property,
 } from 'ags/gobject';
 
+import { support } from 'src/feature/feature';
+
 export class Game {
   constructor(
     public pid: number = 0,
@@ -18,7 +20,7 @@ export class Game {
 const BUS_NAME = 'com.feralinteractive.GameMode';
 const BUS_PATH = '/com/feralinteractive/GameMode';
 const BUS_IFACE = 'com.feralinteractive.GameMode';
-const PENDING_TIMEOUT = 30; // seconds
+const PENDING_TIMEOUT = 30;
 
 const hyprland = AstalHyprland.get_default();
 
@@ -29,6 +31,9 @@ const getGameName = (pid: number): string =>
     .pop()
     ?.replace(/^./, c => c.toUpperCase()) ?? '';
 
+@support({
+  os: [{ os: 'freebsd' }]
+})
 @register()
 export class GameModeService extends GObject.Object {
   @property(Array) games: Game[] = [];
