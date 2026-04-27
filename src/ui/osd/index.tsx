@@ -108,45 +108,49 @@ export default () => {
     watchDevice(device);
   });
 
-  keylock.onCapsLockChanged = (active) => {
-    osd.show(() => (
-      <OsdItem
-        icon={active ? 'shift_lock' : 'shift_lock_off'}
-        cssClass='keylock'
-      >
-        <label
-          valign={Gtk.Align.CENTER}
-          hexpand={true}
-          label={active ? 'Caps Lock ON' : 'Caps Lock OFF'}
-        />
-      </OsdItem>
-    ));
+  if (keylock) {
+    keylock.onCapsLockChanged = (active) => {
+      osd.show(() => (
+        <OsdItem
+          icon={active ? 'shift_lock' : 'shift_lock_off'}
+          cssClass='keylock'
+        >
+          <label
+            valign={Gtk.Align.CENTER}
+            hexpand={true}
+            label={active ? 'Caps Lock ON' : 'Caps Lock OFF'}
+          />
+        </OsdItem>
+      ));
+    };
+
+    keylock.onNumLockChanged = (active) => {
+      osd.show(() => (
+        <OsdItem
+          icon={active ? 'grid_view' : 'grid_off'}
+          cssClass='keylock'
+        >
+          <label
+            valign={Gtk.Align.CENTER}
+            hexpand={true}
+            label={active ? 'Num Lock ON' : 'Num Lock OFF'}
+          />
+        </OsdItem>
+      ));
+    };
   }
 
-  keylock.onNumLockChanged = (active) => {
-    osd.show(() => (
-      <OsdItem
-        icon={active ? 'grid_view' : 'grid_off'}
-        cssClass='keylock'
-      >
-        <label
-          valign={Gtk.Align.CENTER}
-          hexpand={true}
-          label={active ? 'Num Lock ON' : 'Num Lock OFF'}
-        />
-      </OsdItem>
-    ));
-  }
-
-  gamemode.onRegistered = (game) => {
-    osd.show(() => (
-      <OsdItem icon='rocket_launch' cssClass='gamemode'>
-        <label
-          valign={Gtk.Align.CENTER}
-          hexpand={true}
-          label={game.name}
-        />
-      </OsdItem>
-    ));
+  if (gamemode) {
+    gamemode.onRegistered = (game) => {
+      osd.show(() => (
+        <OsdItem icon='rocket_launch' cssClass='gamemode'>
+          <label
+            valign={Gtk.Align.CENTER}
+            hexpand={true}
+            label={game.name}
+          />
+        </OsdItem>
+      ));
+    };
   }
 }

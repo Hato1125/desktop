@@ -12,8 +12,7 @@ import Dock from '@ui/dock/index';
 import Notification from '@ui/notification/index';
 import Osd from '@ui/osd/index';
 
-import { checkAllFeatures } from 'src/feature/feature';
-import { detectEnv } from 'src/feature/env';
+import { checkAllFeatures, env } from 'src/feature/feature';
 
 app.start({
   css: `${SRC}/style.css`,
@@ -26,10 +25,10 @@ app.start({
     res('');
   },
   main() {
-    const env = detectEnv();
-    console.log(`[feature] env: os=${env.os} ${env.osVersion.join('.')}, compositor=${env.compositor} ${env.compositorVersion.join('.')}`);
+    const e = env();
+    console.log(`[feature] env: os=${e.os} ${e.osVersion.join('.')}, compositor=${e.compositor} ${e.compositorVersion.join('.')}`);
 
-    const featureResults = checkAllFeatures(env);
+    const featureResults = checkAllFeatures(e);
     for (const r of featureResults) {
       if (r.available) {
         console.log(`[feature] ${r.name}: available`);

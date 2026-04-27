@@ -8,13 +8,13 @@ import {
 } from 'ags/gobject';
 import fetch from 'gnim/fetch';
 
-import { support } from 'src/feature/feature';
+import { support, makeService } from 'src/feature/feature';
 
 @support({
-  os: [{ os: 'freebsd' }]
+  os: [{ os: 'linux' }]
 })
 @register()
-export class VpnService extends GObject.Object {
+class VpnService extends GObject.Object {
   @property(Boolean) connected: boolean = false;
   @property(String) country: string = '';
 
@@ -57,4 +57,4 @@ export class VpnService extends GObject.Object {
   }
 }
 
-export default new VpnService();
+export default makeService(VpnService);

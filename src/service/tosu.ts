@@ -8,7 +8,7 @@ import {
 
 import fetch from 'gnim/fetch';
 
-import { support } from 'src/feature/feature';
+import { support, makeService } from 'src/feature/feature';
 
 const INTERVAL = 2000;
 const URL = 'http://127.0.0.1:24050/json/v2';
@@ -22,7 +22,7 @@ const resolvePath = (p: string) => {
 
 @support()
 @register()
-export class TosuService extends GObject.Object {
+class TosuService extends GObject.Object {
   @property(Boolean) available: boolean = false;
   @property(String) title: string = '';
   @property(String) artist: string = '';
@@ -63,4 +63,4 @@ export class TosuService extends GObject.Object {
   }
 }
 
-export default new TosuService();
+export default makeService(TosuService);

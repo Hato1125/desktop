@@ -14,16 +14,6 @@ const USER_PRIORITY = Gtk.STYLE_PROVIDER_PRIORITY_USER;
 const HIDDEN  = { blur: BLUR_MAX, opacity: 0 };
 const VISIBLE = { blur: 0,        opacity: 1 };
 
-const available = createBinding(nowplaying, 'available');
-const title = createBinding(nowplaying, 'title');
-const artist = createBinding(nowplaying, 'artist');
-const artwork = createBinding(nowplaying, 'artwork');
-const stars = createBinding(nowplaying, 'stars');
-const source = createBinding(nowplaying, 'source');
-const isOsu = createMemo(() => source() === 'tosu');
-const text = createMemo(() => artist() ? `${artist()} - ${title()}` : title());
-const signature = createMemo(() => `${source()}|${text()}|${stars()}`);
-
 const createThumb = () => {
   const bgProvider = new Gtk.CssProvider();
   const noteBlurProvider = new Gtk.CssProvider();
@@ -110,95 +100,107 @@ const createTextGroup = () => {
   };
 };
 
-type AnimatorDeps = {
-  root: Gtk.Widget;
-  thumb: ReturnType<typeof createThumb>;
-  textGroup: ReturnType<typeof createTextGroup>;
-  setVisible: (v: boolean) => void;
-};
+export default () => {
+  if (!nowplaying) return null;
 
-const createAnimator = ({ root, thumb, textGroup, setVisible }: AnimatorDeps) => {
-  let lastBlur = -1;
-  let lastOpacity = -1;
-  const apply = ({ blur, opacity }: { blur: number; opacity: number }) => {
-    if (Math.abs(blur - lastBlur) >= 0.05) {
-      lastBlur = blur;
-      thumb.setBlur(blur);
-      textGroup.setBlur(blur);
-    }
-    if (Math.abs(opacity - lastOpacity) >= 0.005) {
-      lastOpacity = opacity;
-      root.opacity = opacity;
-    }
-  };
-  const sync = () => {
-    textGroup.title.set_label(text());
-    textGroup.difficulty.set_label(stars().toFixed(2));
-    thumb.setArtwork(artwork());
-  };
+  const available = createBinding(nowplaying, 'available');
+  const title = createBinding(nowplaying, 'title');
+  const artist = createBinding(nowplaying, 'artist');
+  const artwork = createBinding(nowplaying, 'artwork');
+  const stars = createBinding(nowplaying, 'stars');
+  const source = createBinding(nowplaying, 'source');
+  const isOsu = createMemo(() => source() === 'tosu');
+  const text = createMemo(() => artist() ? `${artist()} - ${title()}` : title());
+  const signature = createMemo(() => `${source()}|${text()}|${stars()}`);
 
-  const tween = createTween(root, apply);
-  const fadeIn  = () => tween(HIDDEN,  VISIBLE, FADE_DURATION,       easings.easeOut);
-  const fadeOut = () => tween(VISIBLE, HIDDEN,  FADE_DURATION,       easings.easeIn);
-  const swapOut = () => tween(VISIBLE, HIDDEN,  SWITCH_DURATION / 2, easings.easeInOut);
-  const swapIn  = () => tween(HIDDEN,  VISIBLE, SWITCH_DURATION / 2, easings.easeInOut);
+  const createAnimator = (
+    root: Gtk.Widget,
+    thumb: ReturnType<typeof createThumb>,
+    textGroup: ReturnType<typeof createTextGroup>,
+    setVisible: (v: boolean) => void,
+  ) => {
+    let lastBlur = -1;
+    let lastOpacity = -1;
+    const apply = ({ blur, opacity }: { blur: number; opacity: number }) => {
+      if (Math.abs(blur - lastBlur) >= 0.05) {
+        lastBlur = blur;
+        thumb.setBlur(blur);
+        textGroup.setBlur(blur);
+      }
+      if (Math.abs(opacity - lastOpacity) >= 0.005) {
+        lastOpacity = opacity;
+        root.opacity = opacity;
+      }
+    };
+    const sync = () => {
+      textGroup.title.set_label(text());
+      textGroup.difficulty.set_label(stars().toFixed(2));
+      thumb.setArtwork(artwork());
+    };
 
-  const safe = (fn: () => Promise<void>) => async () => {
-    try { await fn(); } catch (e) { if (e !== CANCELLED) throw e; }
-  };
+    const tween = createTween(root, apply);
+    const fadeIn  = () => tween(HIDDEN,  VISIBLE, FADE_DURATION,       easings.easeOut);
+    const fadeOut = () => tween(VISIBLE, HIDDEN,  FADE_DURATION,       easings.easeIn);
+    const swapOut = () => tween(VISIBLE, HIDDEN,  SWITCH_DURATION / 2, easings.easeInOut);
+    const swapIn  = () => tween(HIDDEN,  VISIBLE, SWITCH_DURATION / 2, easings.easeInOut);
 
-  let showing = false;
+    const safe = (fn: () => Promise<void>) => async () => {
+      try { await fn(); } catch (e) { if (e !== CANCELLED) throw e; }
+    };
 
-  const show = safe(async () => {
+    let showing = false;
+
+    const show = safe(async () => {
+      sync();
+      apply(HIDDEN);
+      setVisible(true);
+      showing = true;
+      await fadeIn();
+      showing = false;
+    });
+
+    const hide = safe(async () => {
+      showing = false;
+      await fadeOut();
+      setVisible(false);
+    });
+
+    const swap = safe(async () => {
+      await swapOut();
+      sync();
+      await swapIn();
+    });
+
     sync();
-    apply(HIDDEN);
-    setVisible(true);
-    showing = true;
-    await fadeIn();
-    showing = false;
-  });
+    if (available()) show();
+    available.subscribe(() => { (available() ? show : hide)(); });
+    signature.subscribe(() => {
+      if (!available()) return;
+      if (showing) sync();
+      else swap();
+    });
+    artwork.subscribe(() => {
+      if (available()) thumb.setArtwork(artwork());
+    });
+  };
 
-  const hide = safe(async () => {
-    showing = false;
-    await fadeOut();
-    setVisible(false);
-  });
+  return defineComponent('nowplaying', () => {
+    const [visible, setVisible] = createState(false);
+    const thumb = createThumb();
+    const textGroup = createTextGroup();
 
-  const swap = safe(async () => {
-    await swapOut();
-    sync();
-    await swapIn();
-  });
-
-  sync();
-  if (available()) show();
-  available.subscribe(() => { (available() ? show : hide)(); });
-  signature.subscribe(() => {
-    if (!available()) return;
-    if (showing) sync();
-    else swap();
-  });
-  artwork.subscribe(() => {
-    if (available()) thumb.setArtwork(artwork());
-  });
-};
-
-export default () => defineComponent('nowplaying', () => {
-  const [visible, setVisible] = createState(false);
-  const thumb = createThumb();
-  const textGroup = createTextGroup();
-
-  const root = (
-    <box visible={visible} class='nowplaying' spacing={8}>
-      {thumb.widget}
-      {textGroup.title}
-      <box class='difficulty' spacing={3} valign={Gtk.Align.CENTER} visible={isOsu}>
-        {textGroup.star}
-        {textGroup.difficulty}
+    const root = (
+      <box visible={visible} class='nowplaying' spacing={8}>
+        {thumb.widget}
+        {textGroup.title}
+        <box class='difficulty' spacing={3} valign={Gtk.Align.CENTER} visible={isOsu}>
+          {textGroup.star}
+          {textGroup.difficulty}
+        </box>
       </box>
-    </box>
-  ) as Gtk.Widget;
+    ) as Gtk.Widget;
 
-  createAnimator({ root, thumb, textGroup, setVisible });
-  return root;
-});
+    createAnimator(root, thumb, textGroup, setVisible);
+    return root;
+  });
+};

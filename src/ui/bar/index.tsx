@@ -16,19 +16,23 @@ import Workspaces from './component/workspaces';
 import KeyLock from './component/keylock';
 import Nowplaying from './component/nowplaying';
 
-const components = new Map([
-  Battery(),
-  Devices(),
-  Menu(),
-  Client(),
-  Vpn(),
-  Network(),
-  DateTime(),
-  Weather(),
-  Workspaces(),
-  KeyLock(),
-  Nowplaying(),
-].map((c) => [c.name, c]));
+const components = new Map(
+  [
+    Battery(),
+    Devices(),
+    Menu(),
+    Client(),
+    Vpn(),
+    Network(),
+    DateTime(),
+    Weather(),
+    Workspaces(),
+    KeyLock(),
+    Nowplaying(),
+  ]
+    .filter((c): c is NonNullable<typeof c> => c !== null && c !== false)
+    .map((c) => [c.name, c]),
+);
 
 const Slot = ({ align }: { align: 'start' | 'center' | 'end' }) => (
   <For each={createBinding(config.bar, align)}>

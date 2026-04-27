@@ -8,7 +8,7 @@ import {
   property,
 } from 'ags/gobject';
 
-import { support } from 'src/feature/feature';
+import { support, makeService } from 'src/feature/feature';
 
 export class Game {
   constructor(
@@ -32,10 +32,10 @@ const getGameName = (pid: number): string =>
     ?.replace(/^./, c => c.toUpperCase()) ?? '';
 
 @support({
-  os: [{ os: 'freebsd' }]
+  os: [{ os: 'linux' }]
 })
 @register()
-export class GameModeService extends GObject.Object {
+class GameModeService extends GObject.Object {
   @property(Array) games: Game[] = [];
 
   onRegistered: ((game: Game) => void) | null = null;
@@ -122,4 +122,4 @@ export class GameModeService extends GObject.Object {
   }
 }
 
-export default new GameModeService();
+export default makeService(GameModeService);

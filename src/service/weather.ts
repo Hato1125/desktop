@@ -6,7 +6,7 @@ import {
 } from 'ags/gobject';
 import fetch from 'gnim/fetch';
 
-import { support } from 'src/feature/feature';
+import { support, makeService } from 'src/feature/feature';
 
 const weatherIcon = (code: number): string => {
   switch (code) {
@@ -28,7 +28,7 @@ const LOCATE_RETRY = 60_000;
 
 @support()
 @register()
-export class WeatherService extends GObject.Object {
+class WeatherService extends GObject.Object {
   @property(Number) temperature: number = 0;
   @property(Number) humidity: number = 0;
   @property(Number) windSpeed: number = 0;
@@ -77,4 +77,4 @@ export class WeatherService extends GObject.Object {
   }
 }
 
-export default new WeatherService();
+export default makeService(WeatherService);

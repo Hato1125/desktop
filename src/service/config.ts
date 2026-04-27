@@ -23,7 +23,7 @@ const DEFAULT_BAR_END = [
 ];
 
 @register()
-export class BarConfig extends GObject.Object {
+class BarConfig extends GObject.Object {
   @property(String) anchor: BarAnchor = 'top';
   @property(Object) start: string[] = DEFAULT_BAR_START;
   @property(Object) center: string[] = DEFAULT_BAR_CENTER;
@@ -38,7 +38,7 @@ export class BarConfig extends GObject.Object {
 }
 
 @register()
-export class DockConfig extends GObject.Object {
+class DockConfig extends GObject.Object {
   @property(Boolean) enable: boolean = true;
   @property(Object) apps: string[] = [];
 
@@ -49,7 +49,7 @@ export class DockConfig extends GObject.Object {
 }
 
 @register()
-export class ConfigService extends GObject.Object {
+class ConfigService extends GObject.Object {
   @property(Object) bar = new BarConfig();
   @property(Object) dock = new DockConfig();
 

@@ -8,7 +8,7 @@ import {
 } from 'ags/gobject';
 import { readFile } from 'ags/file';
 
-import { support } from 'src/feature/feature';
+import { support, makeService } from 'src/feature/feature';
 
 function findKeyboardDevice(): string | null {
   const text = readFile('/proc/bus/input/devices');
@@ -42,7 +42,7 @@ const RETRY_INTERVAL = 5000;
   os: [{ os: 'linux' }]
 })
 @register()
-export class KeyLockService extends GObject.Object {
+class KeyLockService extends GObject.Object {
   @property(Boolean) capsLock: boolean = false;
   @property(Boolean) numLock: boolean = false;
 
@@ -116,4 +116,4 @@ export class KeyLockService extends GObject.Object {
   }
 }
 
-export default new KeyLockService();
+export default makeService(KeyLockService);

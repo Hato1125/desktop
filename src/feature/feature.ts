@@ -1,3 +1,5 @@
+import { detectEnv } from './env';
+
 export type Os = 'linux'
   | 'freebsd'
   | 'openbsd'
@@ -81,21 +83,40 @@ export class FeatureSupport {
 
 export type FeatureSupportInit = ConstructorParameters<typeof FeatureSupport>[0];
 
-export interface SupportedClass {
-  readonly name: string;
-  readonly support: FeatureSupport;
+interface RegistryEntry {
+  name: string;
+  support: FeatureSupport;
 }
 
-const registry: SupportedClass[] = [];
+const registry: RegistryEntry[] = [];
+
+let _env: Env | null = null;
+export const env = (): Env => _env ??= detectEnv();
 
 export function support(init: FeatureSupportInit = {}) {
   return function <T extends new (...args: any[]) => any>(
     target: T,
     _ctx: ClassDecoratorContext<T>,
   ): void {
-    (target as unknown as { support: FeatureSupport }).support = new FeatureSupport(init);
-    registry.push(target as unknown as SupportedClass);
+    const sup = new FeatureSupport(init);
+    (target as unknown as { support: FeatureSupport }).support = sup;
+    registry.push({ name: target.name, support: sup });
   };
+}
+
+export function makeService<T>(cls: { new(): T; readonly support?: FeatureSupport }): T | null {
+  if (cls.support && !cls.support.isAvailable(env())) return null;
+  return new cls();
+}
+
+export function defineFeature(
+  name: string,
+  init: FeatureSupportInit,
+  fn: () => void,
+): void {
+  const sup = new FeatureSupport(init);
+  registry.push({ name, support: sup });
+  if (sup.isAvailable(env())) fn();
 }
 
 export interface FeatureCheckResult {

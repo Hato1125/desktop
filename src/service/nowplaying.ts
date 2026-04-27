@@ -8,13 +8,13 @@ import {
 } from 'ags/gobject';
 
 import tosu from './tosu';
-import { support } from 'src/feature/feature';
+import { support, makeService } from 'src/feature/feature';
 
 export type NowPlayingSource = 'none' | 'tosu' | 'mpris';
 
 @support()
 @register()
-export class NowPlayingService extends GObject.Object {
+class NowPlayingService extends GObject.Object {
   @property(Boolean) available: boolean = false;
   @property(String) title: string = '';
   @property(String) artist: string = '';
@@ -30,8 +30,10 @@ export class NowPlayingService extends GObject.Object {
     super();
     this.mpris = AstalMpris.get_default();
 
-    for (const p of ['available', 'title', 'artist', 'background', 'stars']) {
-      tosu.connect(`notify::${p}`, () => this.schedule());
+    if (tosu) {
+      for (const p of ['available', 'title', 'artist', 'background', 'stars']) {
+        tosu.connect(`notify::${p}`, () => this.schedule());
+      }
     }
 
     this.mpris.connect('notify::players', () => {
@@ -80,7 +82,7 @@ export class NowPlayingService extends GObject.Object {
     let artwork = '';
     let stars = 0;
 
-    if (tosu.available) {
+    if (tosu?.available) {
       source = 'tosu';
       title = tosu.title;
       artist = tosu.artist;
@@ -114,4 +116,4 @@ export class NowPlayingService extends GObject.Object {
   }
 }
 
-export default new NowPlayingService();
+export default makeService(NowPlayingService);
