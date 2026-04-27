@@ -9,19 +9,17 @@ const nestedCompositors = [
   'Xephyr',
 ];
 
-const displayClientName = (client: AstalHyprland.Client) => {
-  const initialClass = client.get_initial_class();
-
+const displayClientName = (initialClass: string, title: string) => {
   if (!initialClass
     || initialClass.trim() === ''
     || nestedCompositors.includes(initialClass)) {
-    return client.get_title();
+    return title;
   }
 
   return initialClass
     .split('.')
     .pop()
-    ?.replace(/^./, c => c.toUpperCase());
+    ?.replace(/^./, c => c.toUpperCase()) ?? '';
 }
 
 export default () => {
@@ -36,7 +34,9 @@ export default () => {
               'label',
               'text-base'
             ]}
-            label={displayClientName(client)}
+            label={createBinding(client, 'title').as(t =>
+              displayClientName(client.get_initial_class(), t)
+            )}
             maxWidthChars={65}
             ellipsize={Pango.EllipsizeMode.END}
           />

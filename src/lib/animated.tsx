@@ -51,7 +51,7 @@ const applyFrame = (
     if (animate[key] !== undefined) {
       const from = initial[key] ?? animate[key]!;
       const to = animate[key]!;
-      (widget as Record<string, number>)[key] = lerp(from, to, t);
+      (widget as unknown as Record<string, number>)[key] = lerp(from, to, t);
     }
   }
 
@@ -102,6 +102,7 @@ export const Animated = ({
     let current = when() ? 1 : 0;
     let active: Adw.TimedAnimation | null = null;
     let pendingIdle: Timer | null = null;
+    let gen = 0;
 
     applyFrame(widget, provider, initial, animate, style, current);
 
@@ -109,11 +110,11 @@ export const Animated = ({
       active?.pause();
       pendingIdle?.cancel();
       pendingIdle = null;
+      active = null;
+      const my = ++gen;
+
       const from = current;
-      if (from === target) {
-        active = null;
-        return;
-      }
+      if (from === target) return;
 
       const anim = new Adw.TimedAnimation({
         widget,
@@ -122,19 +123,23 @@ export const Animated = ({
         duration: Math.max(1, Math.round(duration * Math.abs(target - from))),
         easing,
         target: Adw.CallbackAnimationTarget.new((t: number) => {
+          if (my !== gen) return;
           current = t;
           applyFrame(widget, provider, initial, animate, style, t);
         }),
       });
       active = anim;
+
       anim.connect('done', () => {
-        if (active !== anim) return;
+        if (my !== gen) return;
+        active = null;
         if (target === 1) onEnter?.();
         else onExit?.();
       });
+
       pendingIdle = idle(() => {
         pendingIdle = null;
-        anim.play();
+        if (my === gen) anim.play();
       });
     };
 
