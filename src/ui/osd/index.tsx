@@ -16,9 +16,9 @@ const osd = createPopup({
     ...(config.bar.anchor === 'top'
       ? { marginTop: [0, 50] }
       : { marginBottom: [0, 20] }),
-    duration: 300,
+    duration: 250,
   },
-  timeout: 3000,
+  timeout: 3750,
   anchor: config.bar.anchor === 'top'
     ? Astal.WindowAnchor.TOP
     : Astal.WindowAnchor.BOTTOM,

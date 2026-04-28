@@ -30,7 +30,7 @@ const components = new Map(
     KeyLock(),
     Nowplaying(),
   ]
-    .filter((c): c is NonNullable<typeof c> => c !== null && c !== false)
+    .filter(c => c !== null)
     .map((c) => [c.name, c]),
 );
 
