@@ -3,6 +3,9 @@ import AstalHyprland from 'gi://AstalHyprland?version=0.1';
 import { createBinding, For } from 'ags';
 import { defineComponent } from './component';
 
+const FOCUSED_WORKSPACE = ['workspace', 'focused'];
+const UNFOCUSED_WORKSPACE = ['workspace', 'unfocused'];
+
 export default () => {
   const hyprland = AstalHyprland.get_default();
   const workspaces = createBinding(hyprland, 'workspaces')
@@ -18,8 +21,8 @@ export default () => {
             valign={Gtk.Align.CENTER}
             cssClasses={focused.as(f =>
               workspace.id === f.id
-                ? ['workspace', 'focused']
-                : ['workspace', 'unfocused']
+                ? FOCUSED_WORKSPACE
+                : UNFOCUSED_WORKSPACE
             )}
             onClicked={() => {
               workspace.focus();
