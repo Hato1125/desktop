@@ -34,9 +34,12 @@ export default () => {
               'label',
               'text-base'
             ]}
-            label={createBinding(client, 'title').as(t =>
-              displayClientName(client.get_initial_class(), t)
-            )}
+            label={
+              displayClientName(
+                client.get_initial_class(),
+                client.get_title()
+              )
+            }
             maxWidthChars={65}
             ellipsize={Pango.EllipsizeMode.END}
           />
