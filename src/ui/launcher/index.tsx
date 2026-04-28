@@ -14,6 +14,8 @@ const apps = new AstalApps.Apps();
 const appsWatch = watchDirs([
   '/usr/share/applications',
   '~/.local/share/applications',
+  '/var/lib/flatpak/exports/share/applications',
+  '~/.local/share/flatpak/exports/share/applications',
 ]);
 
 let entry: Gtk.Entry;
@@ -151,6 +153,7 @@ export default () => createRoot(() => (
         if (appsWatch.stale) {
           apps.reload();
           appsWatch.clear();
+          setList(apps.get_list());
         }
         entry.set_text('');
         entry.grab_focus();

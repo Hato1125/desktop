@@ -102,6 +102,7 @@ export const Animated = ({
     let current = when() ? 1 : 0;
     let active: Adw.TimedAnimation | null = null;
     let pendingIdle: Timer | null = null;
+    let pendingMap = 0;
     let gen = 0;
 
     applyFrame(widget, provider, initial, animate, style, current);
@@ -110,6 +111,10 @@ export const Animated = ({
       active?.pause();
       pendingIdle?.cancel();
       pendingIdle = null;
+      if (pendingMap) {
+        widget.disconnect(pendingMap);
+        pendingMap = 0;
+      }
       active = null;
       const my = ++gen;
 
@@ -137,10 +142,25 @@ export const Animated = ({
         else onExit?.();
       });
 
-      pendingIdle = idle(() => {
-        pendingIdle = null;
-        if (my === gen) anim.play();
-      });
+      const schedule = () => {
+        pendingIdle = idle(() => {
+          pendingIdle = null;
+          if (my === gen) anim.play();
+        });
+      };
+
+      if (widget.get_mapped()) {
+        schedule();
+      } else {
+        applyFrame(widget, provider, initial, animate, style, from);
+        pendingMap = widget.connect('map', () => {
+          if (pendingMap) {
+            widget.disconnect(pendingMap);
+            pendingMap = 0;
+          }
+          if (my === gen) schedule();
+        });
+      }
     };
 
     when.subscribe(() => play(when() ? 1 : 0));
