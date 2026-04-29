@@ -63,6 +63,12 @@ const SearchBox = () => (
       hexpand
       placeholderText='Search'
       onNotifyText={({ text }) => setQuery(text)}
+      onActivate={() => {
+        const top = allApps().find(app => matchesQuery(app, query()));
+        if (top) {
+          launch(top);
+        }
+      }}
     />
   </box>
 );
