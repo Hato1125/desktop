@@ -28,7 +28,7 @@ export const createTween = <T extends Values>(widget: Gtk.Widget, apply: (v: T) 
     cancel = () => {
       if (dead) return;
       dead = true;
-      anim?.pause();
+      anim?.skip();
       anim = null;
       reject(CANCELLED);
     };

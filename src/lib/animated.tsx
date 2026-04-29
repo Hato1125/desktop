@@ -108,15 +108,16 @@ export const Animated = ({
     applyFrame(widget, provider, initial, animate, style, current);
 
     const play = (target: number) => {
-      active?.pause();
       pendingIdle?.cancel();
       pendingIdle = null;
       if (pendingMap) {
         widget.disconnect(pendingMap);
         pendingMap = 0;
       }
-      active = null;
+
       const my = ++gen;
+      active?.skip();
+      active = null;
 
       const from = current;
       if (from === target) return;

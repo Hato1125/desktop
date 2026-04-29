@@ -24,6 +24,9 @@ const devices = createBinding(AstalBattery.UPower.new(), 'devices').as(
   ).sort((a, b) => a.deviceType - b.deviceType)
 );
 
+const LEVEL_NORMAL = ['level'];
+const LEVEL_WARN = ['level', 'warn'];
+
 const Battery = ({ device }: { device: AstalBattery.Device }) => (
   <box
     class='devices'
@@ -47,11 +50,11 @@ const Battery = ({ device }: { device: AstalBattery.Device }) => (
       <levelbar
         class='level'
         cssClasses={
-          createBinding(device, 'percentage').as(p => {
-            return p <= 0.2
-              ? ['level', 'warn']
-              : ['level']
-          })
+          createBinding(device, 'percentage').as(p =>
+            p <= 0.2
+              ? LEVEL_WARN
+              : LEVEL_NORMAL
+          )
         }
         minValue={0}
         maxValue={1}

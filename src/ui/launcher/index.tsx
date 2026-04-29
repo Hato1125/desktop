@@ -20,7 +20,22 @@ const appsWatch = watchDirs([
 
 let entry: Gtk.Entry;
 
-const [list, setList] = createState(apps.get_list());
+const filterApps = (list: AstalApps.Application[]) =>
+  list.filter((app) => !app.categories.includes('X-WayDroid-App'));
+
+const sortByName = (a: AstalApps.Application, b: AstalApps.Application) =>
+  a.name.localeCompare(b.name);
+
+const allApps = () => filterApps(apps.get_list()).sort(sortByName);
+
+const matchesQuery = (app: AstalApps.Application, q: string): boolean => {
+  if (!q) return true;
+  const name = app.name.toLowerCase();
+  return q.toLowerCase().split(/\s+/).filter(Boolean).every((t) => name.includes(t));
+};
+
+const [list, setList] = createState(allApps());
+const [query, setQuery] = createState('');
 const [rendered, setRendered] = createState(false);
 const [open, setOpen] = createState(false);
 
@@ -28,15 +43,6 @@ const launch = (app: AstalApps.Application) => {
   if (app.launch()) {
     closeWindow();
   }
-}
-
-const search = (text: string) => {
-  setList(
-    apps.fuzzy_query(text)
-      .filter((app) => {
-        return !app.categories.includes('X-WayDroid-App')
-      })
-  );
 }
 
 const SearchBox = () => (
@@ -56,13 +62,17 @@ const SearchBox = () => (
       ]}
       hexpand
       placeholderText='Search'
-      onNotifyText={({ text }) => search(text)}
+      onNotifyText={({ text }) => setQuery(text)}
     />
   </box>
 );
 
 const Item = ({ app }: { app: AstalApps.Application }) => (
-  <button class='item' onClicked={() => launch(app)}>
+  <button
+    class='item'
+    visible={query.as((q) => matchesQuery(app, q))}
+    onClicked={() => launch(app)}
+  >
     <box spacing={16}>
       <image
         cssClasses={['symbols-3xl']}
@@ -153,7 +163,7 @@ export default () => createRoot(() => (
         if (appsWatch.stale) {
           apps.reload();
           appsWatch.clear();
-          setList(apps.get_list());
+          setList(allApps());
         }
         entry.set_text('');
         entry.grab_focus();

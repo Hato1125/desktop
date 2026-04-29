@@ -23,7 +23,7 @@ class NowPlayingService extends GObject.Object {
   @property(String) source: NowPlayingSource = 'none';
 
   private mpris: AstalMpris.Mpris;
-  private bound = new WeakSet<AstalMpris.Player>();
+  private bound = new Map<AstalMpris.Player, number[]>();
   private scheduled = false;
 
   constructor() {
@@ -44,7 +44,10 @@ class NowPlayingService extends GObject.Object {
       this.bindPlayer(player);
       this.schedule();
     });
-    this.mpris.connect('player-closed', () => this.schedule());
+    this.mpris.connect('player-closed', (_, player: AstalMpris.Player) => {
+      this.unbindPlayer(player);
+      this.schedule();
+    });
 
     this.mpris.players.forEach((p) => this.bindPlayer(p));
     this.recompute();
@@ -52,10 +55,18 @@ class NowPlayingService extends GObject.Object {
 
   private bindPlayer(player: AstalMpris.Player) {
     if (this.bound.has(player)) return;
-    this.bound.add(player);
+    const ids: number[] = [];
     for (const p of ['playback-status', 'title', 'artist', 'cover-art', 'art-url']) {
-      player.connect(`notify::${p}`, () => this.schedule());
+      ids.push(player.connect(`notify::${p}`, () => this.schedule()));
     }
+    this.bound.set(player, ids);
+  }
+
+  private unbindPlayer(player: AstalMpris.Player) {
+    const ids = this.bound.get(player);
+    if (!ids) return;
+    for (const id of ids) player.disconnect(id);
+    this.bound.delete(player);
   }
 
   private schedule() {

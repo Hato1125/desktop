@@ -144,10 +144,10 @@ export const createPopup = (config: PopupConfig) => {
       const entry: Entry = { win, height: 0, dismiss: () => dismiss() };
       entries.unshift(entry);
 
-      idle(() => {
+      idle(async () => {
         entry.height = content.get_preferred_size()[1]?.height ?? 0;
         reposition();
-        animate(win, content, config.transition, 0, 1);
+        await animate(win, content, config.transition, 0, 1);
       });
 
       startTimer();
