@@ -34,9 +34,9 @@ const Battery = ({ device }: { device: AstalBattery.Device }) => (
     halign={Gtk.Align.CENTER}
     valign={Gtk.Align.CENTER}
     tooltipText={
-      createBinding(device, 'percentage').as(p => {
-        return `${device.model} ${Math.floor(p * 100)}%`
-      })
+      createBinding(device, 'percentage').as(p =>
+        `${device.model} ${Math.floor(p * 100)}%`
+      )
     }
   >
     <label
@@ -82,11 +82,7 @@ const Battery = ({ device }: { device: AstalBattery.Device }) => (
 export default () => defineComponent('devices', () => (
   <box spacing={14} visible={devices.as(d => d.length > 0)}>
     <For each={devices}>
-      {(device) => device && (
-        <box>
-          <Battery device={device} />
-        </box>
-      )}
+      {(device) => <Battery device={device} />}
     </For>
   </box>
 ));
