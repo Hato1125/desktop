@@ -61,7 +61,6 @@ const createThumb = () => {
       {base}
       {note('note-1')}
       {note('note-2')}
-      {note('note-3')}
     </overlay>
   ) as Gtk.Widget;
 
@@ -111,7 +110,7 @@ export default () => {
   const source = createBinding(nowplaying, 'source');
   const isOsu = createMemo(() => source() === 'tosu');
   const text = createMemo(() => artist() ? `${artist()} - ${title()}` : title());
-  const signature = createMemo(() => `${source()}|${text()}|${stars()}`);
+  const signature = createMemo(() => `${source()}|${text()}|${stars()}|${artwork()}`);
 
   const createAnimator = (
     root: Gtk.Widget,
@@ -178,9 +177,6 @@ export default () => {
       if (!available()) return;
       if (showing) sync();
       else swap();
-    });
-    artwork.subscribe(() => {
-      if (available()) thumb.setArtwork(artwork());
     });
   };
 

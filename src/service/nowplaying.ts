@@ -23,7 +23,7 @@ class NowPlayingService extends GObject.Object {
   @property(String) source: NowPlayingSource = 'none';
 
   private mpris: AstalMpris.Mpris;
-  private bound = new Map<AstalMpris.Player, number[]>();
+  private bound = new WeakMap<AstalMpris.Player, number[]>();
   private scheduled = false;
 
   constructor() {
