@@ -11,12 +11,18 @@
     padding: 0 27px;
 
     entry {
+      caret-color: var(--accent);
       padding: 15px 0;
 
       text {
         color: var(--fg);
 
         placeholder { color: var(--border-muted); }
+      }
+
+      selection {
+        color: var(--fg);
+        background-color: var(--border-muted);
       }
     }
   }
