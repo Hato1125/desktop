@@ -1,8 +1,7 @@
 import Gtk from 'gi://Gtk?version=4.0';
-import Gio from 'gi://Gio?version=2.0';
-import GLib from 'gi://GLib?version=2.0';
 import { readFile } from 'ags/file';
 import { defineComponent } from './component';
+import power from '@service/power';
 
 const Button = (
   { name, icon, action }: {
@@ -37,35 +36,30 @@ export default () => {
     .find((line) => line.startsWith('ID='))
     ?.split('=')[1] ?? 'linux';
 
-  let popupvar: Gtk.Popover;
-
-  const login1 = Gio.DBusProxy.new_for_bus_sync(
-    Gio.BusType.SYSTEM,
-    Gio.DBusProxyFlags.NONE,
-    null,
-    'org.freedesktop.login1',
-    '/org/freedesktop/login1',
-    'org.freedesktop.login1.Manager',
-    null,
+  const Icon = () => (
+    <image class='symbols-lg' iconName={`${distro}-symbolic`} />
   );
 
-  const powerOff = () => login1.call_sync('PowerOff', new GLib.Variant('(b)', [true]), Gio.DBusCallFlags.NONE, 5000, null);
-  const reboot = () => login1.call_sync('Reboot', new GLib.Variant('(b)', [true]), Gio.DBusCallFlags.NONE, 5000, null);
-  const suspend = () => login1.call_sync('Suspend', new GLib.Variant('(b)', [true]), Gio.DBusCallFlags.NONE, 5000, null);
+  return defineComponent('menu', () => {
+    if (!power) return <box><Icon /></box>;
 
-  return defineComponent('menu', () => (
-    <box>
-      <button onClicked={() => popupvar.popup()}>
-        <image class='symbols-lg' iconName={`${distro}-symbolic`} />
-      </button>
+    let popupvar: Gtk.Popover;
+    const p = power;
 
-      <Gtk.Popover $={(ref) => (popupvar = ref)} hasArrow={false}>
-        <box orientation={Gtk.Orientation.VERTICAL} spacing={6}>
-          <Button name='Shutdown' icon='power_off' action={powerOff} />
-          <Button name='Restart' icon='restart_alt' action={reboot} />
-          <Button name='Sleep' icon='bedtime' action={suspend} />
-        </box>
-      </Gtk.Popover>
-    </box>
-  ));
-}
+    return (
+      <box>
+        <button onClicked={() => popupvar.popup()}>
+          <Icon />
+        </button>
+
+        <Gtk.Popover $={(ref) => (popupvar = ref)} hasArrow={false}>
+          <box orientation={Gtk.Orientation.VERTICAL} spacing={6}>
+            <Button name='Shutdown' icon='power_off' action={p.powerOff} />
+            <Button name='Restart' icon='restart_alt' action={p.reboot} />
+            <Button name='Sleep' icon='bedtime' action={p.suspend} />
+          </box>
+        </Gtk.Popover>
+      </box>
+    );
+  });
+};

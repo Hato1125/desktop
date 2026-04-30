@@ -10,6 +10,8 @@ import {
 
 import { support, makeService } from 'src/feature/feature';
 
+Gio._promisify(Gio.DBusProxy.prototype, 'call', 'call_finish');
+
 export class Game {
   constructor(
     public pid: number = 0,
@@ -101,17 +103,17 @@ class GameModeService extends GObject.Object {
     this.onRegistered?.(game);
   }
 
-  private refresh() {
+  private async refresh() {
     try {
-      const result = this._proxy.call_sync(
+      const result = await this._proxy.call(
         'ListGames',
         null,
         Gio.DBusCallFlags.NONE,
         2000,
         null,
-      );
+      ) as GLib.Variant;
 
-      const entries = (result!.deepUnpack() as [number, number][][])[0]!;
+      const entries = (result.deepUnpack() as [number, number][][])[0]!;
       this.games = entries
         .map(([pid]) => new Game(pid, getGameName(pid)))
         .filter(g => g.name !== '');
