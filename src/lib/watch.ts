@@ -9,13 +9,16 @@ export type Watch = {
 const expand = (path: string) =>
   path === '~' || path.startsWith('~/') ? `${GLib.get_home_dir()}${path.slice(1)}` : path;
 
+const retained: Gio.FileMonitor[] = [];
+
 export const watchDirs = (paths: string[]): Watch => {
   let stale = true;
   for (const path of paths) {
     try {
-      Gio.File.new_for_path(expand(path))
-        .monitor_directory(Gio.FileMonitorFlags.NONE, null)
-        .connect('changed', () => { stale = true; });
+      const monitor = Gio.File.new_for_path(expand(path))
+        .monitor_directory(Gio.FileMonitorFlags.NONE, null);
+      monitor.connect('changed', () => { stale = true; });
+      retained.push(monitor);
     } catch (e) {
       console.warn(`watch: ${path}:`, e);
     }
