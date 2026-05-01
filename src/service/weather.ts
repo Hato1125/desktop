@@ -27,10 +27,14 @@ const weatherIcon = (code: number): string => {
 const INTERVAL = 600_000;
 const LOCATE_RETRY_MIN = 1_000;
 const LOCATE_RETRY_MAX = 60_000;
+const FETCH_RETRIES = 3;
+const FETCH_RETRY_MIN = 2_000;
+const FETCH_RETRY_MAX = 10_000;
 
 @support()
 @register()
 class WeatherService extends GObject.Object {
+  @property(Boolean) available: boolean = false;
   @property(Number) temperature: number = 0;
   @property(Number) humidity: number = 0;
   @property(Number) windSpeed: number = 0;
@@ -70,16 +74,28 @@ class WeatherService extends GObject.Object {
     if (this.lat === null || this.lon === null) return;
 
     try {
-      const url = `https://api.open-meteo.com/v1/forecast?latitude=${this.lat}&longitude=${this.lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m`;
-      const res = await fetch(url);
-      const data = await res.json();
-      const current = data.current;
+      await retry(
+        async () => {
+          const url = `https://api.open-meteo.com/v1/forecast?latitude=${this.lat}&longitude=${this.lon}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m`;
+          const res = await fetch(url);
+          const data = await res.json();
+          const current = data.current;
 
-      this.temperature = current.temperature_2m;
-      this.humidity = current.relative_humidity_2m;
-      this.windSpeed = current.wind_speed_10m;
-      this.weatherCode = current.weather_code;
-      this.icon = weatherIcon(current.weather_code);
+          this.temperature = current.temperature_2m;
+          this.humidity = current.relative_humidity_2m;
+          this.windSpeed = current.wind_speed_10m;
+          this.weatherCode = current.weather_code;
+          this.icon = weatherIcon(current.weather_code);
+          this.available = true;
+        },
+        {
+          retries: FETCH_RETRIES,
+          delay: FETCH_RETRY_MIN,
+          backoff: 'EXPONENTIAL',
+          maxBackOff: FETCH_RETRY_MAX,
+          logger: (msg) => console.error(`Weather: ${msg}`),
+        },
+      );
     } catch (e) {
       console.error('Weather: failed to fetch', e);
     }

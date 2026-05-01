@@ -97,6 +97,14 @@
     &.warn trough block.filled { background-color: var(--danger); }
   }
 
+  .weather {
+    spinner {
+      color: var(--fg);
+      min-width: 10px;
+      min-height: 10px;
+    }
+  }
+
   .nowplaying {
     .thumb-container {
       min-width: 22px;
@@ -147,6 +155,8 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+
 
 @keyframes note-float {
   0% { transform: translate(2px, 0px); text-shadow: 0 0 0 var(--fg); opacity: 0; }
