@@ -1,3 +1,5 @@
+import onetime from 'onetime';
+
 import { detectEnv } from './env';
 
 export type Os = 'linux'
@@ -90,8 +92,7 @@ interface RegistryEntry {
 
 const registry: RegistryEntry[] = [];
 
-let _env: Env | null = null;
-export const env = (): Env => _env ??= detectEnv();
+export const env = onetime(detectEnv);
 
 export function support(init: FeatureSupportInit = {}) {
   return function <T extends new (...args: any[]) => any>(

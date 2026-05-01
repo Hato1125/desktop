@@ -1,3 +1,5 @@
+import onetime from 'onetime'
+
 import Gtk from 'gi://Gtk?version=4.0'
 import Gdk from 'gi://Gdk?version=4.0'
 import GdkPixbuf from 'gi://GdkPixbuf?version=2.0'
@@ -14,28 +16,47 @@ const ICON_SIZE = 22;
 
 const SCALE = (() => {
   const display = Gdk.Display.get_default();
-  if (!display) return 1;
+  if (!display) {
+    return 1;
+  }
+
   const monitors = display.get_monitors();
-  if (monitors.get_n_items() === 0) return 1;
+  if (monitors.get_n_items() === 0) {
+    return 1;
+  }
+
   const monitor = monitors.get_item(0) as Gdk.Monitor | null;
   return monitor?.scale_factor ?? 1;
 })();
 
-let _theme: Gtk.IconTheme | null = null;
-const theme = (): Gtk.IconTheme =>
-  _theme ??= Gtk.IconTheme.get_for_display(Gdk.Display.get_default()!);
+const theme = onetime(() =>
+  Gtk.IconTheme.get_for_display(Gdk.Display.get_default()!)
+);
 
 const resolveIconPath = (iconRef: string): string | undefined => {
-  if (iconRef.startsWith('/')) return iconRef;
+  if (iconRef.startsWith('/')) {
+    return iconRef;
+  }
+
   const paintable = theme().lookup_icon(
-    iconRef, null, ICON_SIZE, SCALE, Gtk.TextDirection.NONE, Gtk.IconLookupFlags.NONE,
+    iconRef,
+    null,
+    ICON_SIZE,
+    SCALE,
+    Gtk.TextDirection.NONE,
+    Gtk.IconLookupFlags.NONE
   );
+
   return paintable.get_file()?.get_path() ?? undefined;
 };
 
 const loadIcon = (iconRef: string): Gdk.Texture | undefined => {
   const path = resolveIconPath(iconRef);
-  if (!path) return undefined;
+
+  if (!path) {
+    return undefined;
+  }
+
   try {
     const px = ICON_SIZE * SCALE;
     const pb = GdkPixbuf.Pixbuf.new_from_file_at_size(path, px, px);
