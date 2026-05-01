@@ -8,7 +8,8 @@
   "dependencies": {
     "ags": "*",
     "gnim": "*",
-    "onetime": "^8.0.0"
+    "onetime": "^8.0.0",
+    "ts-retry-promise": "^0.8.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.9",

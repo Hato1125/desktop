@@ -5,6 +5,7 @@ import {
   property,
 } from 'ags/gobject';
 import fetch from 'gnim/fetch';
+import { retry } from 'ts-retry-promise';
 
 import { support, makeService } from 'src/feature/feature';
 
@@ -24,7 +25,8 @@ const weatherIcon = (code: number): string => {
 };
 
 const INTERVAL = 600_000;
-const LOCATE_RETRY = 60_000;
+const LOCATE_RETRY_MIN = 1_000;
+const LOCATE_RETRY_MAX = 60_000;
 
 @support()
 @register()
@@ -45,16 +47,23 @@ class WeatherService extends GObject.Object {
   }
 
   private async locateAndFetch() {
-    try {
-      const res = await fetch('http://ip-api.com/json/?fields=lat,lon');
-      const data = await res.json();
-      this.lat = data.lat;
-      this.lon = data.lon;
-      await this.fetchWeather();
-    } catch (e) {
-      console.error('Weather: failed to get location, retrying in 60s', e);
-      setTimeout(() => this.locateAndFetch(), LOCATE_RETRY);
-    }
+    await retry(
+      async () => {
+        const res = await fetch('http://ip-api.com/json/?fields=lat,lon');
+        const data = await res.json();
+        this.lat = data.lat;
+        this.lon = data.lon;
+      },
+      {
+        retries: 'INFINITELY',
+        timeout: 'INFINITELY',
+        delay: LOCATE_RETRY_MIN,
+        backoff: 'EXPONENTIAL',
+        maxBackOff: LOCATE_RETRY_MAX,
+        logger: (msg) => console.error(`Weather: ${msg}`),
+      },
+    );
+    await this.fetchWeather();
   }
 
   private async fetchWeather() {

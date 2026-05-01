@@ -24,6 +24,7 @@ bunx esbuild src/main.tsx \
   --external:'resource://*' \
   --external:system \
   --external:console \
+  --main-fields=module,main \
   --jsx=automatic \
   --jsx-import-source=ags/gtk4 \
   --minify-syntax \
