@@ -1,5 +1,6 @@
 import Gtk from 'gi://Gtk?version=4.0'
 import Gdk from 'gi://Gdk?version=4.0'
+import GdkPixbuf from 'gi://GdkPixbuf?version=2.0'
 import Adw from 'gi://Adw?version=1'
 import Astal from 'gi://Astal?version=4.0'
 import AstalApps from 'gi://AstalApps'
@@ -8,6 +9,41 @@ import { createRoot, createState, For } from 'ags'
 
 import { Animated } from '@lib/animated';
 import { watchDirs } from '@lib/watch';
+
+const ICON_SIZE = 22;
+
+const SCALE = (() => {
+  const display = Gdk.Display.get_default();
+  if (!display) return 1;
+  const monitors = display.get_monitors();
+  if (monitors.get_n_items() === 0) return 1;
+  const monitor = monitors.get_item(0) as Gdk.Monitor | null;
+  return monitor?.scale_factor ?? 1;
+})();
+
+let _theme: Gtk.IconTheme | null = null;
+const theme = (): Gtk.IconTheme =>
+  _theme ??= Gtk.IconTheme.get_for_display(Gdk.Display.get_default()!);
+
+const resolveIconPath = (iconRef: string): string | undefined => {
+  if (iconRef.startsWith('/')) return iconRef;
+  const paintable = theme().lookup_icon(
+    iconRef, null, ICON_SIZE, SCALE, Gtk.TextDirection.NONE, Gtk.IconLookupFlags.NONE,
+  );
+  return paintable.get_file()?.get_path() ?? undefined;
+};
+
+const loadIcon = (iconRef: string): Gdk.Texture | undefined => {
+  const path = resolveIconPath(iconRef);
+  if (!path) return undefined;
+  try {
+    const px = ICON_SIZE * SCALE;
+    const pb = GdkPixbuf.Pixbuf.new_from_file_at_size(path, px, px);
+    return pb ? Gdk.Texture.new_for_pixbuf(pb) : undefined;
+  } catch {
+    return undefined;
+  }
+};
 
 const apps = new AstalApps.Apps();
 
@@ -34,7 +70,7 @@ const matchesQuery = (app: AstalApps.Application, q: string): boolean => {
   return q.toLowerCase().split(/\s+/).filter(Boolean).every((t) => name.includes(t));
 };
 
-const [list, setList] = createState(allApps());
+const [list, setList] = createState<AstalApps.Application[]>([]);
 const [query, setQuery] = createState('');
 const [rendered, setRendered] = createState(false);
 const [open, setOpen] = createState(false);
@@ -51,14 +87,14 @@ const SearchBox = () => (
     <label
       cssClasses={[
         'symbols',
-        'symbols-3xl',
+        'symbols-2xl',
       ]}
       label='search'
     />
     <entry
       $={(ref) => (entry = ref)}
       cssClasses={[
-        'text-xl',
+        'text-lg',
       ]}
       hexpand
       placeholderText='Search'
@@ -81,10 +117,9 @@ const Item = ({ app }: { app: AstalApps.Application }) => (
   >
     <box spacing={16}>
       <image
-        cssClasses={['symbols-3xl']}
-        {...(app.iconName.startsWith('/')
-          ? { file: app.iconName }
-          : { iconName: app.iconName })}
+        cssClasses={['icon']}
+        paintable={loadIcon(app.iconName)}
+        pixelSize={ICON_SIZE}
       />
       <label
         cssClasses={['text-lg']}

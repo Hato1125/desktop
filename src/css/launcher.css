@@ -38,13 +38,13 @@
       contrast(1.125)
       brightness(1.125);
 
-    image { -gtk-icon-shadow: 0 0 2px var(--fg-subtle); }
+    image.icon { filter: drop-shadow(0 0 2px var(--fg-subtle)); }
 
     &:focus {
       color: var(--fg-inverse);
       background-color: var(--bg-inverse);
 
-      image { -gtk-icon-shadow: 0 0 2px var(--border); }
+      image.icon { filter: drop-shadow(0 0 2px var(--border)); }
     }
   }
 }
