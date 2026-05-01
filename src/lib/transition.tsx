@@ -21,6 +21,7 @@ type PopupConfig = {
   transition: TransitionConfig;
   timeout: number;
   anchor: Astal.WindowAnchor;
+  exclusivity: Astal.Exclusivity;
   className?: string;
   namespace?: string;
   replace?: boolean;
@@ -131,7 +132,7 @@ export const createPopup = (config: PopupConfig) => {
           namespace={config.namespace ?? ''}
           application={app}
           anchor={config.anchor}
-          exclusivity={Astal.Exclusivity.IGNORE}
+          exclusivity={config.exclusivity}
           layer={Astal.Layer.OVERLAY}
         >
           {render()}

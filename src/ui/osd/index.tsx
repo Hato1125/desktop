@@ -14,7 +14,7 @@ const osd = createPopup({
   transition: {
     opacity: [0, 1],
     ...(config.bar.anchor === 'top'
-      ? { marginTop: [0, 50] }
+      ? { marginTop: [0, 20] }
       : { marginBottom: [0, 20] }),
     duration: 250,
   },
@@ -22,6 +22,7 @@ const osd = createPopup({
   anchor: config.bar.anchor === 'top'
     ? Astal.WindowAnchor.TOP
     : Astal.WindowAnchor.BOTTOM,
+  exclusivity: Astal.Exclusivity.NORMAL,
   className: 'osd',
   namespace: 'osd',
   replace: true,

@@ -14,6 +14,7 @@ const popup = createPopup({
   },
   timeout: 5000,
   anchor: Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT,
+  exclusivity: Astal.Exclusivity.NORMAL,
   className: 'notification',
   namespace: 'notification',
 });
