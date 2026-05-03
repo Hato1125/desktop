@@ -3,7 +3,8 @@
 ![screenshot](assets/desktop.png)
 
 A personal Wayland shell mockup built with [AGS](https://github.com/aylur/ags)
-on top of GTK4. Used as my daily driver until [arc](https://github.com/Hato1125)
+on top of GTK4.  
+Used as my daily driver until [arc](https://github.com/Hato1125)
 (a future C++ UI framework) is ready.
 
 ## Stack
