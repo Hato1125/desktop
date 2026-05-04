@@ -158,6 +158,14 @@
       transparent 34px
     );
 
+    &.bottom {
+      background: linear-gradient(
+        to top,
+        var(--bar-tint) 0px,
+        transparent 34px
+      );
+    }
+
     .workspaces {
       background-color: transparent;
 

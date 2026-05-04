@@ -1,7 +1,7 @@
 import Gtk from 'gi://Gtk?version=4.0';
 import Astal from 'gi://Astal?version=4.0';
 
-import { createBinding, For } from 'ags';
+import { createBinding, createMemo, For } from 'ags';
 
 import config from '@config';
 import Battery from './component/battery';
@@ -40,19 +40,20 @@ const Slot = ({ align }: { align: 'start' | 'center' | 'end' }) => (
   </For>
 );
 
-export default () => (
+export default () => {
+  const anchor = createBinding(config.bar, 'anchor');
+  const transparent = createBinding(config.bar, 'transparent');
+  const cssClasses = createMemo(() =>
+    ['bar', anchor(), ...(transparent() ? ['transparent'] : [])]
+  );
+
+  return (
   <window
     visible
-    cssClasses={
-      createBinding(config.bar, 'transparent').as(
-        (t) => t
-          ? ['bar', 'transparent']
-          : ['bar']
-      )
-    }
+    cssClasses={cssClasses}
     namespace='bar'
     anchor={
-      createBinding(config.bar, 'anchor').as((a) =>
+      anchor.as((a) =>
         (a === 'top' ? Astal.WindowAnchor.TOP : Astal.WindowAnchor.BOTTOM)
         | Astal.WindowAnchor.LEFT
         | Astal.WindowAnchor.RIGHT
@@ -75,4 +76,5 @@ export default () => (
       </box>
     </centerbox>
   </window>
-);
+  );
+}
