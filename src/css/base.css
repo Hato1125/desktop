@@ -26,21 +26,6 @@
   --light-950: #0a0a0a;
 
   --red: #ff3434;
-
-  --overlay-subtle: rgba(255, 255, 255, 0.06);
-  --overlay-muted: rgba(255, 255, 255, 0.12);
-
-  --bg: var(--dark-0);
-  --bg-subtle: var(--dark-50);
-  --bg-muted: var(--dark-100);
-  --border: var(--dark-200);
-  --border-muted: var(--dark-300);
-  --fg-muted: var(--dark-500);
-  --fg-subtle: var(--dark-600);
-  --fg: var(--dark-900);
-  --fg-emphasis: var(--dark-950);
-  --bg-inverse: var(--dark-900);
-  --fg-inverse: var(--dark-0);
   --danger: var(--red);
 
   --font-xs: 6.75px;

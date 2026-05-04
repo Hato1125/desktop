@@ -34,100 +34,90 @@ const drawBottomRight = (round: number, context: giCairo.Context) => {
 
 type DrawArc = (r: number, c: giCairo.Context) => void;
 
-const makeCornerWindow = (
-  props: {
-    monitor: Gdk.Monitor | undefined;
-    layer: Astal.Layer;
-    anchor: Astal.WindowAnchor;
-    exclusivity: Astal.Exclusivity;
-    drawCorner: DrawArc;
-    visible?: boolean | object;
-  }
+const makeMonitorCornerWindow = (
+  monitor: Gdk.Monitor,
+  anchor: Astal.WindowAnchor,
+  drawCorner: DrawArc,
 ) => (
   <window
-    visible={props.visible ?? true}
-    class='corner'
+    visible
+    class='monitor-corner'
     namespace='corner'
-    gdkmonitor={props.monitor}
-    layer={props.layer}
-    anchor={props.anchor}
-    exclusivity={props.exclusivity}
+    gdkmonitor={monitor}
+    layer={Astal.Layer.OVERLAY}
+    anchor={anchor}
+    exclusivity={Astal.Exclusivity.IGNORE}
   >
     <drawingarea
       widthRequest={ROUNDED}
       heightRequest={ROUNDED}
       $={(self) => {
-        self.set_draw_func((_, context: giCairo.Context) => {
-          props.drawCorner(ROUNDED, context);
-
-          context.closePath();
-          context.setSourceRGB(0, 0, 0);
-          context.fill();
+        self.set_draw_func((_, ctx: giCairo.Context) => {
+          drawCorner(ROUNDED, ctx);
+          ctx.closePath();
+          ctx.setSourceRGB(0, 0, 0);
+          ctx.fill();
         });
       }}
     />
   </window>
 );
 
-const makeMonitorCorner = (
+const makeBarCornerWindow = (
   anchor: Astal.WindowAnchor,
   drawCorner: DrawArc,
-) => ({ gdkmonitor }: { gdkmonitor: Gdk.Monitor }) =>
-  makeCornerWindow({
-    monitor: gdkmonitor,
-    layer: Astal.Layer.OVERLAY,
-    anchor,
-    exclusivity: Astal.Exclusivity.IGNORE,
-    drawCorner,
-  });
-
-const makeBarCorner = (
-  anchor: Astal.WindowAnchor,
-  drawCorner: DrawArc,
-) => (visible?: boolean | object) =>
-  makeCornerWindow({
-    monitor: undefined,
-    layer: Astal.Layer.TOP,
-    anchor,
-    exclusivity: Astal.Exclusivity.EXCLUSIVE,
-    drawCorner,
-    visible,
-  });
+  visible: boolean | object,
+) => (
+  <window
+    visible={visible}
+    class='bar-corner'
+    namespace='corner'
+    layer={Astal.Layer.TOP}
+    anchor={anchor}
+    exclusivity={Astal.Exclusivity.NORMAL}
+  >
+    <drawingarea
+      widthRequest={ROUNDED}
+      heightRequest={ROUNDED}
+      $={(self) => {
+        self.set_draw_func((widget, ctx: giCairo.Context) => {
+          drawCorner(ROUNDED, ctx);
+          ctx.closePath();
+          const c = widget.get_color();
+          ctx.setSourceRGBA(c.red, c.green, c.blue, c.alpha);
+          ctx.fill();
+        });
+      }}
+    />
+  </window>
+);
 
 const TL = Astal.WindowAnchor.TOP | Astal.WindowAnchor.LEFT;
 const TR = Astal.WindowAnchor.TOP | Astal.WindowAnchor.RIGHT;
 const BL = Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.LEFT;
 const BR = Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT;
 
-const MonitorTopLeftCorner = makeMonitorCorner(TL, drawTopLeft);
-const MonitorTopRightCorner = makeMonitorCorner(TR, drawTopRight);
-const MonitorBottomLeftCorner = makeMonitorCorner(BL, drawBottomLeft);
-const MonitorBottomRightCorner = makeMonitorCorner(BR, drawBottomRight);
-
-const BarBottomLeftCorner = makeBarCorner(BL, drawBottomLeft);
-const BarBottomRightCorner = makeBarCorner(BR, drawBottomRight);
-const BarTopLeftCorner = makeBarCorner(TL, drawTopLeft);
-const BarTopRightCorner = makeBarCorner(TR, drawTopRight);
-
 export const BarCorner = () => {
   const anchorBinding = createBinding(config.bar, 'anchor');
+  const topVisible = anchorBinding.as((a) => a === 'top');
+  const bottomVisible = anchorBinding.as((a) => a !== 'top');
 
-  BarTopLeftCorner(anchorBinding.as((a) => a === 'top'));
-  BarTopRightCorner(anchorBinding.as((a) => a === 'top'));
-  BarBottomLeftCorner(anchorBinding.as((a) => a !== 'top'));
-  BarBottomRightCorner(anchorBinding.as((a) => a !== 'top'));
+  makeBarCornerWindow(TL, drawTopLeft, topVisible);
+  makeBarCornerWindow(TR, drawTopRight, topVisible);
+  makeBarCornerWindow(BL, drawBottomLeft, bottomVisible);
+  makeBarCornerWindow(BR, drawBottomRight, bottomVisible);
 
   return <box visible={false} />;
-}
+};
 
 export const MonitorCorners = () => (
   <For each={createBinding(app, 'monitors')}>
     {(monitor: Gdk.Monitor) => (
       <This this={app}>
-        <MonitorTopLeftCorner gdkmonitor={monitor} />
-        <MonitorTopRightCorner gdkmonitor={monitor} />
-        <MonitorBottomLeftCorner gdkmonitor={monitor} />
-        <MonitorBottomRightCorner gdkmonitor={monitor} />
+        {makeMonitorCornerWindow(monitor, TL, drawTopLeft)}
+        {makeMonitorCornerWindow(monitor, TR, drawTopRight)}
+        {makeMonitorCornerWindow(monitor, BL, drawBottomLeft)}
+        {makeMonitorCornerWindow(monitor, BR, drawBottomRight)}
       </This>
     )}
   </For>

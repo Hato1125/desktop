@@ -1,4 +1,8 @@
-.corner {
+.monitor-corner {
   background-color: transparent;
 }
 
+.bar-corner {
+  background-color: transparent;
+  color: var(--bg);
+}

@@ -22,7 +22,7 @@
   .workspaces {
     padding: 3px 3px;
     border-radius: 50rem;
-    background-color: var(--dark-100);
+    background-color: var(--bg-muted);
 
     .workspace {
       border-radius: 50rem;
@@ -36,7 +36,7 @@
 
       &.unfocused {
         color: var(--fg);
-        background-color: var(--dark-200);
+        background-color: var(--border);
       }
     }
   }
