@@ -43,7 +43,13 @@ const Slot = ({ align }: { align: 'start' | 'center' | 'end' }) => (
 export default () => (
   <window
     visible
-    class='bar'
+    cssClasses={
+      createBinding(config.bar, 'transparent').as(
+        (t) => t
+          ? ['bar', 'transparent']
+          : ['bar']
+      )
+    }
     namespace='bar'
     anchor={
       createBinding(config.bar, 'anchor').as((a) =>

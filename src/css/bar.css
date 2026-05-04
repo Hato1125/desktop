@@ -5,6 +5,7 @@
   min-width: 37px;
   padding: 0 27px;
 
+
   .search {
     transition: all 150ms ease-out;
     border-radius: 50rem;
@@ -146,6 +147,22 @@
       .value {
         font-family: 'Satoshi Variable';
         font-feature-settings: 'tnum' 1;
+      }
+    }
+  }
+
+  &.transparent {
+    background: linear-gradient(
+      to bottom,
+      var(--bar-tint) 0px,
+      transparent 34px
+    );
+
+    .workspaces {
+      background-color: transparent;
+
+      .workspace.unfocused {
+        background-color: transparent;
       }
     }
   }

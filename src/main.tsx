@@ -17,6 +17,7 @@ import Notification from '@ui/notification/index';
 import Osd from '@ui/osd/index';
 
 import { checkAllFeatures, env } from 'src/feature/feature';
+import config from '@config';
 
 const LIGHT_OVERRIDE = `
 * {
@@ -33,6 +34,7 @@ const LIGHT_OVERRIDE = `
   --fg-inverse: var(--light-0);
   --overlay-subtle: rgba(0, 0, 0, 0.06);
   --overlay-muted: rgba(0, 0, 0, 0.12);
+  --bar-tint: rgba(255, 255, 255, 0.45);
 }
 `;
 
@@ -51,6 +53,7 @@ const DARK_OVERRIDE = `
   --fg-inverse: var(--dark-0);
   --overlay-subtle: rgba(255, 255, 255, 0.06);
   --overlay-muted: rgba(255, 255, 255, 0.12);
+  --bar-tint: rgba(0, 0, 0, 0.45);
 }
 `;
 
@@ -67,14 +70,17 @@ const initThemeSync = () => {
     );
 
     const sync = () => {
-      provider.load_from_string(
-        sm.dark
-          ? DARK_OVERRIDE
-          : LIGHT_OVERRIDE
-      );
+      const { transparent, transparentTheme } = config.bar;
+      const useDark = transparent && transparentTheme !== 'auto'
+        ? transparentTheme === 'dark'
+        : sm.dark;
+
+      provider.load_from_string(useDark ? DARK_OVERRIDE : LIGHT_OVERRIDE);
     };
 
     sm.connect('notify::dark', sync);
+    config.bar.connect('notify::transparent', sync);
+    config.bar.connect('notify::transparent-theme', sync);
     sync();
   }
 }

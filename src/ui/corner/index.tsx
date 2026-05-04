@@ -2,6 +2,7 @@ import Gdk from 'gi://Gdk?version=4.0';
 import Astal from 'gi://Astal?version=4.0';
 import {
   createBinding,
+  createComputed,
   For,
   This
 } from 'ags';
@@ -99,8 +100,9 @@ const BR = Astal.WindowAnchor.BOTTOM | Astal.WindowAnchor.RIGHT;
 
 export const BarCorner = () => {
   const anchorBinding = createBinding(config.bar, 'anchor');
-  const topVisible = anchorBinding.as((a) => a === 'top');
-  const bottomVisible = anchorBinding.as((a) => a !== 'top');
+  const transparentBinding = createBinding(config.bar, 'transparent');
+  const topVisible = createComputed(() => anchorBinding() === 'top' && !transparentBinding());
+  const bottomVisible = createComputed(() => anchorBinding() !== 'top' && !transparentBinding());
 
   makeBarCornerWindow(TL, drawTopLeft, topVisible);
   makeBarCornerWindow(TR, drawTopRight, topVisible);

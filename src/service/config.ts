@@ -9,6 +9,7 @@ import {
 } from 'ags/gobject';
 
 type BarAnchor = 'top' | 'bottom';
+type TransparentTheme = 'dark' | 'light' | 'auto';
 
 const DEFAULT_BAR_START = ['menu', 'client'];
 const DEFAULT_BAR_CENTER = ['workspaces'];
@@ -25,12 +26,16 @@ const DEFAULT_BAR_END = [
 @register()
 class BarConfig extends GObject.Object {
   @property(String) anchor: BarAnchor = 'top';
+  @property(Boolean) transparent: boolean = false;
+  @property(String) transparentTheme: TransparentTheme = 'auto';
   @property(Object) start: string[] = DEFAULT_BAR_START;
   @property(Object) center: string[] = DEFAULT_BAR_CENTER;
   @property(Object) end: string[] = DEFAULT_BAR_END;
 
   load(data: any) {
     this.anchor = data?.anchor ?? 'top';
+    this.transparent = data?.transparent ?? false;
+    this.transparentTheme = data?.transparent_theme ?? 'auto';
     this.start = data?.start ?? DEFAULT_BAR_START;
     this.center = data?.center ?? DEFAULT_BAR_CENTER;
     this.end = data?.end ?? DEFAULT_BAR_END;
