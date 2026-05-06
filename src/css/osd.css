@@ -2,18 +2,17 @@
   background-color: transparent;
   margin-bottom: -1px;
 
-  .content {
+  .osd-pill {
     background-color: var(--bg);
     border: 1px solid var(--border);
-    min-width: 190px;
-    min-height: 38.5px;
+    min-width: 140px;
+    min-height: 37px;
     border-radius: 50rem;
     margin-bottom: 50px;
+    padding: 0 20px 0 15px;
   }
 
   .volume {
-    padding: 0 20px 0 15px;
-
     levelbar {
       min-width: 114px;
       min-height: 4px;
@@ -27,5 +26,22 @@
     }
   }
 
-  .gamemode, .keylock, .bluetooth { padding: 0 20px 0 15px; }
+  .battery {
+    background-color: var(--yellow-50);
+    border: 1px solid var(--yellow-100);
+
+    &.critical {
+      background-color: var(--red-200);
+      border: 1px solid var(--red-300);
+    }
+
+    .symbols {
+      animation: osd-blink 0.65s ease-in-out infinite;
+    }
+  }
+}
+
+@keyframes osd-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
 }

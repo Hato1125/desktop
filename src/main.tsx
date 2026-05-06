@@ -35,6 +35,32 @@ const LIGHT_OVERRIDE = `
   --overlay-subtle: rgba(0, 0, 0, 0.06);
   --overlay-muted: rgba(0, 0, 0, 0.12);
   --bar-tint: rgba(255, 255, 255, 0.45);
+
+  --red-0: var(--red-light-0);
+  --red-50: var(--red-light-50);
+  --red-100: var(--red-light-100);
+  --red-200: var(--red-light-200);
+  --red-300: var(--red-light-300);
+  --red-400: var(--red-light-400);
+  --red-500: var(--red-light-500);
+  --red-600: var(--red-light-600);
+  --red-700: var(--red-light-700);
+  --red-800: var(--red-light-800);
+  --red-900: var(--red-light-900);
+  --red-950: var(--red-light-950);
+
+  --yellow-0: var(--yellow-light-0);
+  --yellow-50: var(--yellow-light-50);
+  --yellow-100: var(--yellow-light-100);
+  --yellow-200: var(--yellow-light-200);
+  --yellow-300: var(--yellow-light-300);
+  --yellow-400: var(--yellow-light-400);
+  --yellow-500: var(--yellow-light-500);
+  --yellow-600: var(--yellow-light-600);
+  --yellow-700: var(--yellow-light-700);
+  --yellow-800: var(--yellow-light-800);
+  --yellow-900: var(--yellow-light-900);
+  --yellow-950: var(--yellow-light-950);
 }
 `;
 
@@ -54,6 +80,32 @@ const DARK_OVERRIDE = `
   --overlay-subtle: rgba(255, 255, 255, 0.06);
   --overlay-muted: rgba(255, 255, 255, 0.12);
   --bar-tint: rgba(0, 0, 0, 0.45);
+
+  --red-0: var(--red-dark-0);
+  --red-50: var(--red-dark-50);
+  --red-100: var(--red-dark-100);
+  --red-200: var(--red-dark-200);
+  --red-300: var(--red-dark-300);
+  --red-400: var(--red-dark-400);
+  --red-500: var(--red-dark-500);
+  --red-600: var(--red-dark-600);
+  --red-700: var(--red-dark-700);
+  --red-800: var(--red-dark-800);
+  --red-900: var(--red-dark-900);
+  --red-950: var(--red-dark-950);
+
+  --yellow-0: var(--yellow-dark-0);
+  --yellow-50: var(--yellow-dark-50);
+  --yellow-100: var(--yellow-dark-100);
+  --yellow-200: var(--yellow-dark-200);
+  --yellow-300: var(--yellow-dark-300);
+  --yellow-400: var(--yellow-dark-400);
+  --yellow-500: var(--yellow-dark-500);
+  --yellow-600: var(--yellow-dark-600);
+  --yellow-700: var(--yellow-dark-700);
+  --yellow-800: var(--yellow-dark-800);
+  --yellow-900: var(--yellow-dark-900);
+  --yellow-950: var(--yellow-dark-950);
 }
 `;
 
