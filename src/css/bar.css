@@ -50,12 +50,7 @@
   }
 
   .vpn {
-    .symbols {
-      margin-top: -3px;
-    }
-
     .country {
-      margin-top: 6px;
       font-weight: bold;
     }
   }

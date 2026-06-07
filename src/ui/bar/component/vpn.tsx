@@ -7,7 +7,12 @@ export default () => {
   const v = vpn;
 
   return defineComponent('vpn', () => (
-    <box class='vpn' visible={createBinding(v, 'connected')}>
+    <box
+      class='vpn'
+      spacing={4}
+      visible={createBinding(v, 'connected')}
+      tooltipText={createBinding(v, 'country').as(country => `VPN ${country}`)}
+    >
       <label
         cssClasses={[
           'filled',
@@ -19,7 +24,8 @@ export default () => {
       <label
         cssClasses={[
           'country',
-          'text-xs'
+          'text-sm',
+          'tabular'
         ]}
         label={createBinding(v, 'country')}
       />
