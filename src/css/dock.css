@@ -6,7 +6,7 @@
   background-color: var(--bg);
   border: 1px solid var(--border);
   border-radius: 50rem;
-  padding: 7px 13px;
+  padding: 5px 13px;
 
   .icon {
     -gtk-icon-size: 27px;

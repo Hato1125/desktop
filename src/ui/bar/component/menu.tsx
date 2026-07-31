@@ -4,13 +4,14 @@ import { defineComponent } from './component';
 import power from '@service/power';
 
 const Button = (
-  { name, icon, action }: {
+  { name, icon, action, class: cssClass }: {
     name: string,
     icon: string,
     action: () => void,
+    class?: string,
   }
 ) => (
-  <button onClicked={action}>
+  <button class={cssClass} onClicked={action}>
     <box spacing={8}>
       <label
         cssClasses={[
@@ -20,6 +21,7 @@ const Button = (
         label={icon}
       />
       <label
+        halign={Gtk.Align.START}
         cssClasses={[
           'label',
           'text-base',
@@ -28,6 +30,28 @@ const Button = (
       />
     </box>
   </button>
+);
+
+const Category = (
+  { name, children }: {
+    name: string,
+    children?: JSX.Element | JSX.Element[]
+  }
+) => (
+  <box orientation={Gtk.Orientation.VERTICAL} spacing={4}>
+    <label
+      halign={Gtk.Align.START}
+      cssClasses={[
+        'label',
+        'text-base',
+        'category',
+      ]}
+      label={name}
+    />
+    <box orientation={Gtk.Orientation.VERTICAL}>
+      {children}
+    </box>
+  </box>
 );
 
 export default () => {
@@ -47,16 +71,18 @@ export default () => {
     const p = power;
 
     return (
-      <box>
+      <box class='menu'>
         <button onClicked={() => popupvar.popup()}>
           <Icon />
         </button>
 
         <Gtk.Popover $={(ref) => (popupvar = ref)} hasArrow={false}>
-          <box orientation={Gtk.Orientation.VERTICAL} spacing={6}>
-            <Button name='Shutdown' icon='power_off' action={p.powerOff} />
-            <Button name='Restart' icon='restart_alt' action={p.reboot} />
-            <Button name='Sleep' icon='bedtime' action={p.suspend} />
+          <box class='context' orientation={Gtk.Orientation.VERTICAL} spacing={10}>
+            <Category name='Power'>
+              <Button name='Sleep' icon='bedtime' action={p.suspend} />
+              <Button name='Restart' icon='restart_alt' action={p.reboot} />
+              <Button name='Shutdown' class='error' icon='power_off' action={p.powerOff} />
+            </Category>
           </box>
         </Gtk.Popover>
       </box>

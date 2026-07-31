@@ -129,6 +129,32 @@ popover {
   font-feature-settings: 'tnum' 1;
 }
 
+.error {
+  color: var(--red-600);
+  background-color: var(--red-100);
+
+  label {
+    color: var(--red-600);
+  }
+
+  .symbols {
+    color: var(--red-600);
+  }
+}
+
+.warning {
+  color: var(--yellow-700);
+  background-color: var(--yellow-50);
+
+  label {
+    color: var(--yellow-700);
+  }
+
+  .symbols {
+    color: var(--yellow-700);
+  }
+}
+
 .symbols {
   margin-top: 1px;
   font-family: "Material Symbols Rounded";

@@ -5,7 +5,6 @@
   min-width: 37px;
   padding: 0 27px;
 
-
   .search {
     transition: all 150ms ease-out;
     border-radius: 50rem;
@@ -169,14 +168,36 @@
       }
     }
   }
+
+  .menu .context {
+    .category {
+      color: var(--dark-500);
+    }
+
+    button {
+      padding: 3px 15px 3px 12px;
+      border-radius: 10px;
+      background-color: var(--bg);
+
+      &:hover {
+        background-color: var(--fg);
+
+        label {
+          color: var(--bg);
+        }
+
+        .symbols {
+          color: var(--bg);
+        }
+      }
+    }
+  }
 }
 
 @keyframes nowplaying-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
-
-
 
 @keyframes note-float {
   0% { transform: translate(2px, 0px); text-shadow: 0 0 0 var(--fg); opacity: 0; }
