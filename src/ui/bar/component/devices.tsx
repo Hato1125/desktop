@@ -1,7 +1,10 @@
 import Gtk from 'gi://Gtk?version=4.0';
 import AstalBattery from 'gi://AstalBattery?version=0.1';
-import { createBinding, For } from 'ags';
+import AstalBluetooth from 'gi://AstalBluetooth?version=0.1';
+import { createBinding, createMemo, For } from 'ags';
 import { defineComponent } from './component';
+
+const TOUCHPAD_APPEARANCE = 0x03c9;
 
 const icons: Map<AstalBattery.Type, string> = new Map([
   [AstalBattery.Type.MOUSE, 'mouse'],
@@ -13,16 +16,38 @@ const icons: Map<AstalBattery.Type, string> = new Map([
   [AstalBattery.Type.HEADSET, 'headphones'],
   [AstalBattery.Type.HEADPHONES, 'headphones'],
   [AstalBattery.Type.BLUETOOTH_GENERIC, 'bluetooth'],
+  [AstalBattery.Type.TOUCHPAD, 'touchpad_mouse'],
 ]);
 
-const devices = createBinding(AstalBattery.UPower.new(), 'devices').as(
-  (all) => (all as AstalBattery.Device[]).filter(d =>
+const upowerDevices = createBinding(AstalBattery.UPower.new(), 'devices');
+const bluetoothDevices = createBinding(AstalBluetooth.get_default(), 'devices');
+
+const getDeviceType = (
+  device: AstalBattery.Device,
+  bluetooth: AstalBluetooth.Device[],
+) => {
+  if (device.deviceType !== AstalBattery.Type.BLUETOOTH_GENERIC) {
+    return device.deviceType;
+  }
+
+  const bluetoothDevice = bluetooth.find(d => d.address === device.serial);
+  return bluetoothDevice?.appearance === TOUCHPAD_APPEARANCE
+    ? AstalBattery.Type.TOUCHPAD
+    : device.deviceType;
+};
+
+const devices = createMemo(() => {
+  const bluetooth = bluetoothDevices();
+
+  return (upowerDevices() as AstalBattery.Device[]).filter(d =>
     d.deviceType !== AstalBattery.Type.LINE_POWER
     && d.isPresent
     && d.isBattery
-    && icons.has(d.deviceType)
-  ).sort((a, b) => a.deviceType - b.deviceType)
-);
+    && icons.has(getDeviceType(d, bluetooth))
+  ).sort(
+    (a, b) => getDeviceType(a, bluetooth) - getDeviceType(b, bluetooth)
+  );
+});
 
 const LEVEL_NORMAL = ['level'];
 const LEVEL_WARN = ['level', 'warn'];
@@ -44,7 +69,11 @@ const Battery = ({ device }: { device: AstalBattery.Device }) => (
         'symbols',
         'symbols-xl',
       ]}
-      label={icons.get(device.deviceType)}
+      label={
+        bluetoothDevices.as(bluetooth =>
+          icons.get(getDeviceType(device, bluetooth)) ?? 'bluetooth'
+        )
+      }
     />
     <overlay>
       <levelbar
@@ -80,7 +109,7 @@ const Battery = ({ device }: { device: AstalBattery.Device }) => (
 );
 
 export default () => defineComponent('devices', () => (
-  <box spacing={14} visible={devices.as(d => d.length > 0)}>
+  <box spacing={14} visible={createMemo(() => devices().length > 0)}>
     <For each={devices}>
       {(device) => <Battery device={device} />}
     </For>
