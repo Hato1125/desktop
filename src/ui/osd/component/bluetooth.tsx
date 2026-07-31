@@ -10,17 +10,24 @@ export default (osd: Osd) => {
     device.connect('notify::connected', () => {
       osd.show(() => (
         <box
-          class='osd-pill bluetooth'
+          cssClasses={[
+            'osd-pill',
+            'bluetooth',
+          ]}
           valign={Gtk.Align.CENTER}
           spacing={14}
         >
           <label
-            cssClasses={['filled', 'symbols', 'symbols-xl']}
+            cssClasses={[
+              'filled',
+              'symbols',
+              'symbols-xl',
+            ]}
             label='bluetooth'
           />
           <label
+            hexpand
             valign={Gtk.Align.CENTER}
-            hexpand={true}
             label={device.name}
           />
         </box>
