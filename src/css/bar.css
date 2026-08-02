@@ -177,7 +177,7 @@
     button {
       padding: 3px 15px 3px 12px;
       border-radius: 10px;
-      background-color: var(--bg);
+      background-color: transparent;
 
       &:hover {
         background-color: var(--fg);

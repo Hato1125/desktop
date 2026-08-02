@@ -6,6 +6,7 @@ import {
   For,
   This
 } from 'ags';
+import type { Accessor } from 'ags';
 import app from 'ags/gtk4/app';
 
 import giCairo from 'cairo';
@@ -67,7 +68,7 @@ const makeMonitorCornerWindow = (
 const makeBarCornerWindow = (
   anchor: Astal.WindowAnchor,
   drawCorner: DrawArc,
-  visible: boolean | object,
+  visible: boolean | Accessor<boolean>,
 ) => (
   <window
     visible={visible}
