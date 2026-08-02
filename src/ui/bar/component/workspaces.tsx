@@ -8,8 +8,15 @@ const UNFOCUSED_WORKSPACE = ['workspace', 'unfocused'];
 
 export default () => {
   const hyprland = AstalHyprland.get_default();
+
+  // AstalHyprland can leave an ID 0 zombie after a workspace create/delete race.
+  // https://github.com/Aylur/Astal/issues/416
   const workspaces = createBinding(hyprland, 'workspaces')
-    .as(ws => [...ws].sort((a, b) => a.id - b.id));
+    .as(ws => [...ws]
+      .filter(workspace => workspace.id > 0)
+      .sort((a, b) => a.id - b.id)
+    );
+
   const focused = createBinding(hyprland, 'focusedWorkspace');
 
   return defineComponent('workspaces', () => (
