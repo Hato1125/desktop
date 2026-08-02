@@ -28,23 +28,27 @@
   }
 
   .item {
+    --icon-shadow: var(--fg-subtle);
+
     border-radius: 12px;
     margin: 0 18px;
     padding: 9px 29px;
     color: var(--fg);
     background-color: var(--bg);
-    filter: grayscale(99.99%)
-      brightness(1.001)
-      contrast(1.125)
-      brightness(1.125);
 
-    image.icon { filter: drop-shadow(0 0 2px var(--fg-subtle)); }
+    image.icon {
+      filter: grayscale(99.99%)
+        brightness(1.001)
+        contrast(1.125)
+        brightness(1.125)
+        drop-shadow(0 0 2px var(--icon-shadow));
+    }
 
     &:focus {
+      --icon-shadow: var(--border);
+
       color: var(--fg-inverse);
       background-color: var(--bg-inverse);
-
-      image.icon { filter: drop-shadow(0 0 2px var(--border)); }
     }
   }
 }

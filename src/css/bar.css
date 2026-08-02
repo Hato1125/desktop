@@ -5,20 +5,6 @@
   min-width: 37px;
   padding: 0 27px;
 
-  .search {
-    transition: all 150ms ease-out;
-    border-radius: 50rem;
-    min-width: 29px;
-    min-height: 29px;
-    color: var(--fg);
-    background-color: var(--bg);
-
-    &:active {
-      color: var(--bg);
-      background-color: var(--fg);
-    }
-  }
-
   .workspaces {
     padding: 3px 3px;
     border-radius: 50rem;
@@ -58,7 +44,7 @@
     color: var(--fg-inverse);
     margin-top: -1px;
 
-    .symbols, .percentage {
+    .symbols {
       color: var(--fg-inverse);
       font-weight: bold;
     }
@@ -75,10 +61,6 @@
       border-radius: 50rem;
       min-width: 14px;
       min-height: 3px;
-    }
-
-    .battery {
-      color: var(--bg-inverse);
     }
 
     .charging {
