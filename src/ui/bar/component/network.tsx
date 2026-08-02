@@ -4,22 +4,44 @@ import { defineComponent } from './component';
 
 const network = AstalNetwork.get_default();
 
-const Wired = ({ wired }: { wired: AstalNetwork.Wired }) => (
+const Unavailable = ({ tooltip }: { tooltip: string }) => (
   <label
-    tooltipMarkup={createBinding(wired, 'device').as(d => d.perm_hw_address)}
-    cssClasses={['filled', 'symbols', 'symbols-lg']}
-    label={
-      createBinding(wired, 'state')
-        .as(state =>
-          state === AstalNetwork.DeviceState.ACTIVATED
-            ? 'automation'
-            : 'signal_disconnected'
-        )
-    }
+    tooltipText={tooltip}
+    cssClasses={[
+      'filled',
+      'symbols',
+      'symbols-xl'
+    ]}
+    label='priority_high'
   />
 );
 
-const WiFi = ({ wifi }: { wifi: AstalNetwork.Wifi }) => {
+const Wired = ({ wired }: { wired: AstalNetwork.Wired | null }) => {
+  if (!wired) {
+    return <Unavailable tooltip='Wired adapter unavailable' />;
+  }
+
+  return (
+    <label
+      tooltipMarkup={createBinding(wired, 'device').as(d => d.perm_hw_address)}
+      cssClasses={['filled', 'symbols', 'symbols-lg']}
+      label={
+        createBinding(wired, 'state')
+          .as(state =>
+            state === AstalNetwork.DeviceState.ACTIVATED
+              ? 'automation'
+              : 'signal_disconnected'
+          )
+      }
+    />
+  );
+};
+
+const WiFi = ({ wifi }: { wifi: AstalNetwork.Wifi | null }) => {
+  if (!wifi) {
+    return <Unavailable tooltip='Wi-Fi adapter unavailable' />;
+  }
+
   const state = createBinding(wifi, 'state');
   const strength = createBinding(wifi, 'strength');
 
@@ -34,17 +56,18 @@ const WiFi = ({ wifi }: { wifi: AstalNetwork.Wifi }) => {
   return (
     <label
       tooltipMarkup={createBinding(wifi, 'ssid')}
-      cssClasses={['filled', 'symbols', 'symbols-xl']}
+      cssClasses={[
+        'filled',
+        'symbols',
+        'symbols-xl'
+      ]}
       label={icon}
     />
   );
 };
 
 const Unknown = () => (
-  <label
-    cssClasses={['filled', 'symbols', 'symbols-xl']}
-    label='android_wifi_3_bar_off'
-  />
+  <Unavailable tooltip='Network status unavailable' />
 );
 
 export default () => defineComponent('network', () => (

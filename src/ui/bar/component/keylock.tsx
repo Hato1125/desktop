@@ -3,7 +3,9 @@ import { createBinding, createMemo } from 'ags';
 import { defineComponent } from './component';
 
 export default () => {
-  if (!keylock) return null;
+  if (!keylock) {
+    return null;
+  }
 
   const capsLock = createBinding(keylock, 'capsLock');
   const numLock = createBinding(keylock, 'numLock');

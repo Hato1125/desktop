@@ -23,7 +23,11 @@ export default () => {
       />
       <label
         visible={available}
-        cssClasses={['filled', 'symbols', 'symbols-lg']}
+        cssClasses={[
+          'filled',
+          'symbols',
+          'symbols-lg'
+        ]}
         label={createBinding(w, 'icon')}
       />
     </box>

@@ -65,7 +65,9 @@ export default () => {
   );
 
   return defineComponent('menu', () => {
-    if (!power) return <box><Icon /></box>;
+    if (!power) {
+      return <box><Icon /></box>;
+    }
 
     let popupvar: Gtk.Popover;
     const p = power;
