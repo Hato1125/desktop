@@ -5,18 +5,21 @@ import { defineComponent } from './component';
 import { createTween, easings, CANCELLED } from '@lib/tween';
 import nowplaying from '@service/nowplaying';
 
-const BLUR_MAX = 8;
 const FADE_DURATION = 1200;
 const SWITCH_DURATION = 1200;
-const THUMB_FILTER = 'grayscale(99.99%) brightness(1.001) contrast(1.125) brightness(1.125)';
 const USER_PRIORITY = Gtk.STYLE_PROVIDER_PRIORITY_USER;
 
-const HIDDEN  = { blur: BLUR_MAX, opacity: 0 };
-const VISIBLE = { blur: 0,        opacity: 1 };
+const HIDDEN = { opacity: 0 };
+const VISIBLE = { opacity: 1 };
+const BLUR_CLASSES = [
+  'blur-fade-in',
+  'blur-fade-out',
+  'blur-swap-in',
+  'blur-swap-out',
+] as const;
 
 const createThumb = () => {
   const bgProvider = new Gtk.CssProvider();
-  const noteBlurProvider = new Gtk.CssProvider();
 
   const placeholder = (
     <label
@@ -52,7 +55,6 @@ const createThumb = () => {
         valign={Gtk.Align.CENTER}
       />
     ) as Gtk.Label;
-    label.get_style_context().add_provider(noteBlurProvider, USER_PRIORITY);
     return label;
   };
 
@@ -64,39 +66,30 @@ const createThumb = () => {
     </overlay>
   ) as Gtk.Widget;
 
-  let blur = 0;
-  let bg = 'background-image: none;';
-  const render = () => {
-    bgProvider.load_from_string(`* { ${bg} filter: blur(${blur}px) ${THUMB_FILTER}; }`);
-    noteBlurProvider.load_from_string(`* { filter: blur(${blur}px); }`);
-  };
-  render();
+  let currentArtwork: string | null = null;
 
   return {
     widget,
     setArtwork: (p: string) => {
+      if (p === currentArtwork) return;
+      currentArtwork = p;
+
       const url = !p ? '' : /^(https?|file):\/\//.test(p) ? p : `file://${p}`;
-      bg = url ? `background-image: url("${url}");` : 'background-image: none;';
+      const bg = url ? `url("${url}")` : 'none';
       placeholder.visible = !url;
       if (url) base.remove_css_class('no-art');
       else     base.add_css_class('no-art');
-      render();
+      bgProvider.load_from_string(`* { background-image: ${bg}; }`);
     },
-    setBlur: (b: number) => { blur = b; render(); },
   };
 };
 
 const createTextGroup = () => {
-  const provider = new Gtk.CssProvider();
   const title = (<label cssClasses={['label', 'text-base']} maxWidthChars={40} ellipsize={Pango.EllipsizeMode.END} />) as Gtk.Label;
   const star = (<label cssClasses={['symbols', 'filled', 'symbols-sm']} label='star' />) as Gtk.Label;
   const difficulty = (<label cssClasses={['value', 'tabular', 'text-sm']} />) as Gtk.Label;
-  for (const w of [title, star, difficulty]) w.get_style_context().add_provider(provider, USER_PRIORITY);
 
-  return {
-    title, star, difficulty,
-    setBlur: (b: number) => provider.load_from_string(`* { color: transparent; text-shadow: 0 0 ${b}px var(--fg); }`),
-  };
+  return { title, star, difficulty };
 };
 
 export default () => {
@@ -118,14 +111,8 @@ export default () => {
     textGroup: ReturnType<typeof createTextGroup>,
     setVisible: (v: boolean) => void,
   ) => {
-    let lastBlur = -1;
     let lastOpacity = -1;
-    const apply = ({ blur, opacity }: { blur: number; opacity: number }) => {
-      if (Math.abs(blur - lastBlur) >= 0.05) {
-        lastBlur = blur;
-        thumb.setBlur(blur);
-        textGroup.setBlur(blur);
-      }
+    const apply = ({ opacity }: { opacity: number }) => {
       if (Math.abs(opacity - lastOpacity) >= 0.005) {
         lastOpacity = opacity;
         root.opacity = opacity;
@@ -136,12 +123,26 @@ export default () => {
       textGroup.difficulty.set_label(stars().toFixed(2));
       thumb.setArtwork(artwork());
     };
+    const animateBlur = (cssClass: typeof BLUR_CLASSES[number]) => {
+      for (const cls of BLUR_CLASSES) root.remove_css_class(cls);
+      root.add_css_class(cssClass);
+    };
 
     const tween = createTween(root, apply);
-    const fadeIn  = () => tween(HIDDEN,  VISIBLE, FADE_DURATION,       easings.easeOut);
-    const fadeOut = () => tween(VISIBLE, HIDDEN,  FADE_DURATION,       easings.easeIn);
-    const swapOut = () => tween(VISIBLE, HIDDEN,  SWITCH_DURATION / 2, easings.easeInOut);
-    const swapIn  = () => tween(HIDDEN,  VISIBLE, SWITCH_DURATION / 2, easings.easeInOut);
+    const animate = (
+      cssClass: typeof BLUR_CLASSES[number],
+      from: typeof HIDDEN,
+      to: typeof HIDDEN,
+      duration: number,
+      easing: typeof easings[keyof typeof easings],
+    ) => {
+      animateBlur(cssClass);
+      return tween(from, to, duration, easing);
+    };
+    const fadeIn  = () => animate('blur-fade-in',  HIDDEN,  VISIBLE, FADE_DURATION,       easings.easeOut);
+    const fadeOut = () => animate('blur-fade-out', VISIBLE, HIDDEN,  FADE_DURATION,       easings.easeIn);
+    const swapOut = () => animate('blur-swap-out', VISIBLE, HIDDEN,  SWITCH_DURATION / 2, easings.easeInOut);
+    const swapIn  = () => animate('blur-swap-in',  HIDDEN,  VISIBLE, SWITCH_DURATION / 2, easings.easeInOut);
 
     const safe = (fn: () => Promise<void>) => async () => {
       try { await fn(); } catch (e) { if (e !== CANCELLED) throw e; }

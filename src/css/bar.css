@@ -83,6 +83,22 @@
   }
 
   .nowplaying {
+    &.blur-fade-in {
+      animation: nowplaying-blur-in 1200ms ease-out both;
+    }
+
+    &.blur-fade-out {
+      animation: nowplaying-blur-out 1200ms ease-in both;
+    }
+
+    &.blur-swap-in {
+      animation: nowplaying-blur-in 600ms ease-in-out both;
+    }
+
+    &.blur-swap-out {
+      animation: nowplaying-blur-out 600ms ease-in-out both;
+    }
+
     .thumb-container {
       min-width: 22px;
       min-height: 22px;
@@ -95,6 +111,10 @@
       background-position: center;
       border-radius: 50rem;
       animation: nowplaying-spin 8s linear infinite;
+      filter: grayscale(99.99%)
+        brightness(1.001)
+        contrast(1.125)
+        brightness(1.125);
 
       &.no-art {
         background-color: var(--fg);
@@ -179,6 +199,16 @@
 @keyframes nowplaying-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+@keyframes nowplaying-blur-in {
+  from { filter: blur(8px); }
+  to { filter: blur(0); }
+}
+
+@keyframes nowplaying-blur-out {
+  from { filter: blur(0); }
+  to { filter: blur(8px); }
 }
 
 @keyframes note-float {
