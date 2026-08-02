@@ -1,6 +1,6 @@
 import Gtk from 'gi://Gtk?version=4.0';
 import Pango from 'gi://Pango?version=1.0';
-import { createBinding, createMemo, createState } from 'ags';
+import { createBinding, createMemo, createState, onCleanup } from 'ags';
 import { defineComponent } from './component';
 import { createTween, easings, CANCELLED } from '@lib/tween';
 import nowplaying from '@service/nowplaying';
@@ -172,11 +172,17 @@ export default () => {
 
     sync();
     if (available()) show();
-    available.subscribe(() => { (available() ? show : hide)(); });
-    signature.subscribe(() => {
+    const unsubscribeAvailable = available.subscribe(() => {
+      (available() ? show : hide)();
+    });
+    const unsubscribeSignature = signature.subscribe(() => {
       if (!available()) return;
       if (showing) sync();
       else swap();
+    });
+    onCleanup(() => {
+      unsubscribeAvailable();
+      unsubscribeSignature();
     });
   };
 

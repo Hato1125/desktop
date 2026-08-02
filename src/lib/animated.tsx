@@ -1,7 +1,7 @@
 import Gtk from 'gi://Gtk?version=4.0';
 import Adw from 'gi://Adw?version=1';
 
-import type { Accessor } from 'ags';
+import { onCleanup, type Accessor } from 'ags';
 import { idle, Timer } from 'ags/time';
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -164,11 +164,28 @@ export const Animated = ({
       }
     };
 
-    when.subscribe(() => play(when() ? 1 : 0));
+    const unsubscribe = when.subscribe(() => play(when() ? 1 : 0));
+    onCleanup(() => {
+      unsubscribe();
+      ++gen;
+      pendingIdle?.cancel();
+      pendingIdle = null;
+      if (pendingMap) {
+        widget.disconnect(pendingMap);
+        pendingMap = 0;
+      }
+      active?.skip();
+      active = null;
+    });
   } else {
     applyFrame(widget, provider, initial, animate, style, 0);
 
-    idle(() => {
+    let disposed = false;
+    let active: Adw.TimedAnimation | null = null;
+    let pendingIdle: Timer | null = idle(() => {
+      pendingIdle = null;
+      if (disposed) return;
+
       const anim = new Adw.TimedAnimation({
         widget,
         value_from: 0,
@@ -178,11 +195,21 @@ export const Animated = ({
         repeat_count: transition?.repeat ? 0 : 1,
         alternate: transition?.alternate ?? false,
         target: Adw.CallbackAnimationTarget.new((t: number) => {
-          applyFrame(widget, provider, initial, animate, style, t);
+          if (!disposed) applyFrame(widget, provider, initial, animate, style, t);
         }),
       });
 
+      active = anim;
+      anim.connect('done', () => { active = null; });
       anim.play();
+    });
+
+    onCleanup(() => {
+      disposed = true;
+      pendingIdle?.cancel();
+      pendingIdle = null;
+      active?.skip();
+      active = null;
     });
   }
 
