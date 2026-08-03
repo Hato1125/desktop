@@ -3,15 +3,19 @@ import { defineComponent } from './component';
 import vpn from '@service/vpn';
 
 export default () => {
-  if (!vpn) return null;
-  const v = vpn;
+  if (!vpn) {
+    return null;
+  }
+
+  const connected = createBinding(vpn, 'connected');
+  const country = createBinding(vpn, 'country');
 
   return defineComponent('vpn', () => (
     <box
       class='vpn'
       spacing={4}
-      visible={createBinding(v, 'connected')}
-      tooltipText={createBinding(v, 'country').as(country => `VPN ${country}`)}
+      visible={connected}
+      tooltipText={country.as(country => `VPN ${country}`)}
     >
       <label
         cssClasses={[
@@ -27,7 +31,7 @@ export default () => {
           'text-sm',
           'tabular'
         ]}
-        label={createBinding(v, 'country')}
+        label={country}
       />
     </box>
   ));
