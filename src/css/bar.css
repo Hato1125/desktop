@@ -171,8 +171,9 @@
     }
   }
 
-  .menu .context {
+  .context {
     .category {
+      padding: 4px;
       color: var(--dark-500);
     }
 
@@ -182,18 +183,107 @@
       background-color: transparent;
 
       &:hover {
-        background-color: var(--fg);
+        background-color: var(--dark-200);
 
         label {
-          color: var(--bg);
+          color: var(--fg);
         }
 
         .symbols {
-          color: var(--bg);
+          color: var(--fg);
+        }
+      }
+    }
+
+    /* Must stay after `button:hover`, which it ties with on specificity. */
+    button.checked {
+      background-color: var(--fg);
+
+      label, .symbols {
+        color: var(--bg);
+      }
+    }
+
+    .secured {
+      margin: 2px 0 0 -4px;
+      color: var(--fg-muted);
+    }
+
+    .band {
+      color: var(--fg-muted);
+    }
+
+    button.scan {
+      padding: 0 4px;
+
+      spinner {
+        color: var(--fg);
+      }
+    }
+
+    dropdown.sink {
+      background-color: transparent;
+      font-size: var(--font-sm);
+
+      > button {
+        padding: 3px 10px;
+        border-radius: 10px;
+        background-color: var(--bg-muted);
+
+        &:hover {
+          background-color: var(--border);
+
+          label {
+            color: var(--fg);
+          }
+        }
+      }
+
+      popover > contents {
+        listview {
+          background-color: transparent;
+
+          > row {
+            padding: 3px 10px;
+            border-radius: 8px;
+
+            &:selected {
+              color: var(--bg);
+              background-color: var(--fg);
+            }
+          }
+
+          image { opacity: 0; }
+        }
+      }
+    }
+
+    scale {
+      min-height: 14px;
+      padding: 0;
+
+      trough {
+        min-height: 4px;
+        border-radius: 50rem;
+        background-color: var(--fg-muted);
+
+        highlight {
+          min-height: 4px;
+          border-radius: 50rem;
+          background-color: var(--fg);
+        }
+
+        slider {
+          margin: -5px;
+          min-width: 14px;
+          min-height: 14px;
+          border-radius: 50rem;
+          background-color: var(--fg);
         }
       }
     }
   }
+
 }
 
 @keyframes nowplaying-spin {

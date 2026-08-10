@@ -15,6 +15,7 @@ import Weather from './component/weather';
 import Workspaces from './component/workspaces';
 import KeyLock from './component/keylock';
 import Nowplaying from './component/nowplaying';
+import Volume from './component/volume';
 
 const components = new Map(
   [
@@ -29,6 +30,7 @@ const components = new Map(
     Workspaces(),
     KeyLock(),
     Nowplaying(),
+    Volume(),
   ]
     .filter(c => c !== null)
     .map((c) => [c.name, c]),
