@@ -1,12 +1,13 @@
 import Gtk from 'gi://Gtk?version=4.0';
-import GLib from 'gi://GLib?version=2.0';
 import AstalBattery from 'gi://AstalBattery?version=0.1';
 
 import { type Osd } from '../index';
 
-const LOW_THRESHOLD = 0.2;
-const CRITICAL_THRESHOLD = 0.1;
-const REMINDER_INTERVAL_SECONDS = 5 * 60;
+// Notify only when the battery drops to one of these levels, in descending order.
+const LEVELS = [20, 10, 5];
+const CRITICAL_LEVEL = 10;
+// Percentage points the battery must recover by before a level can notify again.
+const REARM_MARGIN = 2;
 
 const typeNames: Map<AstalBattery.Type, string> = new Map([
   [AstalBattery.Type.BATTERY, 'Battery'],
@@ -25,9 +26,7 @@ const deviceLabel = (device: AstalBattery.Device) =>
   device.model || typeNames.get(device.deviceType) || 'Battery';
 
 type Latch = {
-  low: boolean;
-  critical: boolean;
-  reminderId: number | null;
+  notified: number | null;
 };
 
 const LowOSD = ({ name, percent }: { name: string, percent: number }) => (
@@ -81,82 +80,54 @@ export default (osd: Osd) => {
   const upower = AstalBattery.UPower.new();
   const latches = new Map<AstalBattery.Device, Latch>();
 
-  const stopReminder = (latch: Latch) => {
-    if (latch.reminderId === null) return;
+  // Lowest level the battery has dropped to, or null while above every level.
+  const reachedLevel = (percent: number) => {
+    let reached: number | null = null;
 
-    GLib.source_remove(latch.reminderId);
-    latch.reminderId = null;
+    for (const level of LEVELS) {
+      if (percent <= level) reached = level;
+    }
+
+    return reached;
   };
 
-  const reset = (latch: Latch) => {
-    latch.low = false;
-    latch.critical = false;
-    stopReminder(latch);
-  };
-
-  const isWarningLow = (level: AstalBattery.WarningLevel) =>
-    level === AstalBattery.WarningLevel.LOW
-    || level === AstalBattery.WarningLevel.CRITICIAL
-    || level === AstalBattery.WarningLevel.ACTION;
-
-  const isWarningCritical = (level: AstalBattery.WarningLevel) =>
-    level === AstalBattery.WarningLevel.CRITICIAL
-    || level === AstalBattery.WarningLevel.ACTION;
-
-  const isBatteryLevelLow = (level: AstalBattery.BatteryLevel) =>
-    level === AstalBattery.BatteryLevel.LOW
-    || level === AstalBattery.BatteryLevel.CRITICIAL;
-
-  const isBatteryLevelCritical = (level: AstalBattery.BatteryLevel) =>
-    level === AstalBattery.BatteryLevel.CRITICIAL;
-
-  const evaluate = (device: AstalBattery.Device, force = false) => {
+  const evaluate = (device: AstalBattery.Device) => {
     const latch = latches.get(device);
     if (!latch) {
       return;
     }
 
     if (!device.isPresent || !device.isBattery || device.charging) {
-      reset(latch);
+      latch.notified = null;
       return;
     }
 
-    const percentage = device.percentage;
-    const warningLevel = device.warningLevel;
-    const batteryLevel = device.batteryLevel;
-    const isCritical = percentage <= CRITICAL_THRESHOLD
-      || isWarningCritical(warningLevel)
-      || isBatteryLevelCritical(batteryLevel);
-    const isLow = isCritical
-      || percentage <= LOW_THRESHOLD
-      || isWarningLow(warningLevel)
-      || isBatteryLevelLow(batteryLevel);
+    const percent = Math.floor(device.percentage * 100);
+    const level = reachedLevel(percent);
 
-    if (!isLow) {
-      reset(latch);
+    if (level === null) {
+      latch.notified = null;
       return;
     }
 
-    if (latch.reminderId === null) {
-      latch.reminderId = GLib.timeout_add_seconds(
-        GLib.PRIORITY_DEFAULT,
-        REMINDER_INTERVAL_SECONDS,
-        () => {
-          evaluate(device, true);
-          return GLib.SOURCE_CONTINUE;
-        },
-      );
+    // Recovered above the level we last notified about: re-arm it silently.
+    if (latch.notified !== null && level > latch.notified) {
+      if (percent > latch.notified + REARM_MARGIN) latch.notified = level;
+      return;
     }
 
-    const percent = Math.floor(percentage * 100);
+    // Still inside the level we already notified about.
+    if (latch.notified !== null && level >= latch.notified) {
+      return;
+    }
+
+    latch.notified = level;
+
     const name = deviceLabel(device);
 
-    if (isCritical && (force || !latch.critical)) {
-      latch.critical = true;
-      latch.low = true;
+    if (level <= CRITICAL_LEVEL) {
       osd.show(() => (<CriticalOSD name={name} percent={percent} />));
-    } else if (force || !latch.low) {
-      latch.low = true;
+    } else {
       osd.show(() => (<LowOSD name={name} percent={percent} />));
     }
   };
@@ -166,13 +137,11 @@ export default (osd: Osd) => {
     if (!device.isBattery) return;
     if (latches.has(device)) return;
 
-    latches.set(device, { low: false, critical: false, reminderId: null });
+    latches.set(device, { notified: null });
     device.connect('notify::percentage', () => evaluate(device));
     device.connect('notify::charging', () => evaluate(device));
     device.connect('notify::is-present', () => evaluate(device));
     device.connect('notify::state', () => evaluate(device));
-    device.connect('notify::warning-level', () => evaluate(device));
-    device.connect('notify::battery-level', () => evaluate(device));
     device.connect('notify::is-battery', () => evaluate(device));
     evaluate(device);
   };
@@ -180,9 +149,8 @@ export default (osd: Osd) => {
   const syncDevices = () => {
     const devices = new Set(upower.devices);
 
-    for (const [device, latch] of latches) {
+    for (const device of latches.keys()) {
       if (!devices.has(device)) {
-        stopReminder(latch);
         latches.delete(device);
       }
     }
@@ -195,11 +163,7 @@ export default (osd: Osd) => {
     watch(device);
   });
   upower.connect('device-removed', (_, device: AstalBattery.Device) => {
-    const latch = latches.get(device);
-    if (latch) {
-      stopReminder(latch);
-      latches.delete(device);
-    }
+    latches.delete(device);
   });
   upower.connect('notify::devices', () => {
     syncDevices();
