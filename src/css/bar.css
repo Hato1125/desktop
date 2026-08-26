@@ -23,6 +23,10 @@
       &.unfocused {
         color: var(--fg);
         background-color: var(--border);
+
+        label {
+          opacity: 0.5;
+        }
       }
     }
   }
