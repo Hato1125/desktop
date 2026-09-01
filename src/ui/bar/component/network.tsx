@@ -272,7 +272,7 @@ export default () => defineComponent('network', () => {
   return wifi
     ? (
       <Menu width={400} trigger={trigger}>
-        <WifiSections wifi={wifi} />
+        {() => <WifiSections wifi={wifi} />}
       </Menu>
     )
     : <box>{trigger}</box>;

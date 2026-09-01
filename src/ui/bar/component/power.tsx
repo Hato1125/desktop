@@ -52,9 +52,11 @@ export default () => {
 
     return (
       <Menu trigger={<Icon />}>
-        <Button name='Sleep' icon='bedtime' action={p.suspend} />
-        <Button name='Restart' icon='restart_alt' action={p.reboot} />
-        <Button name='Shutdown' class='error' icon='power_off' action={p.powerOff} />
+        {() => [
+          <Button name='Sleep' icon='bedtime' action={p.suspend} />,
+          <Button name='Restart' icon='restart_alt' action={p.reboot} />,
+          <Button name='Shutdown' class='error' icon='power_off' action={p.powerOff} />,
+        ]}
       </Menu>
     );
   });

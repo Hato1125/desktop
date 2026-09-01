@@ -182,29 +182,31 @@ export default () => defineComponent('volume', () => (
       />
     }
   >
-    <Category name='Volume'>
-      <With value={defaultSpeaker}>
-        {(speaker: AstalWp.Endpoint | null) => speaker
-          ? <VolumeRow node={speaker} />
-          : <box />}
-      </With>
-    </Category>
+    {() => [
+      <Category name='Volume'>
+        <With value={defaultSpeaker}>
+          {(speaker: AstalWp.Endpoint | null) => speaker
+            ? <VolumeRow node={speaker} />
+            : <box />}
+        </With>
+      </Category>,
 
-    <Category
-      name='Applications'
-      visible={streams.as(s => s.length > 0)}
-    >
-      <box orientation={Gtk.Orientation.VERTICAL} spacing={12}>
-        <For each={streams}>
-          {(stream: AstalWp.Stream) => <Stream stream={stream} />}
+      <Category
+        name='Applications'
+        visible={streams.as(s => s.length > 0)}
+      >
+        <box orientation={Gtk.Orientation.VERTICAL} spacing={12}>
+          <For each={streams}>
+            {(stream: AstalWp.Stream) => <Stream stream={stream} />}
+          </For>
+        </box>
+      </Category>,
+
+      <Category name='Default Output'>
+        <For each={speakers}>
+          {(endpoint: AstalWp.Endpoint) => <Speaker endpoint={endpoint} />}
         </For>
-      </box>
-    </Category>
-
-    <Category name='Default Output'>
-      <For each={speakers}>
-        {(endpoint: AstalWp.Endpoint) => <Speaker endpoint={endpoint} />}
-      </For>
-    </Category>
+      </Category>,
+    ]}
   </Menu>
 ));
