@@ -36,6 +36,7 @@ const EV_LED = 17;
 const LED_NUML = 0;
 const LED_CAPSL = 1;
 const EVENT_SIZE = 24;
+const READ_EVENTS = 32;
 const RETRY_INTERVAL = 5000;
 
 @support({
@@ -75,13 +76,17 @@ class KeyLockService extends GObject.Object {
     }
   }
 
+  // The kernel hands out only whole events and a read returns as soon as at
+  // least one is queued, so a large buffer batches typing bursts into a
+  // single allocation without adding latency.
   private read(stream: Gio.InputStream) {
-    stream.read_bytes_async(EVENT_SIZE, GLib.PRIORITY_DEFAULT, null, (_src, res) => {
+    stream.read_bytes_async(EVENT_SIZE * READ_EVENTS, GLib.PRIORITY_DEFAULT, null, (_src, res) => {
       try {
         const bytes = stream.read_bytes_finish(res);
-        if (bytes && bytes.get_size() === EVENT_SIZE) {
-          this.handleEvent(bytes.get_data()!);
+        if (!bytes || bytes.get_size() === 0) {
+          throw new Error('EOF');
         }
+        this.handleEvents(bytes.get_data()!);
         this.read(stream);
       } catch {
         console.warn('KeyLock: device disconnected, reconnecting...');
@@ -92,11 +97,18 @@ class KeyLockService extends GObject.Object {
     });
   }
 
-  private handleEvent(data: Uint8Array) {
+  private handleEvents(data: Uint8Array) {
     const view = new DataView(data.buffer, data.byteOffset, data.byteLength);
-    const type = view.getUint16(16, true);
-    const code = view.getUint16(18, true);
-    const value = view.getInt32(20, true);
+
+    for (let off = 0; off + EVENT_SIZE <= data.byteLength; off += EVENT_SIZE) {
+      this.handleEvent(view, off);
+    }
+  }
+
+  private handleEvent(view: DataView, off: number) {
+    const type = view.getUint16(off + 16, true);
+    const code = view.getUint16(off + 18, true);
+    const value = view.getInt32(off + 20, true);
 
     if (type !== EV_LED) return;
 
