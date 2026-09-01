@@ -3,7 +3,7 @@ import AstalWp from 'gi://AstalWp?version=0.1';
 import { createBinding, createEffect, createMemo, For, With } from 'ags';
 import { defineComponent } from './component';
 import Category from './category';
-import Popup from './popup';
+import Menu from './menu';
 
 const wp = AstalWp.get_default()!;
 const { audio } = wp;
@@ -169,7 +169,7 @@ const Speaker = ({ endpoint }: { endpoint: AstalWp.Endpoint }) => {
 };
 
 export default () => defineComponent('volume', () => (
-  <Popup
+  <Menu
     width={400}
     trigger={
       <label
@@ -206,5 +206,5 @@ export default () => defineComponent('volume', () => (
         {(endpoint: AstalWp.Endpoint) => <Speaker endpoint={endpoint} />}
       </For>
     </Category>
-  </Popup>
+  </Menu>
 ));

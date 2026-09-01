@@ -6,7 +6,7 @@ import { createBinding, createMemo, For } from 'ags';
 import config from '@config';
 import Battery from './component/battery';
 import Devices from './component/devices';
-import Menu from './component/menu';
+import Power from './component/power';
 import Client from './component/client';
 import Vpn from './component/vpn';
 import Network from './component/network';
@@ -21,7 +21,7 @@ const components = new Map(
   [
     Battery(),
     Devices(),
-    Menu(),
+    Power(),
     Client(),
     Vpn(),
     Network(),

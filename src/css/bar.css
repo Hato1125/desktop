@@ -175,12 +175,7 @@
     }
   }
 
-  .context {
-    .category {
-      padding: 4px;
-      color: var(--dark-500);
-    }
-
+  .menu {
     button {
       padding: 3px 15px 3px 12px;
       border-radius: 10px;
@@ -287,7 +282,6 @@
       }
     }
   }
-
 }
 
 @keyframes nowplaying-spin {

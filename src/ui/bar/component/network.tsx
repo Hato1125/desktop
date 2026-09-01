@@ -5,7 +5,7 @@ import AstalNetwork from 'gi://AstalNetwork?version=0.1';
 import { type Accessor, createBinding, createMemo, For, With } from 'ags';
 import { defineComponent } from './component';
 import Category from './category';
-import Popup from './popup';
+import Menu from './menu';
 
 const network = AstalNetwork.get_default();
 const primary = createBinding(network, 'primary');
@@ -271,9 +271,9 @@ export default () => defineComponent('network', () => {
 
   return wifi
     ? (
-      <Popup width={400} trigger={trigger}>
+      <Menu width={400} trigger={trigger}>
         <WifiSections wifi={wifi} />
-      </Popup>
+      </Menu>
     )
     : <box>{trigger}</box>;
 });

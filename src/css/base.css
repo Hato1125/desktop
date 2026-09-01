@@ -99,8 +99,8 @@
 }
 
 label, entry {
-  margin-top: 1px;
-  font-family: 'Satoshi Variable';
+  margin-top: -1px;
+  font-family: 'Lexend Deca';
   font-weight: 800;
 }
 
