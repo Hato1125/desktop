@@ -6,7 +6,7 @@
   padding: 0 27px;
 
   .workspaces {
-    padding: 3px 3px;
+    padding: 3px;
     border-radius: 50rem;
     background-color: var(--bg-muted);
 
@@ -31,16 +31,8 @@
     }
   }
 
-  .client {
-    label {
-      font-weight: bold;
-    }
-  }
-
-  .vpn {
-    .country {
-      font-weight: bold;
-    }
+  .client label, .vpn .country {
+    font-weight: bold;
   }
 
   .battery {
@@ -102,22 +94,17 @@
       animation: nowplaying-blur-out 600ms ease-in-out both;
     }
 
-    .thumb-container {
+    .thumb-container, .thumbnail, .thumb-placeholder {
       min-width: 22px;
       min-height: 22px;
     }
 
     .thumbnail {
-      min-width: 22px;
-      min-height: 22px;
       background-size: cover;
       background-position: center;
       border-radius: 50rem;
       animation: nowplaying-spin 8s linear infinite;
-      filter: grayscale(99.99%)
-        brightness(1.001)
-        contrast(1.125)
-        brightness(1.125);
+      filter: var(--monochrome-icon);
 
       &.no-art {
         background-color: var(--fg);
@@ -126,8 +113,6 @@
 
     .thumb-placeholder {
       margin: 0;
-      min-width: 22px;
-      min-height: 22px;
       color: var(--bg);
       font-size: 11px;
       -gtk-icon-size: 11px;
@@ -139,38 +124,22 @@
       font-size: 8px;
       animation: note-float 3s ease-out infinite;
     }
-    .note-1 { animation-delay: 0s; }
     .note-2 { animation-delay: 1s; }
-
-    .difficulty {
-      .value {
-        font-family: 'Satoshi Variable';
-        font-feature-settings: 'tnum' 1;
-      }
-    }
   }
 
   &.transparent {
+    --gradient-direction: to bottom;
+
     background: linear-gradient(
-      to bottom,
-      var(--bar-tint) 0px,
+      var(--gradient-direction),
+      var(--bar-tint) 0,
       transparent 34px
     );
 
-    &.bottom {
-      background: linear-gradient(
-        to top,
-        var(--bar-tint) 0px,
-        transparent 34px
-      );
-    }
+    &.bottom { --gradient-direction: to top; }
 
-    .workspaces {
+    .workspaces, .workspace.unfocused {
       background-color: transparent;
-
-      .workspace.unfocused {
-        background-color: transparent;
-      }
     }
   }
 
@@ -181,13 +150,9 @@
       background-color: transparent;
 
       &:hover {
-        background-color: var(--dark-200);
+        background-color: var(--border);
 
-        label {
-          color: var(--fg);
-        }
-
-        .symbols {
+        label, .symbols {
           color: var(--fg);
         }
       }
@@ -202,13 +167,12 @@
       }
     }
 
-    .secured {
-      margin: 2px 0 0 -4px;
+    .secured, .band {
       color: var(--fg-muted);
     }
 
-    .band {
-      color: var(--fg-muted);
+    .secured {
+      margin: 2px 0 0 -4px;
     }
 
     button.scan {

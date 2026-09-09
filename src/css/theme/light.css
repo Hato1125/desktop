@@ -1,0 +1,20 @@
+:root {
+  --bg: #ffffff;
+  --bg-muted: #f5f5f5;
+  --bg-inverse: #171717;
+  --border: #e5e5e5;
+  --border-muted: #d4d4d4;
+  --fg: #171717;
+  --fg-subtle: #525252;
+  --fg-muted: #8a8a8a;
+  --fg-inverse: #ffffff;
+  --bar-tint: rgba(255, 255, 255, 0.45);
+
+  --danger-fg: #4e0e0e;
+  --danger-bg: #f4c2c2;
+  --danger-border: #dd3c3c;
+  --danger-bg-strong: #ea8686;
+
+  --warning-bg: #fffbeb;
+  --warning-border: #fef3c7;
+}

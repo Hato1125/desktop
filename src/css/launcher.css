@@ -37,11 +37,7 @@
     background-color: var(--bg);
 
     image.icon {
-      filter: grayscale(99.99%)
-        brightness(1.001)
-        contrast(1.125)
-        brightness(1.125)
-        drop-shadow(0 0 2px var(--icon-shadow));
+      filter: var(--monochrome-icon) drop-shadow(0 0 2px var(--icon-shadow));
     }
 
     &:focus {

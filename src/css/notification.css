@@ -13,10 +13,7 @@
       -gtk-icon-size: 27px;
       min-width: 27px;
       min-height: 27px;
-      filter: grayscale(99.99%)
-        brightness(1.001)
-        contrast(1.125)
-        brightness(1.125);
+      filter: var(--monochrome-icon);
     }
 
     .summary {
@@ -30,20 +27,16 @@
     .close {
       padding: 1px;
       border-radius: 50rem;
-
-      &:hover {
-        background-color: var(--bg-muted);
-      }
     }
 
     .action {
       padding: 5px 11px;
-      border-radius: 8px;
       border: 1px solid var(--border);
+      border-radius: 8px;
+    }
 
-      &:hover {
-        background-color: var(--bg-muted);
-      }
+    .close:hover, .action:hover {
+      background-color: var(--bg-muted);
     }
   }
 }

@@ -2,7 +2,10 @@
 
 mkdir -p dist/debug
 cp -r src/icons dist/debug/
+mkdir -p dist/debug/theme
 bunx lightningcss --bundle --targets 'chrome 112' src/css/main.css -o dist/debug/style.css
+bunx lightningcss --targets 'chrome 112' src/css/theme/light.css -o dist/debug/theme/light.css
+bunx lightningcss --targets 'chrome 112' src/css/theme/dark.css -o dist/debug/theme/dark.css
 bunx esbuild src/main.tsx \
   --bundle \
   --outfile=dist/debug/main.js \

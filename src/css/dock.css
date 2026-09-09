@@ -13,9 +13,6 @@
     border-radius: 50rem;
     min-width: 27px;
     min-height: 27px;
-    filter: grayscale(99.99%)
-      brightness(1.001)
-      contrast(1.125)
-      brightness(1.125);
+    filter: var(--monochrome-icon);
   }
 }
