@@ -1,6 +1,7 @@
 import Gtk from 'gi://Gtk?version=4.0';
 import AstalWp from 'gi://AstalWp?version=0.1';
-import { createBinding, createEffect, createMemo, For, With } from 'ags';
+import Pango from 'gi://Pango?version=1.0';
+import { type Accessor, For, With, createBinding, createMemo } from 'ags';
 import { defineComponent } from './component';
 import Category from './category';
 import Menu from './menu';
@@ -9,11 +10,13 @@ const wp = AstalWp.get_default()!;
 const { audio } = wp;
 
 const defaultSpeaker = createBinding(wp, 'defaultSpeaker');
-const speakers = createBinding(audio, 'speakers');
-const streams = createBinding(audio, 'streams');
-
+const speakers = createBinding(audio, 'speakers').as(s => s ?? []);
+const streams = createBinding(audio, 'streams').as(s => s ?? []);
 const speakerMute = createBinding(wp, 'defaultSpeaker', 'mute');
 const speakerVolume = createBinding(wp, 'defaultSpeaker', 'volume');
+
+const unknownStreamName = 'Unknown';
+const defaultStreamName = 'Speaker';
 
 const volumeIcon = (mute: boolean, volume: number) => {
   if (mute) return 'volume_off';
@@ -27,27 +30,42 @@ const icon = createMemo(() => defaultSpeaker()
   : 'volume_off'
 );
 
-// Endpoint and Stream both derive from Node, so the same row drives either.
-const VolumeRow = ({ node }: { node: AstalWp.Node }) => {
+const Controller = (
+  { node, title, sink }: {
+    node: AstalWp.Node,
+    title: Accessor<string> | string,
+    sink: JSX.Element,
+}) => {
   const mute = createBinding(node, 'mute');
   const volume = createBinding(node, 'volume');
 
   return (
-    <box spacing={8}>
-      <button
-        valign={Gtk.Align.CENTER}
-        onClicked={() => { node.mute = !node.mute; }}
-      >
-        <label
-          cssClasses={[
-            'filled',
-            'symbols',
-            'symbols-xl',
-          ]}
-          label={createMemo(() => volumeIcon(mute(), volume()))}
-        />
-      </button>
-
+    <box spacing={8} orientation={Gtk.Orientation.VERTICAL}>
+      <box spacing={32}>
+        <button onClicked={() => {node.mute = !node.mute }}>
+          <box spacing={8}>
+            <label
+              cssClasses={[
+                'filled',
+                'symbols',
+                'symbols-xl',
+              ]}
+              label={createMemo(() => volumeIcon(mute(), volume()))}
+            />
+            <label
+              hexpand
+              halign={Gtk.Align.START}
+              ellipsize={Pango.EllipsizeMode.END}
+              cssClasses={[
+                'text',
+                'text-base',
+              ]}
+              label={title}
+            />
+          </box>
+        </button>
+        {sink}
+      </box>
       <slider
         hexpand
         valign={Gtk.Align.CENTER}
@@ -55,118 +73,106 @@ const VolumeRow = ({ node }: { node: AstalWp.Node }) => {
         max={1}
         step={0.01}
         value={volume}
-        onChangeValue={(_self, _scroll, value) => {
+        onChangeValue={(_0, _1, value) => {
           node.volume = Math.min(Math.max(value, 0), 1);
           return false;
         }}
-      />
-
-      <label
-        widthChars={5}
-        halign={Gtk.Align.END}
-        valign={Gtk.Align.CENTER}
-        cssClasses={[
-          'label',
-          'text-base',
-        ]}
-        label={volume.as(v => `${Math.round(v * 100)}%`)}
       />
     </box>
   );
 };
 
-const StreamSink = ({ stream }: { stream: AstalWp.Stream }) => {
-  const target = createBinding(stream, 'targetEndpoint');
+const sinkName = (endpoint: AstalWp.Endpoint) =>
+  endpoint.get_pw_property('node.nick') ?? endpoint.description ?? '';
 
-  // A stream without an explicit target follows whatever the default speaker is.
-  const active = createMemo(() => target()?.id ?? defaultSpeaker()?.id);
+const SinkPicker = ({ active, isSelected, onSelect }: {
+  active: Accessor<AstalWp.Endpoint | null>,
+  isSelected: (endpoint: AstalWp.Endpoint) => Accessor<boolean>,
+  onSelect: (endpoint: AstalWp.Endpoint) => void,
+}) => {
+  let popover: Gtk.Popover;
 
-  const model = new Gtk.StringList();
-  let endpoints: AstalWp.Endpoint[] = [];
-
-  // Guards the notify::selected handler while the model is rebuilt from wireplumber.
-  let syncing = false;
-
-  const dropdown = (
-    <Gtk.DropDown
-      class='sink'
-      hexpand
-      model={model}
-      valign={Gtk.Align.CENTER}
-      onNotifySelected={(self) => {
-        if (!syncing) {
-          const endpoint = endpoints[self.selected];
-
-          if (endpoint && endpoint.id !== target()?.id) {
-            stream.targetEndpoint = endpoint;
-          }
-        }
-      }}
-    />
-  ) as Gtk.DropDown;
-
-  // Registered after the dropdown exists: effects run once on creation.
-  createEffect(() => {
-    const list = speakers();
-    const id = active();
-
-    syncing = true;
-    endpoints = [...list];
-    model.splice(0, model.get_n_items(), endpoints.map(e => e.description));
-    dropdown.selected = Math.max(endpoints.findIndex(e => e.id === id), 0);
-    syncing = false;
-  });
-
-  return dropdown;
-};
-
-const Stream = ({ stream }: { stream: AstalWp.Stream }) => (
-  <box orientation={Gtk.Orientation.VERTICAL} spacing={4}>
-    <label
-      halign={Gtk.Align.START}
-      cssClasses={[
-        'label',
-        'text-base',
-      ]}
-      label={createBinding(stream, 'description').as(d => d || stream.name)}
-    />
-    <VolumeRow node={stream} />
-    <StreamSink stream={stream} />
-  </box>
-);
-
-const Speaker = ({ endpoint }: { endpoint: AstalWp.Endpoint }) => {
-  const isDefault = createBinding(endpoint, 'isDefault');
+  const select = (endpoint: AstalWp.Endpoint) => {
+    onSelect(endpoint);
+    popover.popdown();
+  };
 
   return (
-    <button
-      class={isDefault.as(d => d ? 'checked' : '')}
-      onClicked={() => endpoint.set_is_default(true)}
-    >
-      <box spacing={8}>
+    <menubutton class='sink'>
+      <box spacing={8} orientation={Gtk.Orientation.HORIZONTAL}>
         <label
           cssClasses={[
+            'filled',
             'symbols',
             'symbols-xl',
           ]}
-          label={isDefault.as(d => d
-            ? 'radio_button_checked'
-            : 'radio_button_unchecked'
+          label='keyboard_arrow_down'
+        />
+        <With value={active}>
+          {(endpoint: AstalWp.Endpoint | null) => endpoint && (
+            <label
+              ellipsize={Pango.EllipsizeMode.END}
+              cssClasses={[
+                'text',
+                'text-sm',
+              ]}
+              label={sinkName(endpoint)}
+            />
           )}
-        />
-        <label
-          hexpand
-          halign={Gtk.Align.START}
-          cssClasses={[
-            'label',
-            'text-base',
-          ]}
-          label={endpoint.description}
-        />
+        </With>
       </box>
-    </button>
+
+      <popover $={(self) => { popover = self; }} hasArrow={false}>
+        <box orientation={Gtk.Orientation.VERTICAL}>
+          <For each={speakers}>
+            {(endpoint: AstalWp.Endpoint) => (
+              <button
+                class={isSelected(endpoint).as(s => s ? 'checked' : '')}
+                onClicked={() => select(endpoint)}
+              >
+                <label
+                  halign={Gtk.Align.START}
+                  cssClasses={[
+                    'text',
+                    'text-base',
+                  ]}
+                  label={sinkName(endpoint)}
+                />
+              </button>
+            )}
+          </For>
+        </box>
+      </popover>
+    </menubutton>
   );
 };
+
+const StreamSink = ({ stream }: { stream: AstalWp.Stream }) => {
+  const targetEndpoint = createBinding(stream, 'targetEndpoint');
+
+  return (
+    <SinkPicker
+      active={createMemo(() => targetEndpoint() ?? defaultSpeaker())}
+      isSelected={(endpoint) => {
+        const isDefault = createBinding(endpoint, 'isDefault');
+
+        return createMemo(() => {
+          const target = targetEndpoint();
+          return target ? target.id === endpoint.id : isDefault();
+        });
+      }}
+      onSelect={(endpoint) => { stream.targetEndpoint = endpoint; }}
+    />
+  );
+};
+
+const DefaultSink = () => (
+  <SinkPicker
+    active={defaultSpeaker}
+    isSelected={(endpoint) => createBinding(endpoint, 'isDefault')}
+    onSelect={(endpoint) => endpoint.set_is_default(true)}
+  />
+);
 
 export default () => defineComponent('volume', () => (
   <Menu
@@ -183,30 +189,41 @@ export default () => defineComponent('volume', () => (
     }
   >
     {() => [
-      <Category name='Volume'>
+      <Category name='MASTER'>
         <With value={defaultSpeaker}>
-          {(speaker: AstalWp.Endpoint | null) => speaker
-            ? <VolumeRow node={speaker} />
-            : <box />}
+          {speaker => speaker && (
+            <Controller
+              node={speaker}
+              title={defaultStreamName}
+              sink={<DefaultSink />}
+            />
+          )}
         </With>
       </Category>,
 
       <Category
-        name='Applications'
+        name='APPLICATIONS'
+        class='divided'
         visible={streams.as(s => s.length > 0)}
       >
         <box orientation={Gtk.Orientation.VERTICAL} spacing={12}>
           <For each={streams}>
-            {(stream: AstalWp.Stream) => <Stream stream={stream} />}
+            {stream => (
+              <Controller
+                node={stream}
+                title={
+                  createBinding(stream, 'description')
+                    .as(d => d
+                      ?? stream.name
+                      ?? unknownStreamName
+                    )
+                }
+                sink={<StreamSink stream={stream} />}
+              />
+            )}
           </For>
         </box>
-      </Category>,
-
-      <Category name='Default Output'>
-        <For each={speakers}>
-          {(endpoint: AstalWp.Endpoint) => <Speaker endpoint={endpoint} />}
-        </For>
-      </Category>,
+      </Category>
     ]}
   </Menu>
 ));

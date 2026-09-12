@@ -11,24 +11,24 @@ export default (
   }
 ) => (
   <box
-    class={cssClass}
+    cssClasses={[...(cssClass ? [cssClass] : [])]}
     orientation={Gtk.Orientation.VERTICAL}
-    spacing={4}
+    spacing={14}
     visible={visible}
   >
-    <box class='category'>
+    <box>
       <label
         hexpand
         halign={Gtk.Align.START}
         cssClasses={[
           'label',
-          'text-base',
+          'text-lg',
         ]}
         label={name}
       />
       {header}
     </box>
-    <box orientation={Gtk.Orientation.VERTICAL}>
+    <box class='category' orientation={Gtk.Orientation.VERTICAL}>
       {children}
     </box>
   </box>

@@ -3,7 +3,8 @@ import { createState, With } from 'ags';
 import { idle } from 'ags/time';
 
 export default (
-  { width, trigger, children }: {
+  { classname, width, trigger, children }: {
+    classname?: string,
     width?: number,
     trigger: JSX.Element,
     children?: () => JSX.Element | JSX.Element[]
@@ -19,19 +20,27 @@ export default (
         onShow={() => setOpen(true)}
         onClosed={() => idle(() => setOpen(false))}
       >
-        <box
-          class='menu'
+        <Gtk.ScrolledWindow
+          hscrollbarPolicy={width ? Gtk.PolicyType.EXTERNAL : Gtk.PolicyType.NEVER}
+          vscrollbarPolicy={Gtk.PolicyType.NEVER}
           widthRequest={width ?? -1}
-          orientation={Gtk.Orientation.VERTICAL}
         >
-          <With value={open}>
-            {(o: boolean) => o && (
-              <box orientation={Gtk.Orientation.VERTICAL}>
-                {children?.()}
-              </box>
-            )}
-          </With>
-        </box>
+          <box
+            cssClasses={[
+              'menu',
+              classname ?? ''
+            ]}
+            orientation={Gtk.Orientation.VERTICAL}
+          >
+            <With value={open}>
+              {(o: boolean) => o && (
+                <box orientation={Gtk.Orientation.VERTICAL}>
+                  {children?.()}
+                </box>
+              )}
+            </With>
+          </box>
+        </Gtk.ScrolledWindow>
       </popover>
     </menubutton>
   );

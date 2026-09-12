@@ -15,7 +15,6 @@
 }
 
 label, entry {
-  margin-top: -1px;
   font-family: 'Lexend Deca';
   font-weight: 800;
 }
@@ -23,12 +22,12 @@ label, entry {
 tooltip, popover {
   color: var(--fg);
   background-color: var(--bg);
-  border: 1px solid var(--border);
 }
 
 tooltip {
   padding: 4px 12px;
   border-radius: 50rem;
+  border: 1px solid var(--border);
 
   label {
     font-size: 11px;
@@ -37,12 +36,11 @@ tooltip {
 }
 
 popover {
-  border-radius: 16px;
+  border-radius: 18px;
   padding: 8px;
 }
 
 switch {
-  /* Width is not settable here: GtkSwitch measures it as 2x the slider's. */
   min-width: 25px;
   min-height: 15px;
   border-radius: 50rem;
@@ -65,7 +63,6 @@ switch {
     }
   }
 
-  /* `opacity` alone still reserves the on/off glyphs' width. */
   image {
     opacity: 0;
     min-width: 0;
