@@ -22,7 +22,7 @@ bunx esbuild src/main.tsx \
   --outfile="$OUT_DIR/main.js" \
   --format=esm \
   --platform=neutral \
-  --target=esnext \
+  --target=es2022 \
   --external:'gi://*' \
   --external:'file://*' \
   --external:'resource://*' \
@@ -31,11 +31,12 @@ bunx esbuild src/main.tsx \
   --main-fields=module,main \
   --jsx=automatic \
   --jsx-import-source=ags/gtk4 \
-  --minify-syntax \
-  --minify-whitespace \
+  --minify \
+  --keep-names \
   --drop:debugger \
   --legal-comments=none \
   --tree-shaking=true \
   --charset=utf8 \
   --define:process.env.NODE_ENV='"production"' \
+  --define:SRC="\"$(realpath "$OUT_DIR")\"" \
   --tsconfig=tsconfig.json

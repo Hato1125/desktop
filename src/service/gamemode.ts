@@ -36,7 +36,7 @@ const getGameName = (pid: number): string =>
 @support({
   os: [{ os: 'linux' }]
 })
-@register()
+@register({ GTypeName: 'GameModeService' })
 class GameModeService extends GObject.Object {
   @property(Array) games: Game[] = [];
 

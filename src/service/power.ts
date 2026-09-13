@@ -8,13 +8,12 @@ import { support, makeService } from 'src/feature/feature';
 Gio._promisify(Gio.DBusProxy.prototype, 'call', 'call_finish');
 
 @support({ os: [{ os: 'linux' }] })
-@register()
+@register({ GTypeName: 'PowerService' })
 class PowerService extends GObject.Object {
-  private proxy: Gio.DBusProxy;
+  private proxy?: Gio.DBusProxy;
 
-  constructor() {
-    super();
-    this.proxy = Gio.DBusProxy.new_for_bus_sync(
+  private getProxy() {
+    this.proxy ??= Gio.DBusProxy.new_for_bus_sync(
       Gio.BusType.SYSTEM,
       Gio.DBusProxyFlags.NONE,
       null,
@@ -23,11 +22,12 @@ class PowerService extends GObject.Object {
       'org.freedesktop.login1.Manager',
       null,
     );
+    return this.proxy;
   }
 
   private async call(method: string) {
     try {
-      await this.proxy.call(
+      await this.getProxy().call(
         method,
         new GLib.Variant('(b)', [true]),
         Gio.DBusCallFlags.NONE,

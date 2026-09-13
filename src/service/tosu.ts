@@ -21,7 +21,7 @@ const resolvePath = (p: string) => {
 };
 
 @support()
-@register()
+@register({ GTypeName: 'TosuService' })
 class TosuService extends GObject.Object {
   @property(Boolean) available: boolean = false;
   @property(String) title: string = '';

@@ -23,7 +23,7 @@ const DEFAULT_BAR_END = [
   'datetime',
 ];
 
-@register()
+@register({ GTypeName: 'BarConfig' })
 class BarConfig extends GObject.Object {
   @property(String) anchor: BarAnchor = 'top';
   @property(Boolean) transparent: boolean = false;
@@ -42,7 +42,7 @@ class BarConfig extends GObject.Object {
   }
 }
 
-@register()
+@register({ GTypeName: 'DockConfig' })
 class DockConfig extends GObject.Object {
   @property(Boolean) enable: boolean = true;
   @property(Object) apps: string[] = [];
@@ -53,7 +53,7 @@ class DockConfig extends GObject.Object {
   }
 }
 
-@register()
+@register({ GTypeName: 'ConfigService' })
 class ConfigService extends GObject.Object {
   @property(Object) bar = new BarConfig();
   @property(Object) dock = new DockConfig();

@@ -4,16 +4,14 @@ import Adw from 'gi://Adw?version=1';
 import Gdk from 'gi://Gdk?version=4.0';
 import Gtk from 'gi://Gtk?version=4.0';
 
+import { createRoot } from 'ags';
 import app from 'ags/gtk4/app';
 
-import Launcher, { toggleWindow } from '@ui/launcher/index';
 import {
   MonitorCorners,
   BarCorner,
 } from '@ui/corner/index';
 import Bar from '@ui/bar/index';
-import Dock from '@ui/dock/index';
-import Notification from '@ui/notification/index';
 import Osd from '@ui/osd/index';
 
 import { checkAllFeatures, env } from 'src/feature/feature';
@@ -53,7 +51,9 @@ app.start({
   instanceName: 'desktop',
   requestHandler(args, res) {
     switch (args[0]) {
-      case 'toggle-launcher': toggleWindow(); break;
+      case 'toggle-launcher':
+        import('@ui/launcher/index').then((m) => m.toggleWindow());
+        break;
     }
     res('');
   },
@@ -72,12 +72,12 @@ app.start({
 
     initThemeSync();
 
-    Launcher();
-    Notification();
-    Osd();
     Bar();
     BarCorner();
     MonitorCorners();
-    Dock();
+    Osd();
+    import('@ui/launcher/index').then((m) => createRoot(m.default));
+    import('@ui/notification/index').then((m) => createRoot(m.default));
+    import('@ui/dock/index').then((m) => createRoot(m.default));
   }
 });

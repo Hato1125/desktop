@@ -32,7 +32,7 @@ const FETCH_RETRY_MIN = 2_000;
 const FETCH_RETRY_MAX = 10_000;
 
 @support()
-@register()
+@register({ GTypeName: 'WeatherService' })
 class WeatherService extends GObject.Object {
   @property(Boolean) available: boolean = false;
   @property(Number) temperature: number = 0;

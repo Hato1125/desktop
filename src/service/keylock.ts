@@ -42,7 +42,7 @@ const RETRY_INTERVAL = 5000;
 @support({
   os: [{ os: 'linux' }]
 })
-@register()
+@register({ GTypeName: 'KeyLockService' })
 class KeyLockService extends GObject.Object {
   @property(Boolean) capsLock: boolean = false;
   @property(Boolean) numLock: boolean = false;

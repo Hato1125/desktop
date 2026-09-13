@@ -13,7 +13,7 @@ import { support, makeService } from 'src/feature/feature';
 @support({
   os: [{ os: 'linux' }]
 })
-@register()
+@register({ GTypeName: 'VpnService' })
 class VpnService extends GObject.Object {
   @property(Boolean) connected: boolean = false;
   @property(String) country: string = '';

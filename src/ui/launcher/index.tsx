@@ -238,9 +238,9 @@ export default () => createRoot(() => (
     <Animated
       when={open}
       onExit={() => setRendered(false)}
-      initial={{ opacity: 0, marginTop: 120, marginBottom: -120 }}
+      initial={{ opacity: 0, marginTop: 80, marginBottom: -80 }}
       animate={{ opacity: 1, marginTop: 0, marginBottom: 0 }}
-      transition={{ duration: 150, easing: Adw.Easing.EASE_OUT_CIRC }}
+      transition={{ duration: 110, easing: Adw.Easing.EASE_OUT_CIRC }}
     >
       <box
         $={(ref) => (content = ref)}

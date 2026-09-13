@@ -13,7 +13,7 @@ import { support, makeService } from 'src/feature/feature';
 export type NowPlayingSource = 'none' | 'tosu' | 'mpris';
 
 @support()
-@register()
+@register({ GTypeName: 'NowPlayingService' })
 class NowPlayingService extends GObject.Object {
   @property(Boolean) available: boolean = false;
   @property(String) title: string = '';
