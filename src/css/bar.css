@@ -237,7 +237,7 @@
         border-radius: 12px;
 
         &:hover {
-          background-color: var(--border-muted);
+          background-color: transparent;
 
           label {
             color: var(--fg-inverse);
