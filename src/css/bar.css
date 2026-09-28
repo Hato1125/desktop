@@ -253,6 +253,16 @@
         }
       }
     }
+
+    &.bluetooth {
+      .card {
+        padding: 8px 8px;
+      }
+
+      .address, .empty {
+        color: var(--fg-muted);
+      }
+    }
   }
 }
 

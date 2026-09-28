@@ -16,6 +16,7 @@ import Workspaces from './component/workspaces';
 import KeyLock from './component/keylock';
 import Nowplaying from './component/nowplaying';
 import Volume from './component/volume';
+import Bluetooth from './component/bluetooth';
 
 const components = new Map(
   [
@@ -31,6 +32,7 @@ const components = new Map(
     KeyLock(),
     Nowplaying(),
     Volume(),
+    Bluetooth(),
   ]
     .filter(c => c !== null)
     .map((c) => [c.name, c]),
