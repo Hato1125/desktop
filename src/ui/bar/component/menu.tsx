@@ -16,6 +16,7 @@ export default (
     <menubutton>
       {trigger}
       <popover
+        class='menu-popover'
         hasArrow={false}
         onShow={() => setOpen(true)}
         onClosed={() => idle(() => setOpen(false))}

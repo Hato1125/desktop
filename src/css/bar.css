@@ -143,6 +143,10 @@
     }
   }
 
+  .menu-popover {
+    border: 1px solid rgba(255, 255, 255, 0.133);
+  }
+
   .menu {
     padding: 8px;
 
