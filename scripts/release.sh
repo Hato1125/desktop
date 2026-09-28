@@ -8,14 +8,13 @@ cp -r src/icons "$OUT_DIR/"
 
 bunx lightningcss \
   --bundle \
-  --minify \
   --targets 'chrome 112' \
   src/css/main.css \
   -o "$OUT_DIR/style.css"
 
 mkdir -p "$OUT_DIR/theme"
-bunx lightningcss --minify --targets 'chrome 112' src/css/theme/light.css -o "$OUT_DIR/theme/light.css"
-bunx lightningcss --minify --targets 'chrome 112' src/css/theme/dark.css -o "$OUT_DIR/theme/dark.css"
+bunx lightningcss --targets 'chrome 112' src/css/theme/light.css -o "$OUT_DIR/theme/light.css"
+bunx lightningcss --targets 'chrome 112' src/css/theme/dark.css -o "$OUT_DIR/theme/dark.css"
 
 bunx esbuild src/main.tsx \
   --bundle \
